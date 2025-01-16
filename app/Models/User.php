@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Constant;
 
 class User extends Authenticatable
 {
@@ -44,5 +45,22 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_user');
+    }
+
+    public function jobPosition()
+    {
+        return $this->hasOne(Constant::class, 'key', 'job_position')
+            ->where('group', 'job_position');
+    }
+
+    public function userStatus()
+    {
+        return $this->hasOne(Constant::class, 'key', 'status')
+            ->where('group', 'user_status');
     }
 }
