@@ -1,11 +1,20 @@
 # Run on local
 1. Copy .env.example to .env
-2. composer install
-3. php artisan key:generate
-4. npm install
-5. npm run build
-6. docker-compose build
-7. docker-compose up -d
+2. Set up env params  
+DB_CONNECTION=mysql  
+DB_HOST=db  
+DB_PORT=3306  
+DB_DATABASE=pmo_assistant  
+DB_USERNAME=admin  
+DB_PASSWORD=pmo123456  
+3. composer install
+4. php artisan key:generate
+5. npm install
+6. docker pull hungph1996/pmo-assistant:latest
+7. npm run build
+8. npm run dev
+9. docker pull hungph1996/pmo-assistant:latest
+10. docker-compose up -d
 
 # Re-build container on Docker Hub
 1. docker buildx build --platform linux/amd64,linux/arm64 -t hungph1996/pmo-assistant:latest --push .
