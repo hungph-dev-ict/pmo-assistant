@@ -108,7 +108,7 @@
         <!-- /.card-body -->
     </div>
     <!-- /.card -->
-    {{$projects->links()}}
+    {{$projects->links('vendor.pagination.default')}}
 
 </section>
 <!-- /.content -->
