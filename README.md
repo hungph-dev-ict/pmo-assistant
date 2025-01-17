@@ -8,8 +8,7 @@
 7. docker-compose up -d
 
 # Re-build container on Docker Hub
-1. docker build -t hungph1996/pmo-assistant:latest .
-2. docker push hungph1996/pmo-assistant:latest
+1. docker buildx build --platform linux/amd64,linux/arm64 -t hungph1996/pmo-assistant:latest --push .
 
 # Re-pull container on Docker Hub
 1. docker pull hungph1996/pmo-assistant:latest

@@ -8,8 +8,8 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/css/adminlte.css', // CSS của AdminLTE
-                'resources/js/adminlte.js',  // JS của AdminLTE
+                // 'resources/css/adminlte.css', // CSS của AdminLTE
+                // 'resources/js/adminlte.js',  // JS của AdminLTE
             ],
             refresh: true,
         }),
