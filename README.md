@@ -1,6 +1,6 @@
 # Run on local
 1. Copy .env.example to .env
-2. Set up env params  
+2. Set up .env params  
 DB_CONNECTION=mysql  
 DB_HOST=db  
 DB_PORT=3306  
@@ -15,6 +15,7 @@ DB_PASSWORD=pmo123456
 8. npm run dev
 9. docker pull hungph1996/pmo-assistant:latest
 10. docker-compose up -d
+11. Run command in the below section **In container**
 
 # Re-build container on Docker Hub
 1. docker buildx build --platform linux/amd64,linux/arm64 -t hungph1996/pmo-assistant:latest --push .
