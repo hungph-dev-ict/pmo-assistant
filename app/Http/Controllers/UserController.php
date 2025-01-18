@@ -21,4 +21,9 @@ class UserController extends Controller
         $users = User::with('jobPosition')->get();
         return view('users.index', compact('users')); // Trả về view với danh sách người dùng
     }
+
+    public function create()
+    {
+        return view('users.create');
+    }
 }

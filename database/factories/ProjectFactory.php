@@ -17,7 +17,6 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->unique()->numberBetween(1, 10000),
             'name' => $this->faker->words(3, true),
             'description' => $this->faker->sentence(10),
             'start_date' => $this->faker->dateTimeBetween('-1 year', 'now'),

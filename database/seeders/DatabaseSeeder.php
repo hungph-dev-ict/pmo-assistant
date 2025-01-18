@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         // Xóa toàn bộ dữ liệu trước khi seed
         User::truncate();
         Permission::truncate();
+        DB::table('projects')->truncate();
         Role::truncate();
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
@@ -29,8 +30,6 @@ class DatabaseSeeder extends Seeder
             ConstantsTableSeeder::class,
             RolesAndPermissionsSeeder::class,
         ]);
-
-        User::factory(10)->create();
 
         User::factory()->create([
             'account' => 'ROOT',
@@ -67,8 +66,8 @@ class DatabaseSeeder extends Seeder
             'status' => '1',
             'password' => bcrypt('test@12345') // Mã hóa mật khẩu
         ]);
-        Project::factory(100)->create();
 
+        Project::factory(100)->create();
 
         //Gán vai trò admin cho user có email admin@gmail.com
         $admin = User::where('email', 'admin@gmail.com')->first();

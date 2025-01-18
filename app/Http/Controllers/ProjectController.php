@@ -12,9 +12,15 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::paginate(5);
+        $projects = Project::paginate(10);
         return view('projects.index', compact('projects'));
     }
+
+    public function create()
+    {
+        return view('projects.create');
+    }
+
     /**
      * Store a newly created resource in storage.
      */

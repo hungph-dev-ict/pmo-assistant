@@ -49,10 +49,10 @@
                             Description
                         </th>
                         <th>
-                            Start_date
+                            Start Date
                         </th>
                         <th style="width: 8%" class="text-center">
-                            End_date
+                            End Date
                         </th>
                         <th style="width: 20%">
                         </th>
@@ -62,7 +62,7 @@
                     @foreach ($projects as $project)
                     <tr>
                         <td>
-                            #
+                            {{$project->id}}
                         </td>
                         <td>
                             <a>
@@ -83,16 +83,16 @@
                             {{$project->end_date}}
                         </td>
                         <td class="project-actions text-right">
-                            <a class="btn btn-primary btn-sm" href="#">
+                            <a class="btn btn-primary btn-sm" href="{{ route('projects.show', $project->id) }}">
                                 <i class="fas fa-folder">
                                 </i>
                                 View
                             </a>
-                            <a class="btn btn-info btn-sm" href="#">
+                            <!-- <a class="btn btn-info btn-sm" href="#">
                                 <i class="fas fa-pencil-alt">
                                 </i>
                                 Edit
-                            </a>
+                            </a> -->
                             <a class="btn btn-danger btn-sm" href="#">
                                 <i class="fas fa-trash">
                                 </i>
@@ -106,11 +106,23 @@
             </table>
         </div>
         <!-- /.card-body -->
+        <div class="card-footer d-flex justify-content-between align-items-center" style="padding: 0.5rem 1rem;">
+            <div class="d-flex">
+                Showing
+                <strong class="mx-1">{{ $projects->firstItem() }}</strong>
+                to
+                <strong class="mx-1">{{ $projects->lastItem() }}</strong>
+                of
+                <strong class="mx-1">{{ $projects->total() }}</strong>
+                entries
+            </div>
+            <div class="pagination-wrapper ml-auto">
+                {{ $projects->links('vendor.pagination.default') }}
+            </div>
+        </div>
+
     </div>
     <!-- /.card -->
-    <div class="float-right" style="margin-top: 10px; font-size: 0.75rem; padding: 5px;">
-        {{$projects->links('vendor.pagination.default')}}
-    </div>
 </section>
 <!-- /.content -->
 @endsection
