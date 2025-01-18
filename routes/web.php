@@ -14,7 +14,7 @@ Route::middleware('auth')->group(function () {
         return view('welcome');
     })->name('dashboard');
 //     Route::resource('projects', ProjectController::class);
-    
+
 
 //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 //     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -29,7 +30,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
         ]);
 
-        // User::factory(10)->create();
+        User::factory(10)->create();
 
         User::factory()->create([
             'account' => 'ROOT',
@@ -66,8 +67,10 @@ class DatabaseSeeder extends Seeder
             'status' => '1',
             'password' => bcrypt('test@12345') // Mã hóa mật khẩu
         ]);
+        Project::factory(100)->create();
 
-        // Gán vai trò admin cho user có email admin@gmail.com
+
+        //Gán vai trò admin cho user có email admin@gmail.com
         $admin = User::where('email', 'admin@gmail.com')->first();
         if ($admin) {
             $admin->assignRole('admin');
@@ -79,7 +82,7 @@ class DatabaseSeeder extends Seeder
             $pm->assignRole('pm');
         }
 
-        // Gán vai trò user cho user có email dev@gmail.com
+        //Gán vai trò user cho user có email dev@gmail.com
         $dev = User::where('email', 'dev@gmail.com')->first();
         if ($dev) {
             $dev->assignRole('user');
