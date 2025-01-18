@@ -33,7 +33,7 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show($projectId)
     {
         return view('projects.show');
     }
