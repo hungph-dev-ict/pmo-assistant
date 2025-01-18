@@ -25,8 +25,8 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::resource('users', UserController::class);
 });
 
-Route::group(['middleware' => ['auth', 'role:pm']], function () {
-    Route::resource('projects', ProjectController::class)->only(['index', 'show']);
+Route::group(['middleware' => ['auth', 'role:admin|pm']], function () {
+    Route::resource('projects', ProjectController::class);
 });
 
 Route::group(['middleware' => ['auth', 'role:user']], function () {
