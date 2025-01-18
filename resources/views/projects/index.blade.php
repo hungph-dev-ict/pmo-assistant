@@ -108,8 +108,9 @@
         <!-- /.card-body -->
     </div>
     <!-- /.card -->
-    {{$projects->links('vendor.pagination.default')}}
-
+    <div class="float-right" style="margin-top: 10px; font-size: 0.75rem; padding: 5px;">
+        {{$projects->links('vendor.pagination.default')}}
+    </div>
 </section>
 <!-- /.content -->
 @endsection
