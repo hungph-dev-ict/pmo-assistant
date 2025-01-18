@@ -82,7 +82,7 @@ class DatabaseSeeder extends Seeder
             $pm->assignRole('pm');
         }
 
-        // Gán vai trò user cho user có email dev@gmail.com
+        //Gán vai trò user cho user có email dev@gmail.com
         $dev = User::where('email', 'dev@gmail.com')->first();
         if ($dev) {
             $dev->assignRole('user');
