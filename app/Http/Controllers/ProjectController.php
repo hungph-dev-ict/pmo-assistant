@@ -13,7 +13,6 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::paginate(5);
-        // dd($projects);
         return view('projects.index', compact('projects'));
     }
     /**
