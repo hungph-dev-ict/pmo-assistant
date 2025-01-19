@@ -101,7 +101,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="pages/gallery.html" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
+                                <i class="nav-icon fas fa-book"></i>
                                 <p>
                                     Project Management
                                     <i class="fas fa-angle-left right"></i>
