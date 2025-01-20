@@ -41,8 +41,8 @@
                 <!-- Sidebar Menu -->
                 <nav class="user-panel mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-                        <li class="nav-item">
-                            <a href="pages/gallery.html" class="nav-link">
+                        <li class="nav-item {{ request()->is('projects*') ? 'menu-open' : '' }}">
+                            <a href="pages/gallery.html" class="nav-link {{ request()->is('projects*') ? 'active' : '' }}">
                                 <i class="nav-icon fab fa-stack-overflow"></i>
                                 <p>
                                     Project setting
@@ -51,13 +51,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('projects.index') }}" class="nav-link">
+                                    <a href="{{ route('projects.index') }}" class="nav-link {{ request()->routeIs('projects.index') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Projects</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('projects.create') }}" class="nav-link">
+                                    <a href="{{ route('projects.create') }}" class="nav-link {{ request()->routeIs('projects.create') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Project Add</p>
                                     </a>
@@ -76,8 +76,8 @@
                                 </li> -->
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="pages/gallery.html" class="nav-link">
+                        <li class="nav-item {{ request()->is('users*') ? 'menu-open' : '' }}">
+                            <a href="pages/gallery.html" class="nav-link {{ request()->is('users*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>
                                     User setting
@@ -86,21 +86,21 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('users.index') }}" class="nav-link">
+                                    <a href="{{ route('users.index') }}" class="nav-link  {{ request()->routeIs('users.index') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Users</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('users.create') }}" class="nav-link">
+                                    <a href="{{ route('users.create') }}" class="nav-link  {{ request()->routeIs('users.create') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>User Add</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="pages/gallery.html" class="nav-link">
+                        <li class="nav-item {{ request()->is('pages*') ? 'menu-open' : '' }}">
+                            <a href="pages/gallery.html" class="nav-link {{ request()->is('pages*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>
                                     Project Management
@@ -109,25 +109,25 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('users.index') }}" class="nav-link">
+                                    <a href="{{ route('users.index') }}" class="nav-link  {{ request()->routeIs('users.index') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Task Lists</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="pages/examples/project-add.html" class="nav-link">
+                                    <a href="pages/examples/project-add.html" class="nav-link  {{ request()->is('pages/examples/project-add.html') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Members</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="pages/examples/project-edit.html" class="nav-link">
+                                    <a href="pages/examples/project-edit.html" class="nav-link  {{ request()->is('pages/examples/project-edit.html') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Charts</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="pages/examples/project-detail.html" class="nav-link">
+                                <li class="nav-item"> 
+                                    <a href="pages/examples/project-detail.html" class="nav-link  {{ request()->is('pages/examples/project-detail.html') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Project Detail</p>
                                     </a>
