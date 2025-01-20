@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title', config('app.name', 'PMO Assistant'))</title>
     <!-- jQuery và Bootstrap JS (AdminLTE phụ thuộc vào cả hai) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Font Awesome Icons -->
     @vite(['resources/css/app.css', 'resources/css/fontawesome-free/css/all.min.css', 'resources/js/app.js'])
     <script src="https://code.jscharting.com/latest/jscharting.js"></script>
+    <!-- Inline CSS -->
+    @yield('inline_css')
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -109,30 +111,47 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('users.index') }}" class="nav-link  {{ request()->routeIs('users.index') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
+                                  <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Level 2</p>
+                                  </a>
+                                </li>
+                                <li class="nav-item">
+                                  <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                      Level 2
+                                      <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                  </a>
+                                  <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                      <a href="{{ route('pm.task', 1) }}" class="nav-link">
+                                        <i class="far fa-dot-circle nav-icon"></i>
                                         <p>Task Lists</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/examples/project-add.html" class="nav-link  {{ request()->is('pages/examples/project-add.html') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
+                                      </a>
+                                    </li>
+                                    <li class="nav-item">
+                                      <a href="{{ route('pm.member', 1) }}" class="nav-link">
+                                        <i class="far fa-dot-circle nav-icon"></i>
                                         <p>Members</p>
-                                    </a>
+                                      </a>
+                                    </li>
+                                    <li class="nav-item">
+                                      <a href="{{ route('pm.chart', 1) }}" class="nav-link">
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <p>Chart</p>
+                                      </a>
+                                    </li>
+                                  </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="pages/examples/project-edit.html" class="nav-link  {{ request()->is('pages/examples/project-edit.html') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Charts</p>
-                                    </a>
+                                  <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Level 2</p>
+                                  </a>
                                 </li>
-                                <li class="nav-item"> 
-                                    <a href="pages/examples/project-detail.html" class="nav-link  {{ request()->is('pages/examples/project-detail.html') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Project Detail</p>
-                                    </a>
-                                </li>
-                            </ul>
+                              </ul>
                         </li>
                         <!-- <li class="nav-item">
                             <a href="pages/gallery.html" class="nav-link">
@@ -185,6 +204,8 @@
         <!-- /.control-sidebar -->
     </div>
     @vite(['resources/js/app.js'])
+    <!-- Inline JS -->
+    @yield('inline_js')
 </body>
 
 </html>
