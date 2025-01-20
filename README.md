@@ -1,19 +1,19 @@
 # Run on local
 1. Copy .env.example to .env
-2. Set up .env params  
+2. Copy AdminLTE-3.2.0\plugins to resources/js
+3. Set up .env params  
 DB_CONNECTION=mysql  
 DB_HOST=db  
 DB_PORT=3306  
 DB_DATABASE=pmo_assistant  
 DB_USERNAME=admin  
 DB_PASSWORD=pmo123456  
-3. composer install
-4. php artisan key:generate
-5. npm install
-6. docker pull hungph1996/pmo-assistant:latest
-7. npm run build
-8. npm run dev
-9. docker pull hungph1996/pmo-assistant:latest
+4. composer install
+5. php artisan key:generate
+6. npm install
+7. docker pull hungph1996/pmo-assistant:latest
+8. npm run build
+9. npm run dev
 10. docker-compose up -d
 11. Run command in the below section **In container**
 
