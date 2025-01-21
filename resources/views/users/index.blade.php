@@ -134,6 +134,20 @@
             </table>
         </div>
         <!-- /.card-body -->
+        <div class="card-footer d-flex justify-content-between align-items-center" style="padding: 0.5rem 1rem;">
+            <div class="d-flex">
+                Showing
+                <strong class="mx-1">{{ $users->firstItem() }}</strong>
+                to
+                <strong class="mx-1">{{ $users->lastItem() }}</strong>
+                of
+                <strong class="mx-1">{{ $users->total() }}</strong>
+                entries
+            </div>
+            <div class="pagination-wrapper ml-auto">
+                {{ $users->links('vendor.pagination.default') }}
+            </div>
+        </div>
     </div>
     <!-- /.card -->
 

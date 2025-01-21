@@ -23,10 +23,14 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
+    Route::get('/clients', [UserController::class, 'getAllClients'])->name('admin.get-all-client');
+});
+
+Route::group(['middleware' => ['auth', 'role:client']], function () {
     Route::resource('users', UserController::class);
 });
 
-Route::group(['middleware' => ['auth', 'role:admin|pm']], function () {
+Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::resource('projects', ProjectController::class);
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');

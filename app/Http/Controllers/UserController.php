@@ -18,12 +18,19 @@ class UserController extends Controller
     public function index()
     {
         // Lấy tất cả người dùng
-        $users = User::with('jobPosition')->get();
+        $users = User::with('jobPosition')->paginate(10);
         return view('users.index', compact('users')); // Trả về view với danh sách người dùng
     }
 
     public function create()
     {
         return view('users.create');
+    }
+
+    public function getAllClients()
+    {
+        // Lấy tất cả người dùng có role là client
+        $users = User::with('jobPosition')->role('client')->paginate(10);
+        return view('users.index', compact('users')); // Trả về view với danh sách người dùng
     }
 }

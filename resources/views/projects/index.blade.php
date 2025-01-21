@@ -120,7 +120,6 @@
                 {{ $projects->links('vendor.pagination.default') }}
             </div>
         </div>
-
     </div>
     <!-- /.card -->
 </section>
