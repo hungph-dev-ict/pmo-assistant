@@ -24,7 +24,7 @@ export default defineConfig({
         'select2-min-css': 'resources/js/plugins/select2/css/select2.min.css',
         'select2-bootstrap4-css': 'resources/js/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css',
         'select2-full-js': 'resources/js/plugins/select2/js/select2.full.min.js',
-        // 'moment-js': 'resources/js/plugins/moment/moment.min.js',
+        // 'moment-js': 'resources/js/plugins/moment/moment-with-locales.min.js',
         'tempusdominus-bootstrap-4-css': 'resources/js/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
         'tempusdominus-bootstrap-4-js': 'resources/js/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
       },

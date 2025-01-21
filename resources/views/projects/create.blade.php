@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('inline_css')
+    <!-- Tempus Dominus CSS -->
+    <link rel="stylesheet" href="{{ asset('build/css/plugins/tempusdominus-bootstrap-4-css.css') }}">
     <link rel="stylesheet" href="{{ asset('build/css/plugins/select2-min-css.css') }}">
     <link rel="stylesheet" href="{{ asset('build/css/plugins/select2-bootstrap4-css.css') }}">
 @endsection
@@ -62,7 +64,7 @@
                         <div class="form-group">
                             <label>Project Manager</label>
                             <select class="form-control select2" style="width: 100%;">
-                                <option selected="selected">Alabama</option>
+                                <option value="" disabled selected>-- Select Project Manager --</option>
                                 <option>Alaska</option>
                                 <option>California</option>
                                 <option>Delaware</option>
@@ -145,19 +147,18 @@
     <!-- Moment.js from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     {{-- <script src="{{ asset('build/js/plugins/moment-js.js') }}"></script> --}}
-    <!-- Tempus Dominus CSS -->
-    <link rel="stylesheet" href="{{ asset('build/css/plugins/tempusdominus-bootstrap-4-css.css') }}">
     <!-- Tempus Dominus JS -->
     <script src="{{ asset('build/js/plugins/tempusdominus-bootstrap-4-js.js') }}"></script>
+@endsection
+
+@section('inline_js_custom')
     <script>
         $(function() {
             //Initialize Select2 Elements
-            $('.select2').select2()
-
-            //Initialize Select2 Elements
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
+            $('.select2').select2({
+            placeholder: "-- Select Project Manager --", // Placeholder hiển thị khi không có lựa chọn
+            allowClear: true // Bật tính năng xóa lựa chọn
+        })
 
             //Date picker
             $('#reservationdate').datetimepicker({
