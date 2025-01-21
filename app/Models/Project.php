@@ -26,12 +26,12 @@ class Project extends Model
         'estimated_project_duration',
 
     ];
-    // protected $casts = [
-    //     'start_date' => 'datetime',
-    //     'end_date' => 'datetime',
-    //     'created_at' => 'datetime',
-    //     'updated_at' => 'datetime',
-    // ];
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
     public function users()
     {

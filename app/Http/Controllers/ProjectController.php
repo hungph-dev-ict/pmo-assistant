@@ -42,7 +42,6 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        dd($project);
         return view('projects.edit');
     }
 
