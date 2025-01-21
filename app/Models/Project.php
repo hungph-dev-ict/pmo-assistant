@@ -17,10 +17,14 @@ class Project extends Model
     protected $fillable = [
         'name',
         'description',
+        'status',
+        'client_company',
+        'project_manager',
         'start_date',
         'end_date',
-        'created_at',
-        'updated_at',
+        'estimated_budget',
+        'estimated_project_duration',
+
     ];
     protected $casts = [
         'start_date' => 'datetime',
