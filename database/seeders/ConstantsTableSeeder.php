@@ -13,6 +13,14 @@ class ConstantsTableSeeder extends Seeder
             [
                 'group' => 'job_position',
                 'key' => '1',
+                'value1' => 'Manager',
+                'value2' => 'Head Account',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'job_position',
+                'key' => '2',
                 'value1' => 'PM',
                 'value2' => 'Project Manager',
                 'created_at' => now(),
@@ -20,7 +28,7 @@ class ConstantsTableSeeder extends Seeder
             ],
             [
                 'group' => 'job_position',
-                'key' => '2',
+                'key' => '3',
                 'value1' => 'BrSE',
                 'value2' => 'Bridge System Engineer',
                 'created_at' => now(),
@@ -28,7 +36,7 @@ class ConstantsTableSeeder extends Seeder
             ],
             [
                 'group' => 'job_position',
-                'key' => '3',
+                'key' => '4',
                 'value1' => 'DEV',
                 'value2' => 'Developer',
                 'created_at' => now(),
@@ -36,7 +44,7 @@ class ConstantsTableSeeder extends Seeder
             ],
             [
                 'group' => 'job_position',
-                'key' => '4',
+                'key' => '5',
                 'value1' => 'TESTER',
                 'value2' => 'Tester',
                 'created_at' => now(),

@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
-class UserSeeder extends Seeder
+class UserTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
             'account' => 'PMO',
             'name' => 'PMO Account',
             'email' => 'pm@gmail.com',
-            'client_head_id' => '2',
+            'tenant_head_acc_id' => '2',
             'job_position' => '1',
             'status' => '1',
             'password' => bcrypt('pm@12345') // Mã hóa mật khẩu
@@ -45,8 +45,8 @@ class UserSeeder extends Seeder
             'account' => 'DEV',
             'name' => 'Dev Account',
             'email' => 'dev@gmail.com',
-            'client_head_id' => '2',
-            'job_position' => '3',
+            'tenant_head_acc_id' => '2',
+            'job_position' => '4',
             'status' => '1',
             'password' => bcrypt('dev@12345') // Mã hóa mật khẩu
         ]);
@@ -55,8 +55,8 @@ class UserSeeder extends Seeder
             'account' => 'TEST',
             'name' => 'Test Account',
             'email' => 'test@gmail.com',
-            'client_head_id' => '2',
-            'job_position' => '4',
+            'tenant_head_acc_id' => '2',
+            'job_position' => '5',
             'status' => '1',
             'password' => bcrypt('test@12345') // Mã hóa mật khẩu
         ]);
