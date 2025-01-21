@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         // Xóa toàn bộ dữ liệu trước khi seed
+        DB::table('plans')->truncate();
         DB::table('projects')->truncate();
         DB::table('project_user')->truncate();
         User::truncate();
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ConstantsTableSeeder::class,
             RolesAndPermissionsSeeder::class,
+            PlansTableSeeder::class,
             UserTableSeeder::class,
             ProjectsTableSeeder::class
         ]);

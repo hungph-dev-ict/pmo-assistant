@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@section('inline_css')
+    {{-- <link rel="stylesheet" href="{{ asset('build/css/plugins/sweetalert2-theme-bootstrap-4-css.css') }}"> --}}
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.15.10/dist/sweetalert2.min.css"> --}}
+    <link rel="stylesheet" href="{{ asset('build/css/plugins/toastr-css.css') }}">
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css"> --}}
+@endsection
+
 @section('content')
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -42,12 +49,12 @@
                             <th style="width: 2%" class="text-center">
                                 #
                             </th>
-                            <th style="width: 30%" class="text-center">
+                            <th style="width: 30%">
                                 Name
                             </th>
                             <th style="width: 3%" class="text-center">
                             </th>
-                            <th style="width: 15%" class="text-center">
+                            <th style="width: 15%">
                                 Head Account
                             </th>
                             <th style="width: 9%" class="text-center">
@@ -101,7 +108,7 @@
                                     {{ $tenant->updated_at }}
                                 </td>
                                 <td class="project-actions text-center">
-                                    <a class="btn btn-info btn-sm" href="#">
+                                    <a class="btn btn-info btn-sm toastsDefaultDefault" href="#">
                                         <i class="fas fa-pencil-alt">
                                         </i>
                                         Edit
@@ -154,7 +161,23 @@
                 </div>
             </div>
         </div>
-
     </section>
     <!-- /.content -->
+@endsection
+
+@section('inline_js')
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.15.10/dist/sweetalert2.all.min.js"></script> --}}
+    {{-- <script src="{{ asset('build/js/plugins/sweetalert2-js.js') }}"></script> --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script> --}}
+    <script src="{{ asset('build/js/plugins/toastr-js.js') }}"></script>
+@endsection
+
+@section('inline_js_custom')
+    <script>
+        @if (session('success'))
+            $(function() {
+                toastr.success('{{ session('success') }}', 'Tenant Created');
+            });
+        @endif
+    </script>
 @endsection

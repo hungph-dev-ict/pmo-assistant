@@ -23,6 +23,7 @@ class User extends Authenticatable
         'account',
         'name',
         'email',
+        'client_head_id',
         'password',
         'job_position',
         'status',

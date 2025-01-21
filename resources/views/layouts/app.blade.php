@@ -12,6 +12,7 @@
     {{-- <script src="https://code.jscharting.com/latest/jscharting.js"></script> --}}
     <!-- Inline CSS -->
     @yield('inline_css')
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css"> --}}
     @vite(['resources/css/app.css'])
 </head>
 
@@ -258,17 +259,17 @@
                                         </a>
                                     </li>
                                     <!-- <li class="nav-item">
-                                        <a href="" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Project Edit</p>
-                                        </a>
-                                    </li> -->
+                                            <a href="" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Project Edit</p>
+                                            </a>
+                                        </li> -->
                                     <!-- <li class="nav-item">
-                                        <a href="" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Project Detail</p>
-                                        </a>
-                                    </li> -->
+                                            <a href="" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Project Detail</p>
+                                            </a>
+                                        </li> -->
                                 </ul>
                             </li>
                             <li class="nav-item {{ request()->is('users*') ? 'menu-open' : '' }}">
@@ -309,36 +310,36 @@
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    @foreach($projects as $project)
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>
-                                                {{ $project->name }}
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="{{ route('pm.task', 1) }}" class="nav-link">
-                                                    <i class="far fa-dot-circle nav-icon"></i>
-                                                    <p>Task Lists</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="{{ route('pm.member', 1) }}" class="nav-link">
-                                                    <i class="far fa-dot-circle nav-icon"></i>
-                                                    <p>Members</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="{{ route('pm.chart', 1) }}" class="nav-link">
-                                                    <i class="far fa-dot-circle nav-icon"></i>
-                                                    <p>Chart</p>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    @foreach ($projects as $project)
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>
+                                                    {{ $project->name }}
+                                                    <i class="right fas fa-angle-left"></i>
+                                                </p>
+                                            </a>
+                                            <ul class="nav nav-treeview">
+                                                <li class="nav-item">
+                                                    <a href="{{ route('pm.task', 1) }}" class="nav-link">
+                                                        <i class="far fa-dot-circle nav-icon"></i>
+                                                        <p>Task Lists</p>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="{{ route('pm.member', 1) }}" class="nav-link">
+                                                        <i class="far fa-dot-circle nav-icon"></i>
+                                                        <p>Members</p>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="{{ route('pm.chart', 1) }}" class="nav-link">
+                                                        <i class="far fa-dot-circle nav-icon"></i>
+                                                        <p>Chart</p>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
                                     @endforeach
                                 </ul>
                             </li>
@@ -380,6 +381,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     @yield('inline_js')
+    {{-- <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script> --}}
     @vite(['resources/js/app.js'])
     @yield('inline_js_custom')
 </body>

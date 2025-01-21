@@ -28,6 +28,10 @@ export default defineConfig({
         // 'moment-js': 'resources/js/plugins/moment/moment-with-locales.min.js',
         'tempusdominus-bootstrap-4-css': 'resources/js/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
         'tempusdominus-bootstrap-4-js': 'resources/js/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
+        'sweetalert2-theme-bootstrap-4-css': 'resources/js/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css',
+        'sweetalert2-js': 'resources/js/plugins/sweetalert2/sweetalert2.min.js',
+        'toastr-css': 'resources/js/plugins/toastr/toastr.min.css',
+        'toastr-js': 'resources/js/plugins/toastr/toastr.min.js',
       },
       output: {
         format: 'cjs', // Chuyển định dạng xuất sang CommonJS

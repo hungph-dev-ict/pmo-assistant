@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TenantService;
 use Illuminate\Http\Request;
 use App\Models\Tenant;
+use App\Models\Plan;
 
 class TenantController extends Controller
 {
+    protected $tenantService;
+
+    // Tiêm TenantService vào controller thông qua constructor
+    public function __construct(TenantService $tenantService)
+    {
+        $this->tenantService = $tenantService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -22,7 +32,8 @@ class TenantController extends Controller
      */
     public function create()
     {
-         return view('tenants.create');
+        $plans = Plan::all();
+        return view('tenants.create', compact(var_name: 'plans'));
     }
 
     /**
@@ -30,7 +41,16 @@ class TenantController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newTenantInfo = $request->all();
+
+        $createNewTenant = $this->tenantService->createTenant($newTenantInfo);
+
+        if($createNewTenant) {
+            return redirect()->route('tenants.index')
+                         ->with('success', 'Tenant created successfully.');
+        }
+
+        return 500;
     }
 
     /**
