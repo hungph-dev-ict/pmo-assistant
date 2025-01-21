@@ -2,6 +2,9 @@
 @import '@fortawesome/fontawesome-free/css/all.min.css';
 @import 'icheck-bootstrap/icheck-bootstrap.min.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Thêm namespace cho các lớp Tailwind */
+.tw- {
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+}
