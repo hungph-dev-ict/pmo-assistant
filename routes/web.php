@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TenantController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PmController;
@@ -23,7 +24,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
-    Route::get('/clients', [UserController::class, 'getAllClients'])->name('admin.get-all-client');
+    Route::resource('/tenants', TenantController::class);
+    Route::resource('/plans', PlanController::class);
 });
 
 Route::group(['middleware' => ['auth', 'role:client']], function () {
