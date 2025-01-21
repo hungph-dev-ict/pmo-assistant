@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         // Xóa toàn bộ dữ liệu trước khi seed
         User::truncate();
         Permission::truncate();
+        DB::table('constants')->truncate();
         DB::table('projects')->truncate();
         Role::truncate();
 
@@ -67,7 +68,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('test@12345') // Mã hóa mật khẩu
         ]);
 
-        Project::factory(100)->create();
+        // Project::factory(100)->create();
 
         //Gán vai trò admin cho user có email admin@gmail.com
         $admin = User::where('email', 'admin@gmail.com')->first();

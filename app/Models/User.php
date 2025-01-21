@@ -64,7 +64,7 @@ class User extends Authenticatable
 
     public function userStatus()
     {
-        return $this->hasOne(Constant::class, 'key', 'status')
+        return $this->hasOne(Constant::class, 'key', 'user_status')
             ->where('group', 'user_status');
     }
 }
