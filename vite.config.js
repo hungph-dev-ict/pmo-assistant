@@ -21,6 +21,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
+        'flag-icon-css': 'resources/js/plugins/flag-icon-css/css/flag-icon.min.css',
         'select2-min-css': 'resources/js/plugins/select2/css/select2.min.css',
         'select2-bootstrap4-css': 'resources/js/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css',
         'select2-full-js': 'resources/js/plugins/select2/js/select2.full.min.js',
