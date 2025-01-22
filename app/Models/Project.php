@@ -54,4 +54,21 @@ class Project extends Model
     {
         return $this->hasMany(Task::class);
     }
+    
+    public static function createProject($projectData)
+    {
+        $newProject = self::create([
+            'name' => $projectData['project_name'],
+            'description' => $projectData['project_description'],
+            'status' => $projectData['project_status'],
+            'client_company' => $projectData['project_client_company'],
+            'project_manager' => $projectData['project_project_manager'],
+            'start_date' => $projectData['project_start_date'],
+            'end_date' => $projectData['project_end_date'],
+            'estimated_budget' => $projectData['project_estimated_budget'],
+            'estimated_project_duration' => $projectData['project_estimated_project_duration'],
+        ]);
+
+        return $newProject;
+    }
 }

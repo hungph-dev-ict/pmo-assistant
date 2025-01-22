@@ -23,4 +23,9 @@ class ProjectService
         $project = Project::withTrashed()->findOrFail($id); // Bao gồm cả project đã bị xóa mềm
         return $project->restore(); // Khôi phục project
     }
+
+    public function createProject(array $data)
+    {
+        return Project::createProject($data);
+    }
 }

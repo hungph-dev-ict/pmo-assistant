@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Services\ProjectService;
-use Illuminate\Http\Request;
+use App\Http\Requests\CreateProjectRequest;
 
 class ProjectController extends Controller
 {
@@ -27,15 +27,27 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return view('projects.create');
+        $listProjectManager  = User::role('pm')->get();
+        $projectStatuses = Constant::where('group', 'project_status')->get();
+        return view('projects.create', compact('listProjectManager', 'projectStatuses'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateProjectRequest $request)
     {
-        //
+        // Dữ liệu đã được validate
+        $newProjectInfo = $request->validated();
+
+        $createNewProject = $this->projectService->createProject($newProjectInfo);
+
+        if ($createNewProject) {
+            return redirect()->route('projects.index')
+                ->with('success', 'Project created successfully.');
+        }
+
+        return 500;
     }
 
     /**

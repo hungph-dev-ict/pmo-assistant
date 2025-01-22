@@ -57,67 +57,181 @@
                 </div>
                 <!-- /.card-body -->
             </div>
-            <!-- /.card -->
-        </div>
-        <div class="col-md-6">
-            <div class="card card-secondary">
-                <div class="card-header">
-                    <h3 class="card-title">Time & Budget</h3>
+        </div><!-- /.container-fluid -->
+    </section>
+    <form action="{{ route('projects.store') }}" method="POST">
+        @csrf
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">General</h3>
 
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <!-- Date -->
-                    <div class="form-group">
-                        <label>Start Date:</label>
-                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input"
-                                data-target="#reservationdate" />
-                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
                             </div>
                         </div>
-                    </div>
-                    <!-- Date -->
-                    <div class="form-group">
-                        <label>End Date:</label>
-                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input"
-                                data-target="#reservationdate" />
-                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="projectName">Project Name</label>
+                                <input type="text" id="projectName" name="project_name"
+                                    class="form-control @error('project_name') is-invalid @enderror">
+                                @error('project_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('project_name') }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="projectDescription">Project Description</label>
+                                <textarea id="projectDescription" name="project_description"
+                                    class="form-control @error('project_description') is-invalid @enderror" rows="3"></textarea>
+                                @error('project_description')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('project_description') }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="projectStatus">Status</label>
+                                <select id="projectStatus" name="project_status"
+                                    class="form-control custom-select @error('project_status') is-invalid @enderror">
+                                    <option selected disabled>Select one</option>
+                                    @foreach ($projectStatuses as $projectStatus)
+                                        <option value="{{ $projectStatus->key }}">{{ $projectStatus->value1 }}</option>
+                                    @endforeach
+                                </select>
+                                @error('project_status')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('project_status') }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="projectClientCompany">Client Company</label>
+                                <input type="text" id="projectClientCompany" name="project_client_company"
+                                    class="form-control @error('project_client_company') is-invalid @enderror">
+                                @error('project_client_company')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('project_client_company') }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="projectProjectManager">Project Manager</label>
+                                <select id="projectProjectManager" name="project_project_manager"
+                                    class="form-control select2 @error('project_project_manager') is-invalid @enderror"
+                                    style="width: 100%;">
+                                    <option value="" disabled selected>-- Select Project Manager --</option>
+                                    @foreach ($listProjectManager as $projectManager)
+                                        <option value="{{ $projectManager->id }}">{{ $projectManager->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('project_project_manager')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('project_project_manager') }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
+                        <!-- /.card-body -->
                     </div>
-                    <div class="form-group">
-                        <label for="inputEstimatedBudget">Estimated budget (MM)</label>
-                        <input type="number" id="inputEstimatedBudget" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputSpentBudget">Total amount spent (MM)</label>
-                        <input type="number" id="inputSpentBudget" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputEstimatedDuration">Estimated project duration (months)</label>
-                        <input type="number" id="inputEstimatedDuration" class="form-control">
-                    </div>
+                    <!-- /.card -->
                 </div>
-                <!-- /.card-body -->
+                <div class="col-md-6">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">Time & Budget</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Date -->
+                            <div class="form-group">
+                                <label for="projectStartDate">Start Date:</label>
+                                <div class="input-group date" id="projectStartDatePicker" data-target-input="nearest">
+                                    <input type="text" id="projectStartDate" name="project_start_date"
+                                        class="form-control datetimepicker-input @error('project_start_date') is-invalid @enderror"
+                                        data-target="#projectStartDatePicker" />
+                                    <div class="input-group-append" data-target="#projectStartDatePicker"
+                                        data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                    @error('project_start_date')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('project_start_date') }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                            </div>
+                            <!-- Date -->
+                            <div class="form-group">
+                                <label for="projectEndDate">End Date:</label>
+                                <div class="input-group date" id="projectEndDatePicker" data-target-input="nearest">
+                                    <input type="text" id="projectEndDate" name="project_end_date"
+                                        class="form-control datetimepicker-input @error('project_end_date') is-invalid @enderror"
+                                        data-target="#projectEndDatePicker" />
+                                    <div class="input-group-append" data-target="#projectEndDatePicker"
+                                        data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                    @error('project_end_date')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('project_end_date') }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="projectEstimatedBudget">Estimated budget (MM)</label>
+                                <input type="text" id="projectEstimatedBudget" name="project_estimated_budget"
+                                    class="form-control @error('project_estimated_budget') is-invalid @enderror">
+                                @error('project_estimated_budget')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('project_estimated_budget') }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="inputSpentBudget">Total amount spent (MM)</label>
+                                <input type="number" id="inputSpentBudget" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="projectEstimatedProjectDuration">Estimated project duration (months)</label>
+                                <input type="text" id="projectEstimatedProjectDuration"
+                                    name="project_estimated_project_duration"
+                                    class="form-control @error('project_estimated_project_duration') is-invalid @enderror">
+                                @error('project_estimated_project_duration')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('project_estimated_project_duration') }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
             </div>
-            <!-- /.card -->
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-12">
-            <a href="#" class="btn btn-secondary">Cancel</a>
-            <input type="submit" value="Create new Project" class="btn btn-success float-right">
-        </div>
-    </div>
+            <div class="row">
+                <div class="col-12">
+                    <a href="#" class="btn btn-secondary">Cancel</a>
+                    <input type="submit" value="Create new Project" class="btn btn-success float-right">
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </form>
 @endsection
 
 @section('inline_js')
@@ -140,9 +254,26 @@
             })
 
             //Date picker
-            $('#reservationdate').datetimepicker({
-                format: 'L'
+            $('#projectStartDatePicker').datetimepicker({
+                format: 'YYYY-MM-DD', // Định dạng ngày
+                useCurrent: false,
             });
+            // Khởi tạo datetimepicker cho reservationdate
+            $('#projectEndDatePicker').datetimepicker({
+                format: 'YYYY-MM-DD',
+                useCurrent: false,
+            });
+            // Ràng buộc khi thay đổi Start Date
+            $('#projectStartDatePicker').on('change.datetimepicker', function(e) {
+                // Cập nhật minDate cho End Date khi Start Date thay đổi
+                $('#projectEndDatePicker').datetimepicker('minDate', e.date);
+            });
+            // Ràng buộc khi thay đổi End Date
+            $('#projectEndDatePicker').on('change.datetimepicker', function(e) {
+                // Cập nhật maxDate cho Start Date khi End Date thay đổi
+                $('#projectStartDatePicker').datetimepicker('maxDate', e.date);
+            });
+
         })
     </script>
 @endsection
