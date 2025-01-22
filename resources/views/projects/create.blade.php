@@ -156,7 +156,7 @@
                         <div class="card-body">
                             <!-- Date -->
                             <div class="form-group">
-                                <label for="projectStartDate">Start Date</label>
+                                <label for="projectStartDate">Start Date:</label>
                                 <div class="input-group date" id="projectStartDatePicker" data-target-input="nearest">
                                     <input type="text" id="projectStartDate" name="project_start_date"
                                         class="form-control datetimepicker-input @error('project_start_date') is-invalid @enderror"
@@ -175,7 +175,7 @@
                             </div>
                             <!-- Date -->
                             <div class="form-group">
-                                <label for="projectEndDate">End Date</label>
+                                <label for="projectEndDate">End Date:</label>
                                 <div class="input-group date" id="projectEndDatePicker" data-target-input="nearest">
                                     <input type="text" id="projectEndDate" name="project_end_date"
                                         class="form-control datetimepicker-input @error('project_end_date') is-invalid @enderror"
