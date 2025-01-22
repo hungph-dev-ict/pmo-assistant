@@ -42,6 +42,7 @@ class Project extends Model
     {
         return $this->belongsTo(Constant::class, 'project_manager', 'key');
     }
+
     public function projectStatus()
     {
         return $this->belongsTo(Constant::class, 'status', 'key')
