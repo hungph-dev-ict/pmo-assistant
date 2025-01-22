@@ -29,6 +29,7 @@ DB_PASSWORD=pmo123456
 1. docker exec -it web-app bash 
 2. php artisan migrate
 3. php artisan db:seed
+4. php artisan optimize
 
 # Git Flow
 
