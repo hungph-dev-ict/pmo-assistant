@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\TenantService;
 use Illuminate\Http\Request;
+use App\Http\Requests\CreateTenantRequest;
 use App\Models\Tenant;
 use App\Models\Plan;
 
@@ -39,15 +40,16 @@ class TenantController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateTenantRequest $request)
     {
-        $newTenantInfo = $request->all();
+        // Dữ liệu đã được validate
+        $newTenantInfo = $request->validated();
 
         $createNewTenant = $this->tenantService->createTenant($newTenantInfo);
 
-        if($createNewTenant) {
+        if ($createNewTenant) {
             return redirect()->route('tenants.index')
-                         ->with('success', 'Tenant created successfully.');
+                ->with('success', 'Tenant created successfully.');
         }
 
         return 500;

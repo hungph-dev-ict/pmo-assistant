@@ -37,21 +37,39 @@
                             @csrf
                             <div class="form-group">
                                 <label for="tenantName">Tenant Name <span style="color: red;">*</span></label>
-                                <input type="text" id="tenantName" name="tenant_name" class="form-control">
+                                <input type="text" id="tenantName" name="tenant_name"
+                                    class="form-control @error('tenant_name') is-invalid @enderror">
+                                @error('tenant_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('tenant_name') }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="tenantDescription">Tenant Description <span style="color: red;">*</span></label>
-                                <textarea id="tenantDescription" name="tenant_description" class="form-control" rows="3"></textarea>
+                                <textarea id="tenantDescription" name="tenant_description"
+                                    class="form-control @error('tenant_description') is-invalid @enderror" rows="3"></textarea>
+                                @error('tenant_description')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('tenant_description') }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="tenantPlan">Plan <span style="color: red;">*</span></label>
-                                <select id="tenantPlan" name="tenant_plan" class="form-control custom-select">
+                                <select id="tenantPlan" name="tenant_plan"
+                                    class="form-control custom-select @error('tenant_plan') is-invalid @enderror">
                                     <option selected disabled>Select one</option>
                                     @foreach ($plans as $plan)
                                         <option value="{{ $plan->id }}">
                                             {{ $plan->name . ' - ' . $plan->price . '$ per user' }}</option>
                                     @endforeach
                                 </select>
+                                @error('tenant_plan')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('tenant_plan') }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                     </div>
                     <!-- /.card-body -->
@@ -72,15 +90,33 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="haEmail">Email <span style="color: red;">*</span></label>
-                            <input type="email" id="haEmail" name="ha_email" class="form-control">
+                            <input type="text" id="haEmail" name="ha_email"
+                                class="form-control @error('ha_email') is-invalid @enderror">
+                            @error('ha_email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('ha_email') }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="haAccount">Account <span style="color: red;">*</span></label>
-                            <input type="text" id="haAccount" name="ha_account" class="form-control">
+                            <input type="text" id="haAccount" name="ha_account"
+                                class="form-control @error('ha_account') is-invalid @enderror">
+                            @error('ha_account')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('ha_account') }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="haFullName">Full Name <span style="color: red;">*</span></label>
-                            <input type="text" id="haFullName" name="ha_full_name" class="form-control">
+                            <input type="text" id="haFullName" name="ha_full_name"
+                                class="form-control @error('ha_full_name') is-invalid @enderror">
+                            @error('ha_full_name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('ha_full_name') }}</strong>
+                                </span>
+                            @enderror
                         </div>
                     </div>
                     <!-- /.card-body -->

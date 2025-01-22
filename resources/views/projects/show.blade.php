@@ -42,7 +42,8 @@
                                 <div class="info-box bg-light">
                                     <div class="info-box-content">
                                         <span class="info-box-text text-center text-muted">Estimated budget</span>
-                                        <span class="info-box-number text-center text-muted mb-0">{{$project->estimated_budget}}</span>
+                                        <span
+                                            class="info-box-number text-center text-muted mb-0">{{ $project->estimated_budget }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -58,7 +59,8 @@
                                 <div class="info-box bg-light">
                                     <div class="info-box-content">
                                         <span class="info-box-text text-center text-muted">Estimated project duration</span>
-                                        <span class="info-box-number text-center text-muted mb-0">{{$project->estimated_project_duration}}</span>
+                                        <span
+                                            class="info-box-number text-center text-muted mb-0">{{ $project->estimated_project_duration }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -71,9 +73,9 @@
                                         <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg"
                                             alt="user image">
                                         <span class="username">
-                                            <a href="#">{{$project->name}}</a>
+                                            <a href="#">{{ $project->name }}</a>
                                         </span>
-                                        <span class="description">{{$project->status}} - {{ $project->start_date}}</span>
+                                        <span class="description">{{ $project->status }} - {{ $project->start_date }}</span>
                                     </div>
                                     <!-- /.user-block -->
                                     <p>
@@ -99,10 +101,10 @@
                         <br>
                         <div class="text-muted">
                             <p class="text-sm">Client Company
-                                <b class="d-block">{{$project->client_company}}</b>
+                                <b class="d-block">{{ $project->client_company }}</b>
                             </p>
                             <p class="text-sm">Project Manager
-                                <b class="d-block">{{$project->project_manager}}</b>
+                                <b class="d-block">{{ $project->project_manager }}</b>
                             </p>
                         </div>
 
