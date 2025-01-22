@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\User;
+use App\Models\Constant;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -17,8 +19,10 @@ class ProjectController extends Controller
     }
 
     public function create()
-    {
-        return view('projects.create');
+    {        
+        $users_pmmanager = User::role('pm')->get();
+        $projects_status = Constant::where('group', 'project_status')->get();
+        return view('projects.create', compact('users_pmmanager', 'projects_status'));
     }
 
     /**
@@ -26,15 +30,40 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Validate dữ liệu
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255', 
+            'description' => 'required|string', 
+            'status' => 'required|integer', 
+            'client_company' => 'required|string|max:100',
+            'project_manager' => 'required|integer|exists:users,id', 
+            'start_date' => 'required|date', 
+            'end_date' => 'required|date', 
+            'estimated_budget' => 'required|numeric|min:0',
+            'estimated_project_duration' => 'required|integer|min:0', 
+        ]);
+        // Lưu dữ liệu vào cơ sở dữ liệu
+        $project = Project::create([
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+            'status' => $validatedData['status'],
+            'client_company' => $validatedData['client_company'],
+            'project_manager' => $validatedData['project_manager'],
+            'start_date' => $validatedData['start_date'],
+            'end_date' => $validatedData['end_date'],
+            'estimated_budget' => $validatedData['estimated_budget'],
+            'estimated_project_duration' => $validatedData['estimated_project_duration'],
+        ]);
+    
+        return redirect()->route('projects.index')->with('success', 'Project created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show($projectId)
     {
-        return view('projects.show',compact('project'));
+        return view('projects.show');
     }
 
     /**
