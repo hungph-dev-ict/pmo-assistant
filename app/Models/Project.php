@@ -35,6 +35,16 @@ class Project extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'project_user');
+        return $this->belongsToMany(User::class, 'project_user'); // Mối quan hệ nhiều-nhiều giữa Project và User
+    }
+
+    public function projectManager()
+    {
+        return $this->belongsTo(Constant::class, 'project_manager', 'key');
+    }
+    public function projectStatus()
+    {
+        return $this->belongsTo(Constant::class, 'status', 'key')
+            ->where('group', 'project_status');
     }
 }
