@@ -42,6 +42,10 @@ class Tenant extends Model
             'tenant_head_acc_id' => $newTenant->id
         ]);
 
-        return $result;
+        if($result) {
+            return $newTenant;
+        }
+
+        return 500;
     }
 }
