@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CreateTenantRequest;
 use App\Models\Tenant;
 use App\Models\Plan;
+use App\Mail\TenantRegisteredMail;
+use Illuminate\Support\Facades\Mail;
 
 class TenantController extends Controller
 {
@@ -46,6 +48,9 @@ class TenantController extends Controller
         $newTenantInfo = $request->validated();
 
         $createNewTenant = $this->tenantService->createTenant($newTenantInfo);
+
+        // Gửi email cho head tenant
+        Mail::to($createNewTenant->email)->send(new TenantRegisteredMail($createNewTenant));
 
         if ($createNewTenant) {
             return redirect()->route('tenants.index')
