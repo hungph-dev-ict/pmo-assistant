@@ -259,17 +259,17 @@
                                         </a>
                                     </li>
                                     <!-- <li class="nav-item">
-                                            <a href="" class="nav-link">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Project Edit</p>
-                                            </a>
-                                        </li> -->
+                                                                        <a href="" class="nav-link">
+                                                                            <i class="far fa-circle nav-icon"></i>
+                                                                            <p>Project Edit</p>
+                                                                        </a>
+                                                                    </li> -->
                                     <!-- <li class="nav-item">
-                                            <a href="" class="nav-link">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Project Detail</p>
-                                            </a>
-                                        </li> -->
+                                                                        <a href="" class="nav-link">
+                                                                            <i class="far fa-circle nav-icon"></i>
+                                                                            <p>Project Detail</p>
+                                                                        </a>
+                                                                    </li> -->
                                 </ul>
                             </li>
                             <li class="nav-item {{ request()->is('users*') ? 'menu-open' : '' }}">
@@ -344,16 +344,20 @@
                                 </ul>
                             </li>
                         @endrole
+                        @auth
+                            <li class="nav-item mt-3" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <a href="#" class="nav-link"
+                                        onclick="event.preventDefault(); this.closest('form').submit();">
+                                        <i class="fas fa-sign-out-alt nav-icon"></i>
+                                        <p>Logout</p>
+                                    </a>
+                                </form>
+                            </li>
+                        @endauth
                     </ul>
                 </nav>
-                <div class="mt-3 ml-3 pb-3 mb-3 d-flex">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">
-                            Logout
-                        </a>
-                    </form>
-                </div>
                 <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->

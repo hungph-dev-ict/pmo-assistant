@@ -29,3 +29,42 @@ DB_PASSWORD=pmo123456
 1. docker exec -it web-app bash 
 2. php artisan migrate
 3. php artisan db:seed
+
+# Git Flow
+
+## Terminal in local
+git pull origin develop --rebase  
+composer install  
+npm run build  
+npm run dev  
+
+## In container
+php artisan migrate  
+php artisan db:seed  
+
+# setting json for Visual Studio Code
+```
+{
+    // Formatter mặc định
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+    // Formatter cho file PHP
+    "[php]": {
+        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+    },
+
+    // Formatter cho file Blade
+    "[blade]": {
+        "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+    },
+
+    // Tùy chọn Blade Formatter
+    "bladeFormatter.format.wrapLineLength": 120, // Độ dài dòng tối đa
+    "bladeFormatter.format.indentSize": 4,      // Kích thước thụt dòng
+    "bladeFormatter.format.useTabs": false,     // Sử dụng spaces thay vì tabs
+
+    // Tùy chọn PHP Formatter
+    "intelephense.format.enable": true,         // Bật định dạng PHP
+    "phpformatter.indent_with_space": true      // Sử dụng spaces thay vì tabs
+}
+```
