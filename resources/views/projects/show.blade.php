@@ -107,7 +107,7 @@
                         <p class="text-sm">Project Manager
                             <b class="d-block">
                                 @if ($project->project_manager)
-                                    {{ $project->projectManager->value1 ?? '' }}
+                                    {{ $project->projectManager->name ?? '' }}
                                 @endif
                             </b>
                         </p>

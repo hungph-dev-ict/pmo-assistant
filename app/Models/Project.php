@@ -40,7 +40,7 @@ class Project extends Model
 
     public function projectManager()
     {
-        return $this->belongsTo(Constant::class, 'project_manager', 'key');
+        return $this->belongsTo(User::class, 'project_manager', 'id');
     }
 
     public function projectStatus()
