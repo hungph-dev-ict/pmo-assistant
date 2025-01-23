@@ -23,7 +23,7 @@ export default defineConfig({
       input: {
         app: 'resources/js/app.js', // Điểm entry chính
         css: 'resources/css/app.css', // File CSS chính
-
+        'fontawesome-free-css': 'resources/js/plugins/fontawesome-free/css/all.min.css',
         'flag-icon-css': 'resources/js/plugins/flag-icon-css/css/flag-icon.min.css',
         'select2-min-css': 'resources/js/plugins/select2/css/select2.min.css',
         'select2-bootstrap4-css': 'resources/js/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css',
