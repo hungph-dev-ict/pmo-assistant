@@ -5,6 +5,14 @@
     <link rel="stylesheet" href="{{ asset('build/css/plugins/tempusdominus-bootstrap-4-css.css') }}">
     <link rel="stylesheet" href="{{ asset('build/css/plugins/select2-min-css.css') }}">
     <link rel="stylesheet" href="{{ asset('build/css/plugins/select2-bootstrap4-css.css') }}">
+    <style>
+        .was-validated .custom-select:invalid,
+        .custom-select.is-invalid {
+            border-color: #dc3545;
+            padding-right: calc(0.75em + 2.3125rem) !important;
+            background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") right 0.75rem center/8px 10px no-repeat, #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e") center right 1.75rem/calc(0.75em + 0.375rem) calc(0.75em + 0.375rem) no-repeat !important;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -79,7 +87,8 @@
                             <div class="form-group">
                                 <label for="projectName">Project Name</label>
                                 <input type="text" id="projectName" name="project_name"
-                                    class="form-control @error('project_name') is-invalid @enderror">
+                                    class="form-control @error('project_name') is-invalid @enderror"
+                                    value="{{ old('project_name') }}">
                                 @error('project_name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('project_name') }}</strong>
@@ -89,7 +98,7 @@
                             <div class="form-group">
                                 <label for="projectDescription">Project Description</label>
                                 <textarea id="projectDescription" name="project_description"
-                                    class="form-control @error('project_description') is-invalid @enderror" rows="3"></textarea>
+                                    class="form-control @error('project_description') is-invalid @enderror" rows="3">{{ old('project_description') }}</textarea>
                                 @error('project_description')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('project_description') }}</strong>
@@ -100,9 +109,11 @@
                                 <label for="projectStatus">Status</label>
                                 <select id="projectStatus" name="project_status"
                                     class="form-control custom-select @error('project_status') is-invalid @enderror">
-                                    <option selected disabled>Select one</option>
+                                    <option selected disabled>Select Status</option>
                                     @foreach ($projectStatuses as $projectStatus)
-                                        <option value="{{ $projectStatus->key }}">{{ $projectStatus->value1 }}</option>
+                                        <option value="{{ $projectStatus->key }}"
+                                            {{ old('project_status') == $projectStatus->key ? 'selected' : '' }}>
+                                            {{ $projectStatus->value1 }}</option>
                                     @endforeach
                                 </select>
                                 @error('project_status')
@@ -114,7 +125,8 @@
                             <div class="form-group">
                                 <label for="projectClientCompany">Client Company</label>
                                 <input type="text" id="projectClientCompany" name="project_client_company"
-                                    class="form-control @error('project_client_company') is-invalid @enderror">
+                                    class="form-control @error('project_client_company') is-invalid @enderror"
+                                    value="{{ old('project_client_company') }}">
                                 @error('project_client_company')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('project_client_company') }}</strong>
@@ -128,7 +140,9 @@
                                     style="width: 100%;">
                                     <option value="" disabled selected>-- Select Project Manager --</option>
                                     @foreach ($listProjectManager as $projectManager)
-                                        <option value="{{ $projectManager->id }}">{{ $projectManager->name }}</option>
+                                        <option value="{{ $projectManager->id }}"
+                                            {{ old('project_project_manager') == $projectManager->id ? 'selected' : '' }}>
+                                            {{ $projectManager->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('project_project_manager')
@@ -160,7 +174,7 @@
                                 <div class="input-group date" id="projectStartDatePicker" data-target-input="nearest">
                                     <input type="text" id="projectStartDate" name="project_start_date"
                                         class="form-control datetimepicker-input @error('project_start_date') is-invalid @enderror"
-                                        data-target="#projectStartDatePicker" />
+                                        data-target="#projectStartDatePicker" value="{{ old('project_start_date') }}" />
                                     <div class="input-group-append" data-target="#projectStartDatePicker"
                                         data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -179,7 +193,7 @@
                                 <div class="input-group date" id="projectEndDatePicker" data-target-input="nearest">
                                     <input type="text" id="projectEndDate" name="project_end_date"
                                         class="form-control datetimepicker-input @error('project_end_date') is-invalid @enderror"
-                                        data-target="#projectEndDatePicker" />
+                                        data-target="#projectEndDatePicker" value="{{ old('project_end_dates') }}" />
                                     <div class="input-group-append" data-target="#projectEndDatePicker"
                                         data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -194,7 +208,8 @@
                             <div class="form-group">
                                 <label for="projectEstimatedBudget">Estimated budget (MM)</label>
                                 <input type="text" id="projectEstimatedBudget" name="project_estimated_budget"
-                                    class="form-control @error('project_estimated_budget') is-invalid @enderror">
+                                    class="form-control @error('project_estimated_budget') is-invalid @enderror"
+                                    value="{{ old('project_estimated_budget') }}">
                                 @error('project_estimated_budget')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('project_estimated_budget') }}</strong>
@@ -203,13 +218,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="inputSpentBudget">Total amount spent (MM)</label>
-                                <input type="number" id="inputSpentBudget" class="form-control">
+                                <input type="number" id="inputSpentBudget" name="total_amount_spent"
+                                    class="form-control" value="{{ old('total_amount_spent') }}">
                             </div>
                             <div class="form-group">
                                 <label for="projectEstimatedProjectDuration">Estimated project duration (months)</label>
                                 <input type="text" id="projectEstimatedProjectDuration"
                                     name="project_estimated_project_duration"
-                                    class="form-control @error('project_estimated_project_duration') is-invalid @enderror">
+                                    class="form-control @error('project_estimated_project_duration') is-invalid @enderror"
+                                    value="{{ old('project_estimated_project_duration') }}">
                                 @error('project_estimated_project_duration')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('project_estimated_project_duration') }}</strong>
