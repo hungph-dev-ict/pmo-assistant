@@ -9,7 +9,7 @@ done
 
 # Chạy migrate
 echo "Running migrations..."
-php artisan migrate --force --seed
+php artisan migrate --force
 
 # Chạy ứng dụng Laravel
 php artisan serve --host=0.0.0.0 --port=8000

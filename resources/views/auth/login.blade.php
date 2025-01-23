@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Tải tài nguyên CSS và JS đã biên dịch từ Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 

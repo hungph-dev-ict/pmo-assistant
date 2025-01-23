@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PmController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
@@ -43,6 +44,15 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
 
 Route::group(['middleware' => ['auth', 'role:user']], function () {
     // Route::get('tasks', [TaskController::class, 'index']);
+});
+
+Route::get('/db-check', function () {
+    try {
+        DB::connection()->getPdo();
+        return "Database connection is working!";
+    } catch (\Exception $e) {
+        return "Database connection error: " . $e->getMessage();
+    }
 });
 
 require __DIR__ . '/auth.php';
