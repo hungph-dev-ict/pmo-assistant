@@ -33,8 +33,8 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 # Copy file cấu hình Nginx
 COPY nginx.conf.local /etc/nginx/nginx.conf
 
-# Mở cổng 8080 cho Nginx
-EXPOSE 8080
+# Mở cổng 9000 cho Nginx
+EXPOSE 9000
 
 # Khởi chạy PHP-FPM và Nginx
 CMD service nginx start && php-fpm
