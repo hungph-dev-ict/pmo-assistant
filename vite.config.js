@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import path from 'path';
+import { globSync } from 'glob'; // Thay thế cách import
 
 export default defineConfig({
   plugins: [
@@ -8,6 +9,7 @@ export default defineConfig({
       input: [
         'resources/css/app.css',
         'resources/js/app.js',
+        ...globSync('resources/images/adminlte/**/*.{png,jpg,jpeg,svg,gif}'), // Thêm tất cả hình ảnh từ thư mục images/adminlte
       ],
       refresh: true,
     }),
@@ -23,6 +25,12 @@ export default defineConfig({
       input: {
         app: 'resources/js/app.js', // Điểm entry chính
         css: 'resources/css/app.css', // File CSS chính
+        ...Object.fromEntries(
+          globSync('resources/images/adminlte/**/*.*').map((file) => [
+            file.replace('resources/', '').replace(/\//g, '-'),
+            path.resolve(__dirname, file),
+          ])
+        ),
         'fontawesome-free-css': 'resources/js/plugins/fontawesome-free/css/all.min.css',
         'flag-icon-css': 'resources/js/plugins/flag-icon-css/css/flag-icon.min.css',
         'select2-min-css': 'resources/js/plugins/select2/css/select2.min.css',
@@ -45,8 +53,8 @@ export default defineConfig({
           if (/\.css$/.test(assetInfo.name)) {
             return 'css/plugins/[name][extname]'; // CSS đưa vào thư mục css/plugins
           }
-          if (/\.png|\.jpg|\.jpeg|\.svg$/.test(assetInfo.name)) {
-            return 'images/[name][extname]'; // Hình ảnh đưa vào thư mục images
+          if (/\.png|\.jpg|\.jpeg|\.svg|\.gif$/.test(assetInfo.name)) {
+            return 'images/plugins/[name][extname]'; // Hình ảnh đưa vào thư mục images/plugins
           }
           return '[name][extname]'; // Các tệp khác giữ nguyên tên
         },
