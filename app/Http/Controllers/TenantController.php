@@ -23,7 +23,7 @@ class TenantController extends Controller
      */
     public function index()
     {
-        $tenants = Tenant::with(['headUser:id,account,name', 'plan:id,name'])->paginate(10);
+        $tenants = Tenant::withTrashed()->with(['headUser:id,account,name', 'plan:id,name'])->paginate(10);
 
         return view('tenants.index', compact('tenants'));
     }
@@ -84,6 +84,28 @@ class TenantController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Xóa tenant bằng TenantService
+        $result = $this->tenantService->deleteTenantById($id);
+        
+        if ($result) {
+            return redirect()->route('tenants.index')->with('success', 'Tenant deleted successfully.');
+        }
+
+        return redirect()->route('tenants.index')->with('error', 'Failed to delete tenant.');
+    }
+
+    /**
+     * Restore the specified tenant from soft deletes.
+     */
+    public function restore(string $id)
+    {
+        // Khôi phục tenant bằng TenantService
+        $result = $this->tenantService->restoreTenantById($id);
+
+        if ($result) {
+            return redirect()->route('tenants.index')->with('success', 'Tenant restored successfully.');
+        }
+
+        return redirect()->route('tenants.index')->with('error', 'Failed to restore tenant.');
     }
 }

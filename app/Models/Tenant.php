@@ -3,11 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
 
 class Tenant extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['name', 'description', 'head_user_id', 'plan_id'];
+
+    protected $dates = ['deleted_at']; // Đảm bảo Laravel hiểu cột này là kiểu datetime
 
     public function headUser()
     {

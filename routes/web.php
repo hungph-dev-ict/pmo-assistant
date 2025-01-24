@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
 
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::resource('/tenants', TenantController::class);
+    // Route để khôi phục tenant
+    Route::post('tenants/{id}/restore', [TenantController::class, 'restore'])->name('tenants.restore');
     Route::resource('/plans', PlanController::class);
 });
 
