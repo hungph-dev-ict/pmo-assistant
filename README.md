@@ -14,7 +14,7 @@ DB_PASSWORD=pmo123456
 7. docker pull hungph1996/pmo-assistant:latest
 8. npm run build
 9. npm run dev
-10. docker-compose up -d
+10. docker-compose up -d --build
 11. Run command in the below section **In container**
 
 # Re-build container on Docker Hub
@@ -42,6 +42,7 @@ npm run dev
 ## In container
 php artisan migrate  
 php artisan db:seed  
+php artisan optimize  
 
 # setting json for Visual Studio Code
 ```
