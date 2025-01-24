@@ -11,5 +11,5 @@ done
 echo "Running migrations..."
 php artisan migrate --force
 
-# Chạy ứng dụng Laravel
-php artisan serve --host=0.0.0.0 --port=8000
+# Khởi động PHP-FPM
+php-fpm
