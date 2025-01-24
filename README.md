@@ -42,7 +42,7 @@ npm run dev
 ## In container
 php artisan migrate  
 php artisan db:seed  
-php artisan optimize  
+php artisan optimize:clear  
 
 # setting json for Visual Studio Code
 ```
