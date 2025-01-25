@@ -13,10 +13,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Dashboard</h3>
+                    <h3 class="card-title">{{ __('messages.dashboard') }}</h3>
                 </div>
                 <div class="card-body">
-                    <p>Welcome to your AdminLTE dashboard.</p>
+                    <p>{{ __('messages.welcome') }}</p>
                     <!-- You can add more components here like charts, tables, etc. -->
                 </div>
             </div>

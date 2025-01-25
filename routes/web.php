@@ -58,4 +58,12 @@ Route::get('/db-check', function () {
     }
 });
 
+Route::get('locale/{lang}', function ($lang) {
+    if (in_array($lang, ['en', 'jp', 'vi'])) {
+        session(['lang' => $lang]);
+        app()->setLocale($lang);
+    }
+    return redirect()->back();
+});
+
 require __DIR__ . '/auth.php';

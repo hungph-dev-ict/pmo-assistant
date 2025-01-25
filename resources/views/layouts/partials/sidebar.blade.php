@@ -1,6 +1,5 @@
-<!-- resources/views/layouts/partials/sidebar.blade.php -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <a href="{{ route('dashboard')}}" class="brand-link">
+    <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ Vite::asset('resources/images/adminlte/AdminLTELogo.png') }}" alt="AdminLTE Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">PMO Assistant</span>
@@ -34,7 +33,7 @@
                         <a href="pages/gallery.html" class="nav-link {{ request()->is('pages*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-book"></i>
                             <p>
-                                Project Management
+                                {{ __('messages.project_management') }}
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
@@ -52,19 +51,19 @@
                                         <li class="nav-item">
                                             <a href="{{ route('pm.task', 1) }}" class="nav-link">
                                                 <i class="far fa-dot-circle nav-icon"></i>
-                                                <p>Task Lists</p>
+                                                <p>{{ __('messages.task_lists') }}</p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="{{ route('pm.member', 1) }}" class="nav-link">
                                                 <i class="far fa-dot-circle nav-icon"></i>
-                                                <p>Members</p>
+                                                <p>{{ __('messages.members') }}</p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="{{ route('pm.chart', 1) }}" class="nav-link">
                                                 <i class="far fa-dot-circle nav-icon"></i>
-                                                <p>Chart</p>
+                                                <p>{{ __('messages.chart') }}</p>
                                             </a>
                                         </li>
                                     </ul>
@@ -81,7 +80,7 @@
                             <a href="#" class="nav-link"
                                 onclick="event.preventDefault(); this.closest('form').submit();">
                                 <i class="fas fa-sign-out-alt nav-icon"></i>
-                                <p>Logout</p>
+                                <p>{{ __('messages.logout') }}</p>
                             </a>
                         </form>
                     </li>
