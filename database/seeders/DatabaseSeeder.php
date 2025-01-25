@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         DB::table('projects')->truncate();
         DB::table('project_user')->truncate();
         User::truncate();
+        DB::table('tenants')->truncate();
         Permission::truncate();
         DB::table('constants')->truncate();
         Role::truncate();
@@ -32,7 +33,12 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             PlansTableSeeder::class,
             UserTableSeeder::class,
-            ProjectsTableSeeder::class
+            ProjectsTableSeeder::class,
+            TenantsTableSeeder::class,
         ]);
+
+        // Cập nhật tất cả các users để có tenant_id = 2
+        DB::table('users')
+            ->update(['tenant_id' => 2]);
     }
 }

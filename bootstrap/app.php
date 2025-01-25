@@ -4,6 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\ShareProjectManagerData;
+use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\SetLocaleByIp;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,6 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->web(append: [
             ShareProjectManagerData::class,
+            SetLocale::class,
+            SetLocaleByIp::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\DB;
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
     })->name('dashboard');
     //     Route::resource('projects', ProjectController::class);
 
@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
 
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::resource('/tenants', TenantController::class);
+    // Route để khôi phục tenant
+    Route::post('tenants/{id}/restore', [TenantController::class, 'restore'])->name('tenants.restore');
     Route::resource('/plans', PlanController::class);
 });
 
@@ -35,6 +37,7 @@ Route::group(['middleware' => ['auth', 'role:client']], function () {
 
 Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::resource('projects', ProjectController::class);
+    Route::post('projects/{id}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');
         Route::get('/member', [PmController::class, 'listMembers'])->name('pm.member');
@@ -53,6 +56,14 @@ Route::get('/db-check', function () {
     } catch (\Exception $e) {
         return "Database connection error: " . $e->getMessage();
     }
+});
+
+Route::get('locale/{lang}', function ($lang) {
+    if (in_array($lang, ['en', 'jp', 'vi'])) {
+        session(['lang' => $lang]);
+        app()->setLocale($lang);
+    }
+    return redirect()->back();
 });
 
 require __DIR__ . '/auth.php';
