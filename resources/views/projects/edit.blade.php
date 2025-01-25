@@ -1,25 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1>Project Edit</h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">Project Edit</li>
-                </ol>
-            </div>
-        </div>
-    </div><!-- /.container-fluid -->
-</section>
-
-<!-- Main content -->
-<section class="content">
     <div class="row">
         <div class="col-md-6">
             <div class="card card-primary">
@@ -85,7 +66,8 @@
                     </div>
                     <div class="form-group">
                         <label for="inputEstimatedDuration">Estimated project duration</label>
-                        <input type="number" id="inputEstimatedDuration" class="form-control" value="20" step="0.1">
+                        <input type="number" id="inputEstimatedDuration" class="form-control" value="20"
+                            step="0.1">
                     </div>
                 </div>
                 <!-- /.card-body -->
@@ -172,6 +154,4 @@
             <input type="submit" value="Save Changes" class="btn btn-success float-right">
         </div>
     </div>
-</section>
-<!-- /.content -->
 @endsection

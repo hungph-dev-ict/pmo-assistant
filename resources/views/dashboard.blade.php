@@ -1,5 +1,13 @@
 @extends('layouts.app')
 
+@section('page_title')
+    Dashboard
+@endsection
+
+@section('breadcrumb')
+    <li class="breadcrumb-item">Dashboard</li>
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-12">
