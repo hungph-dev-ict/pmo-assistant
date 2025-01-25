@@ -10,7 +10,7 @@ class Tenant extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name', 'description', 'head_user_id', 'plan_id'];
+    protected $fillable = ['name', 'description', 'head_user_id', 'logo', 'plan_id'];
 
     protected $casts = [
         'created_at' => 'datetime',
@@ -28,12 +28,13 @@ class Tenant extends Model
         return $this->belongsTo(Plan::class, 'plan_id');
     }
 
-    public static function createTenant($tenantData)
+    public static function createTenant($tenantData, $logo_path, $ha_avatar)
     {
         $newUser = User::create([
             'account' => $tenantData['ha_account'],
             'name' => $tenantData['ha_full_name'],
             'email' => $tenantData['ha_email'],
+            'avatar' => $ha_avatar,
             'job_position' => '1',
             'status' => '1',
             'email_verified_at' => Carbon::now(),
@@ -46,6 +47,7 @@ class Tenant extends Model
             'name' => $tenantData['tenant_name'],
             'description' => $tenantData['tenant_description'],
             'head_user_id' => $newUser->id,
+            'logo' => $logo_path,
             'plan_id' => $tenantData['tenant_plan']
         ]);
 

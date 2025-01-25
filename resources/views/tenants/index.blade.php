@@ -35,6 +35,8 @@
                         <th style="width: 2%" class="text-center">
                             #
                         </th>
+                        <th style="width: 5%" class="text-center">
+                        </th>
                         <th style="width: 15%">
                             Name
                         </th>
@@ -43,7 +45,7 @@
                         </th>
                         <th style="width: 3%" class="text-center">
                         </th>
-                        <th style="width: 15%">
+                        <th style="width: 10%">
                             Head Account
                         </th>
                         <th style="width: 9%" class="text-center">
@@ -61,6 +63,10 @@
                                 {{ $tenant->id }}
                             </td>
                             <td>
+                                <img src="{{ $tenant->logo_base64 }}" alt="Logo of {{ $tenant->name }}"
+                                    style="max-width: 100%; max-height: 3.8rem;" loading="lazy" />
+                            </td>
+                            <td>
                                 {{ $tenant->name }}
                             </td>
                             <td>
@@ -68,10 +74,15 @@
                             </td>
                             <td>
                                 <ul class="list-inline">
-                                    <li class="list-inline-item">
-                                        <img alt="Avatar" class="table-avatar"
-                                            src="{{ Vite::asset('resources/images/adminlte/avatar4.png') }}">
-                                    </li>
+                                    @if ($tenant->headUser->avatar)
+                                        <img src="{{ $tenant->ha_avatar_base64 }}" alt="Avatar of {{ $tenant->headUser->name }}"
+                                            style="max-width: 100%; max-height: 3.8rem;" loading="lazy" />
+                                    @else
+                                        <li class="list-inline-item">
+                                            <img alt="Avatar" class="table-avatar"
+                                                src="{{ Vite::asset('resources/images/adminlte/avatar4.png') }}">
+                                        </li>
+                                    @endif
                                 </ul>
                             </td>
                             <td>

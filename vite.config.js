@@ -42,6 +42,7 @@ export default defineConfig({
         'sweetalert2-js': 'resources/js/plugins/sweetalert2/sweetalert2.min.js',
         'toastr-css': 'resources/js/plugins/toastr/toastr.min.css',
         'toastr-js': 'resources/js/plugins/toastr/toastr.min.js',
+        'bs-custom-file-input': 'resources/js/plugins/bs-custom-file-input/bs-custom-file-input.min.js'
       },
       output: {
         format: 'cjs', // Chuyển định dạng xuất sang CommonJS

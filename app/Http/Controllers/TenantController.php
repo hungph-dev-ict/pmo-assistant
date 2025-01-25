@@ -3,19 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Services\TenantService;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateTenantRequest;
 use App\Models\Tenant;
 use App\Models\Plan;
+use Log;
 
 class TenantController extends Controller
 {
     protected $tenantService;
+    protected $imageUploadService;
 
     // Tiêm TenantService vào controller thông qua constructor
-    public function __construct(TenantService $tenantService)
+    public function __construct(TenantService $tenantService, ImageUploadService $imageUploadService)
     {
         $this->tenantService = $tenantService;
+        $this->imageUploadService = $imageUploadService;
     }
 
     /**
@@ -23,7 +27,31 @@ class TenantController extends Controller
      */
     public function index()
     {
-        $tenants = Tenant::withTrashed()->with(['headUser:id,account,name', 'plan:id,name'])->paginate(10);
+        // Lấy danh sách tenants
+        $tenants = Tenant::withTrashed()->with(['headUser:id,account,name,avatar', 'plan:id,name'])->paginate(5);
+        foreach ($tenants as $tenant) {
+            // Kiểm tra nếu tenant chưa có logo đã mã hóa
+            if (!$tenant->logo) {
+                // Nếu không có logo, sử dụng URL mặc định
+                $fileContent = file_get_contents('https://drive.google.com/uc?export=view&id=191jpGTBMy5o_ZyQLbNOBTKiOUYiPhG2X');
+            } else {
+                // Tải nội dung của logo từ URL
+                $fileContent = file_get_contents($tenant->logo);
+            }
+
+            // Mã hóa ảnh thành Base64
+            $tenant->logo_base64 = 'data:image/jpeg;base64,' . base64_encode($fileContent);
+            Log::info('----');
+            Log::info($tenant->headUser);
+            if (!$tenant->headUser->avatar) {
+                $tenant->ha_avatar_base64 = '';
+            } else {
+                // Tải nội dung của logo từ URL
+                $fileContent = file_get_contents($tenant->headUser->avatar);
+                // Mã hóa ảnh thành Base64
+                $tenant->ha_avatar_base64 = 'data:image/jpeg;base64,' . base64_encode($fileContent);
+            }
+        }
 
         return view('tenants.index', compact('tenants'));
     }
@@ -45,12 +73,15 @@ class TenantController extends Controller
         // Dữ liệu đã được validate
         $newTenantInfo = $request->validated();
 
-        $createNewTenant = $this->tenantService->createTenant($newTenantInfo);
+        // Gọi service xử lý ảnh
+        $logo_url = $this->imageUploadService->uploadToGoogleDrive('tenant_logo', $request->file('tenant_logo'));
+        $ha_avatar = $this->imageUploadService->uploadToGoogleDrive('ha_avatar', $request->file('ha_avatar'));
 
-        if ($createNewTenant) {
-            return redirect()->route('tenants.index')
-                ->with('success', 'Tenant created successfully.');
-        }
+            $createNewTenant = $this->tenantService->createTenant($newTenantInfo, $logo_url, $ha_avatar);
+            if ($createNewTenant) {
+                return redirect()->route('tenants.index')
+                    ->with('success', 'Tenant created successfully.');
+            }
 
         return 500;
     }
@@ -86,7 +117,7 @@ class TenantController extends Controller
     {
         // Xóa tenant bằng TenantService
         $result = $this->tenantService->deleteTenantById($id);
-        
+
         if ($result) {
             return redirect()->route('tenants.index')->with('success', 'Tenant deleted successfully.');
         }

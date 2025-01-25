@@ -9,9 +9,9 @@ use App\Models\User;
 
 class TenantService
 {
-    public function createTenant(array $data)
+    public function createTenant(array $data, $logo_path, $ha_avatar)
     {
-        $newTenant = Tenant::createTenant($data);
+        $newTenant = Tenant::createTenant($data, $logo_path, $ha_avatar);
 
         // Gửi email cho head tenant
         Mail::to($newTenant->headUser->email)->send(new TenantRegisteredMail($newTenant));

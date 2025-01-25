@@ -1,5 +1,21 @@
 @extends('layouts.app')
 
+@section('inline_css')
+    <style>
+        /* Custom style for error messages */
+        .custom-invalid-feedback {
+            display: block;
+            /* Ensure it is displayed */
+            color: #dc3545;
+            /* Red color to match standard error messages */
+            font-size: 80%;
+            /* Slightly smaller text */
+            margin-top: 0.25rem;
+            /* Add some spacing */
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-md-6">
@@ -14,7 +30,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('tenants.store') }}" method="POST">
+                    <form action="{{ route('tenants.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="tenantName">Tenant Name <span style="color: red;">*</span></label>
@@ -37,6 +53,29 @@
                                 </span>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label for="tenant_logo">Tenant Logo</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" name="tenant_logo"
+                                        class="custom-file-input @error('tenant_logo') is-invalid @enderror"
+                                        id="tenantLogo">
+                                    <label class="custom-file-label" for="tenantLogo">Choose file</label>
+                                </div>
+
+                            </div>
+                            <!-- Thẻ img để hiển thị ảnh xem trước -->
+                            <div class="mt-3">
+                                <img id="previewTenantLogo" src="#" alt="PreviewLogo" class="img-fluid img-thumbnail"
+                                    style="max-width: 200px; display: none;">
+                            </div>
+                            @error('tenant_logo')
+                                <span class="custom-invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('tenant_logo') }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
                         <div class="form-group">
                             <label for="tenantPlan">Plan <span style="color: red;">*</span></label>
                             <select id="tenantPlan" name="tenant_plan"
@@ -103,10 +142,31 @@
                             </span>
                         @enderror
                     </div>
+                    <div class="form-group">
+                        <label for="ha_avatar">Upload Avatar</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" name="ha_avatar"
+                                    class="custom-file-input @error('ha_avatar') is-invalid @enderror"" id="haAvatar">
+                                <label class="custom-file-label" for="haAvatar">Choose file</label>
+
+                            </div>
+                        </div>
+                        <!-- Thẻ img để hiển thị ảnh xem trước -->
+                        <div class="mt-3">
+                            <img id="previewHaAvatar" src="#" alt="PreviewAvatar" class="img-fluid img-thumbnail"
+                                style="max-width: 200px; display: none;">
+                        </div>
+                        @error('ha_avatar')
+                            <span class="custom-invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('ha_avatar') }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    <!-- /.card-body -->
                 </div>
-                <!-- /.card-body -->
+                <!-- /.card -->
             </div>
-            <!-- /.card -->
         </div>
     </div>
     <div class="row">
@@ -116,4 +176,48 @@
         </div>
     </div>
     </form>
+@endsection
+
+@section('inline_js')
+    @vite(['resources/js/plugins/bs-custom-file-input/bs-custom-file-input.min.js'])
+@endsection
+
+@section('custom_inline_js')
+    <script>
+        $(function() {
+            bsCustomFileInput.init();
+        });
+
+        $(document).on('change', '#tenantLogo', function(event) {
+            const inputFile = event.target.files[0]; // Lấy file được chọn
+            const previewTenantLogo = $('#previewTenantLogo'); // Thẻ img để xem trước
+
+            if (inputFile) {
+                const reader = new FileReader(); // Tạo FileReader để đọc file
+                reader.onload = function(e) {
+                    previewTenantLogo.attr('src', e.target.result); // Gán URL hình ảnh vào thẻ img
+                    previewTenantLogo.show(); // Hiển thị ảnh
+                };
+                reader.readAsDataURL(inputFile); // Đọc file dưới dạng URL
+            } else {
+                previewTenantLogo.hide(); // Nếu không có file, ẩn ảnh xem trước
+            }
+        });
+
+        $(document).on('change', '#haAvatar', function(event) {
+            const inputFile = event.target.files[0]; // Lấy file được chọn
+            const previewHaAvatar = $('#previewHaAvatar'); // Thẻ img để xem trước
+
+            if (inputFile) {
+                const reader = new FileReader(); // Tạo FileReader để đọc file
+                reader.onload = function(e) {
+                    previewHaAvatar.attr('src', e.target.result); // Gán URL hình ảnh vào thẻ img
+                    previewHaAvatar.show(); // Hiển thị ảnh
+                };
+                reader.readAsDataURL(inputFile); // Đọc file dưới dạng URL
+            } else {
+                previewHaAvatar.hide(); // Nếu không có file, ẩn ảnh xem trước
+            }
+        });
+    </script>
 @endsection
