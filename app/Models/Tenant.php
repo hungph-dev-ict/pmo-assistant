@@ -12,7 +12,11 @@ class Tenant extends Model
 
     protected $fillable = ['name', 'description', 'head_user_id', 'plan_id'];
 
-    protected $dates = ['deleted_at']; // Đảm bảo Laravel hiểu cột này là kiểu datetime
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
 
     public function headUser()
     {
@@ -36,18 +40,20 @@ class Tenant extends Model
             'password' => bcrypt('client@123')
         ]);
 
+        $newUser->assignRole('client');
+
         $newTenant = self::create([
             'name' => $tenantData['tenant_name'],
             'description' => $tenantData['tenant_description'],
             'head_user_id' => $newUser->id,
             'plan_id' => $tenantData['tenant_plan']
         ]);
-        
+
         $result = $newUser->update([
-            'tenant_head_acc_id' => $newTenant->id
+            'tenant_id' => $newTenant->id
         ]);
 
-        if($result) {
+        if ($result) {
             return $newTenant;
         }
 

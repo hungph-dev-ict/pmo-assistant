@@ -1,10 +1,7 @@
 @extends('layouts.app')
 
 @section('inline_css')
-    {{-- <link rel="stylesheet" href="{{ asset('build/css/plugins/sweetalert2-theme-bootstrap-4-css.css') }}"> --}}
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.15.10/dist/sweetalert2.min.css"> --}}
     <link rel="stylesheet" href="{{ asset('build/css/plugins/toastr-css.css') }}">
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css"> --}}
 @endsection
 
 @section('content')
@@ -37,20 +34,23 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    {{-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
                         <i class="fas fa-times"></i>
-                    </button>
+                    </button> --}}
                 </div>
             </div>
             <div class="card-body p-0">
-                <table class="table table-striped projects">
+                <table class="table projects">
                     <thead>
                         <tr>
                             <th style="width: 2%" class="text-center">
                                 #
                             </th>
-                            <th style="width: 30%">
+                            <th style="width: 15%">
                                 Name
+                            </th>
+                            <th style="width: 41%">
+                                Description
                             </th>
                             <th style="width: 3%" class="text-center">
                             </th>
@@ -60,12 +60,6 @@
                             <th style="width: 9%" class="text-center">
                                 Current Plan
                             </th>
-                            <th style="width: 13%" class="text-center">
-                                Created At
-                            </th>
-                            <th style="width: 13%" class="text-center">
-                                Updated At
-                            </th>
                             <th style="width: 15%" class="text-center">
                                 Action
                             </th>
@@ -73,12 +67,15 @@
                     </thead>
                     <tbody>
                         @foreach ($tenants as $tenant)
-                            <tr>
+                            <tr class="{{ $tenant->trashed() ? 'table-secondary' : '' }}">
                                 <td>
                                     {{ $tenant->id }}
                                 </td>
                                 <td>
                                     {{ $tenant->name }}
+                                </td>
+                                <td>
+                                    {{ $tenant->description }}
                                 </td>
                                 <td>
                                     <ul class="list-inline">
@@ -100,12 +97,6 @@
 
                                 <td class="text-center">
                                     {{ $tenant->plan->name ?? 'N/A' }}
-                                </td>
-                                <td class="text-center">
-                                    {{ $tenant->created_at }}
-                                </td>
-                                <td class="text-center">
-                                    {{ $tenant->updated_at }}
                                 </td>
                                 <td class="project-actions">
                                     <div class="d-flex justify-content-center">
@@ -169,9 +160,10 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
-                        <form method="POST" action="{{ route('tenants.restore', $tenant->id) }}">
+                        <form method="POST" id="deleteTenantForm" action="{{ route('tenants.destroy', $tenant->id) }}">
                             @csrf
-                            <button type="submit" class="btn btn-success">Restore</button>
+                            @method("DELETE")
+                            <button type="submit" class="btn btn-outline-light">Delete</button>
                         </form>
                     </div>
                 </div>
@@ -182,9 +174,6 @@
 @endsection
 
 @section('inline_js')
-    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.15.10/dist/sweetalert2.all.min.js"></script> --}}
-    {{-- <script src="{{ asset('build/js/plugins/sweetalert2-js.js') }}"></script> --}}
-    {{-- <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script> --}}
     <script src="{{ asset('build/js/plugins/toastr-js.js') }}"></script>
 @endsection
 

@@ -35,7 +35,7 @@ class UserTableSeeder extends Seeder
             'account' => 'PMO',
             'name' => 'PMO Account',
             'email' => 'pm@gmail.com',
-            'tenant_head_acc_id' => '2',
+            'tenant_id' => NULL,
             'job_position' => '1',
             'status' => '1',
             'password' => bcrypt('pm@12345') // Mã hóa mật khẩu
@@ -45,7 +45,7 @@ class UserTableSeeder extends Seeder
             'account' => 'DEV',
             'name' => 'Dev Account',
             'email' => 'dev@gmail.com',
-            'tenant_head_acc_id' => '2',
+            'tenant_id' => NULL,
             'job_position' => '4',
             'status' => '1',
             'password' => bcrypt('dev@12345') // Mã hóa mật khẩu
@@ -55,7 +55,7 @@ class UserTableSeeder extends Seeder
             'account' => 'TEST',
             'name' => 'Test Account',
             'email' => 'test@gmail.com',
-            'tenant_head_acc_id' => '2',
+            'tenant_id' => NULL,
             'job_position' => '5',
             'status' => '1',
             'password' => bcrypt('test@12345') // Mã hóa mật khẩu
@@ -67,11 +67,11 @@ class UserTableSeeder extends Seeder
             $admin->assignRole('admin');
         }
 
-         //Gán vai trò admin cho user có email admin@gmail.com
-         $admin = User::where('email', 'client@gmail.com')->first();
-         if ($admin) {
-             $admin->assignRole('client');
-         }
+        //Gán vai trò admin cho user có email admin@gmail.com
+        $admin = User::where('email', 'client@gmail.com')->first();
+        if ($admin) {
+            $admin->assignRole('client');
+        }
 
         // Gán vai trò pm cho user có email pm@gmail.com
         $pm = User::where('email', 'pm@gmail.com')->first();
