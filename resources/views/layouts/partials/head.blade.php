@@ -3,7 +3,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <title>PMO-A | @yield('page_title', config('app.name', 'PMO Assistant'))</title>
 @vite(['resources/js/plugins/fontawesome-free/css/all.min.css'])
-<link rel="stylesheet" href="{{ asset('build/css/plugins/flag-icon-css.css') }}">
+@vite(['resources/js/plugins/flag-icon-css/css/flag-icon.min.css'])
 <!-- Font Awesome Icons -->
 {{-- <script src="https://code.jscharting.com/latest/jscharting.js"></script> --}}
 <!-- Inline CSS -->

@@ -145,7 +145,7 @@
                 entries
             </div>
             <div class="pagination-wrapper ml-auto">
-                {{ $users->links('vendor.pagination.default') }}
+                {{ $users->links('vendor.pagination.bootstrap-4') }}
             </div>
         </div>
     </div>

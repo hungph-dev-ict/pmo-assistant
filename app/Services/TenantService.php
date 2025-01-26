@@ -12,9 +12,10 @@ class TenantService
     public function createTenant(array $data, $logo_path, $ha_avatar)
     {
         $newTenant = Tenant::createTenant($data, $logo_path, $ha_avatar);
+        $createdPassword = $data['ha_password'];
 
         // Gửi email cho head tenant
-        Mail::to($newTenant->headUser->email)->send(new TenantRegisteredMail($newTenant));
+        Mail::to($newTenant->headUser->email)->send(new TenantRegisteredMail($newTenant, $createdPassword));
 
         return $newTenant;
     }

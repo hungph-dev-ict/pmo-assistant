@@ -10,6 +10,7 @@ use App\Models\Tenant;
 use App\Models\Plan;
 use App\Helpers\ImageHelper;
 use Illuminate\Support\Facades\Cache;
+use Log;
 
 class TenantController extends Controller
 {
@@ -29,7 +30,7 @@ class TenantController extends Controller
     public function index()
     {
         // Lấy danh sách tenants
-        $tenants = Tenant::withTrashed()->with(['headUser:id,account,name,avatar', 'plan:id,name'])->paginate(5);
+        $tenants = Tenant::withTrashed()->with(['headUser:id,account,name,avatar,tenant_id', 'plan:id,name'])->paginate(5);
         // Đường dẫn ảnh mặc định
         $defaultTenantLogo = 'https://drive.google.com/uc?export=view&id=191jpGTBMy5o_ZyQLbNOBTKiOUYiPhG2X';
         $defaultHaAvatar = 'https://drive.google.com/uc?export=view&id=1lv0f70ekHE_5AH7o6NQPEF9PmCPgc6Mk';
@@ -75,7 +76,8 @@ class TenantController extends Controller
     public function create()
     {
         $plans = Plan::all();
-        return view('tenants.create', compact(var_name: 'plans'));
+
+        return view('tenants.create', compact('plans'));
     }
 
     /**
@@ -112,7 +114,8 @@ class TenantController extends Controller
      */
     public function edit(string $id)
     {
-        $tenant = Tenant::with(['headUser:id,email,account,name,avatar', 'plan:id,name'])->findOrFail($id);
+        $tenant = Tenant::with(['headUser:id,email,account,name,avatar,tenant_id', 'plan:id,name'])->findOrFail($id);
+        Log::info($tenant );
 
         // Đường dẫn ảnh cần xử lý (có thể là null)
         $tenantLogoLink = $tenant->logo; // Hoặc null nếu không có ảnh

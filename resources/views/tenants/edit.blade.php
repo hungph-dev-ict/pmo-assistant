@@ -1,5 +1,15 @@
 @extends('layouts.app')
 
+@section('page_title')
+    {{ $tenant->name }} Edit
+@endsection
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('tenants.index') }}">Tenants</a></li>
+    <li class="breadcrumb-item active">{{ $tenant->name }}</li>
+@endsection
+
 @section('inline_css')
 <style>
     /* Custom style for error messages */

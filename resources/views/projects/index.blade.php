@@ -122,7 +122,7 @@
                 entries
             </div>
             <div class="pagination-wrapper ml-auto">
-                {{ $projects->links('vendor.pagination.default') }}
+                {{ $projects->links('vendor.pagination.bootstrap-4') }}
             </div>
         </div>
     </div>

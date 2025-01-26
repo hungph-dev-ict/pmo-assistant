@@ -26,13 +26,13 @@ class ShareProjectManagerData
                     // Nếu người dùng là PM, lấy các dự án mà họ là project manager
                     $projects = Project::where('project_manager', $userId)->get();
                 } elseif (Auth::user()->hasRole('client')) {
-                    // Lấy các dự án mà người quản lý dự án (project_manager) thuộc tenant mà userId đang quản lý (head_user_id)
                     $projects = Project::whereIn('id', function ($query) use ($userId) {
                         $query->select('projects.id')
                             ->from('projects')
-                            ->join('users', 'users.id', '=', 'projects.project_manager') // Kết nối bảng users để lấy thông tin PM
-                            ->join('tenants', 'tenants.id', '=', 'users.tenant_id') // Kết nối bảng tenants để lấy tenant của PM
-                            ->where('tenants.head_user_id', $userId); // Lọc theo tenant mà người dùng đang quản lý
+                            ->join('users as pm', 'pm.id', '=', 'projects.project_manager') // Kết nối với bảng users để lấy thông tin project manager (PM)
+                            ->join('users as head_user', 'head_user.tenant_id', '=', 'pm.tenant_id') // Kết nối bảng users để xác định head user
+                            ->where('head_user.id', $userId) // Lọc theo userId là head user
+                            ->where('head_user.head_account_flg', true); // Chỉ lấy head user
                     })->get();
                 } else {
                     // Nếu không phải PM hay Client, không lấy dự án nào
