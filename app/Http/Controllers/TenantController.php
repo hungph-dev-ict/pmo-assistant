@@ -112,8 +112,33 @@ class TenantController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $tenant = Tenant::with(['headUser:id,email,account,name,avatar', 'plan:id,name'])->findOrFail($id);
+
+        // Đường dẫn ảnh cần xử lý (có thể là null)
+        $tenantLogoLink = $tenant->logo; // Hoặc null nếu không có ảnh
+
+        // Nếu không có ảnh, sử dụng ảnh mặc định
+        if (!$tenantLogoLink) {
+            $tenant->logo_base64 = '';
+        } else {
+            // Gọi helper để xử lý base64
+            $tenant->logo_base64 = ImageHelper::imageToBase64($tenantLogoLink);
+        }
+
+        $haAvatarLink = $tenant->headUser->avatar; // Hoặc null nếu không có ảnh
+        // Nếu không có ảnh, sử dụng ảnh mặc định
+        if (!$haAvatarLink) {
+            $tenant->ha_avatar_base64 = '';
+        } else {
+            // Gọi helper để xử lý base64
+            $tenant->ha_avatar_base64 = ImageHelper::imageToBase64($haAvatarLink);
+        }
+
+        $plans = Plan::all(); // Lấy danh sách các kế hoạch (hoặc logic khác)
+
+        return view('tenants.edit', compact('tenant', 'plans'));
     }
+
 
     /**
      * Update the specified resource in storage.

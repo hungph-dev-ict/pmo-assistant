@@ -101,7 +101,7 @@
                                         </form>
                                     @else
                                         <!-- Nút Edit -->
-                                        <a class="btn btn-info btn-sm mr-2" href="#">
+                                        <a class="btn btn-info btn-sm mr-2" href="{{ route('tenants.edit', $tenant->id) }}">
                                             <i class="fas fa-pencil-alt"></i> Edit
                                         </a>
                                         <a class="btn btn-danger btn-sm" data-toggle="modal"
