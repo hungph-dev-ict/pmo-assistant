@@ -73,17 +73,8 @@
                                 {{ $tenant->description }}
                             </td>
                             <td>
-                                <ul class="list-inline">
-                                    @if ($tenant->headUser->avatar)
-                                        <img src="{{ $tenant->ha_avatar_base64 }}" alt="Avatar of {{ $tenant->headUser->name }}"
-                                            style="max-width: 100%; max-height: 3.8rem;" loading="lazy" />
-                                    @else
-                                        <li class="list-inline-item">
-                                            <img alt="Avatar" class="table-avatar"
-                                                src="{{ Vite::asset('resources/images/adminlte/avatar4.png') }}">
-                                        </li>
-                                    @endif
-                                </ul>
+                                <img src="{{ $tenant->ha_avatar_base64 }}" alt="Avatar of {{ $tenant->headUser->name }}"
+                                    style="max-width: 100%; max-height: 3.8rem;" loading="lazy" />
                             </td>
                             <td>
                                 <a>
