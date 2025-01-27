@@ -43,7 +43,7 @@
         </li>
         <li class="nav-item">
             <a href="{{ route('users.create') }}"
-                class="nav-link  {{ request()->routeIs('users.create') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('users.create') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>User Add</p>
             </a>

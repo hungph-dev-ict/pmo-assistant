@@ -8,4 +8,7 @@ return [
     'members' => 'Thành viên',
     'chart' => 'Biểu đồ',
     'logout' => 'Đăng xuất',
+    'tenant_setting' => 'Cài đặt Tenant',
+    'tenants' => 'Danh sách Tenant',
+    'tenant_add' => 'Thêm mới Tenant',
 ];

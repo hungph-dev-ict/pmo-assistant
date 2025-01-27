@@ -20,6 +20,13 @@ class TenantService
         return $newTenant;
     }
 
+    public function updateTenant($idTenant, array $data, $logo_path, $ha_avatar)
+    {
+        $updateTenant = Tenant::updateTenant($idTenant, $data, $logo_path, $ha_avatar);
+
+        return $updateTenant;
+    }
+
     /**
      * Soft delete a tenant by its ID and all users belonging to the tenant.
      */

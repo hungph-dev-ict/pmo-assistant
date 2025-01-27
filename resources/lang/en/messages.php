@@ -8,4 +8,7 @@ return [
     'members' => 'Members',
     'chart' => 'Chart',
     'logout' => 'Logout',
+    'tenant_setting' => 'Tenant setting',
+    'tenants' => 'Tenants',
+    'tenant_add' => 'Tenant Add',
 ];

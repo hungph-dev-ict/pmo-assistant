@@ -6,6 +6,7 @@ use App\Services\TenantService;
 use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateTenantRequest;
+use App\Http\Requests\UpdateTenantRequest;
 use App\Models\Tenant;
 use App\Models\Plan;
 use App\Helpers\ImageHelper;
@@ -115,7 +116,6 @@ class TenantController extends Controller
     public function edit(string $id)
     {
         $tenant = Tenant::with(['headUser:id,email,account,name,avatar,tenant_id', 'plan:id,name'])->findOrFail($id);
-        Log::info($tenant );
 
         // Đường dẫn ảnh cần xử lý (có thể là null)
         $tenantLogoLink = $tenant->logo; // Hoặc null nếu không có ảnh
@@ -146,9 +146,22 @@ class TenantController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTenantRequest $request, string $idTenant)
     {
-        //
+        // Dữ liệu đã được validate
+        $updateTenantInfo = $request->validated();
+
+        // Gọi service xử lý ảnh
+        $logo_url = $this->imageUploadService->uploadToGoogleDrive('tenant_logo', $request->file('tenant_logo'));
+        $ha_avatar = $this->imageUploadService->uploadToGoogleDrive('ha_avatar', $request->file('ha_avatar'));
+
+        $updateNewTenant = $this->tenantService->updateTenant($idTenant, $updateTenantInfo, $logo_url, $ha_avatar);
+        if ($updateNewTenant) {
+            return redirect()->route('tenants.index')
+                ->with('success', 'Tenant created successfully.');
+        }
+
+        return 500;
     }
 
     /**

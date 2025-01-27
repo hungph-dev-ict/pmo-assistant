@@ -21,7 +21,7 @@ class Tenant extends Model
     public function headUser()
     {
         $query = $this->hasOne(User::class, 'tenant_id')
-        ->where('head_account_flg', '1');
+            ->where('head_account_flg', '1');
 
         return $this->hasOne(User::class, 'tenant_id')
             ->where('head_account_flg', true);
@@ -57,5 +57,38 @@ class Tenant extends Model
         $newUser->assignRole('client');
 
         return $newTenant;
+    }
+
+    public static function updateTenant($idTenant, $tenantData, $logo_path, $ha_avatar)
+    {
+        // Lấy thông tin tenant hiện tại
+        $tenant = self::find($idTenant);
+        if (!$tenant) {
+            throw new \Exception("Tenant không tồn tại.");
+        }
+
+        // Cập nhật thông tin tenant
+        $tenant->update([
+            'name' => $tenantData['tenant_name'],
+            'description' => $tenantData['tenant_description'],
+            'logo' => $logo_path,
+            'plan_id' => $tenantData['tenant_plan'],
+        ]);
+
+        // Lấy tài khoản head account của tenant
+        $headAccount = User::where('tenant_id', $idTenant)->where('head_account_flg', '1')->first();
+        if (!$headAccount) {
+            throw new \Exception("Head Account không tồn tại.");
+        }
+
+        // Cập nhật thông tin tài khoản head account
+        $headAccount->update([
+            'account' => $tenantData['ha_account'],
+            'name' => $tenantData['ha_full_name'],
+            'avatar' => $ha_avatar,
+        ]);
+
+
+        return $tenant;
     }
 }

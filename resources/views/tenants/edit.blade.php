@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('page_title')
-    {{ $tenant->name }} Edit
+{{ $tenant->name }} Edit
 @endsection
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('tenants.index') }}">Tenants</a></li>
-    <li class="breadcrumb-item active">{{ $tenant->name }}</li>
+<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+<li class="breadcrumb-item"><a href="{{ route('tenants.index') }}">Tenants</a></li>
+<li class="breadcrumb-item active">{{ $tenant->name }}</li>
 @endsection
 
 @section('inline_css')
@@ -40,8 +40,9 @@
                 </div>
             </div>
             <div class="card-body">
-                <form action="{{ route('tenants.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('tenants.update', $tenant->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                     <div class="form-group">
                         <label for="tenantName">Tenant Name <span style="color: red;">*</span></label>
                         <input type="text" id="tenantName" name="tenant_name"
@@ -124,7 +125,7 @@
                 <div class="form-group">
                     <label for="haEmail">Email <span style="color: red;">*</span></label>
                     <input type="text" id="haEmail" name="ha_email"
-                        class="form-control @error('ha_email') is-invalid @enderror" value="{{ old('ha_email', $tenant->headUser->email) }}">
+                        class="form-control @error('ha_email') is-invalid @enderror disabled" value="{{ old('ha_email', $tenant->headUser->email) }}">
                     @error('ha_email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('ha_email') }}</strong>
@@ -182,7 +183,7 @@
 <div class="row">
     <div class="col-12">
         <a href="{{ route('tenants.index') }}" class="btn btn-secondary">Cancel</a>
-        <input type="submit" value="Create new Tenant" class="btn btn-success float-right">
+        <input type="submit" value="Update Tenant" class="btn btn-success float-right">
     </div>
 </div>
 </form>
