@@ -49,9 +49,6 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
 Route::group(['middleware' => ['auth', 'role:pm|staff']], function () {
     Route::prefix('staff/{project_id}')->group(function () {
         Route::get('/task', [StaffController::class, 'listTasks'])->name('staff.task');
-        Route::get('/task/{task_id}/edit', [StaffController::class, 'listTasks'])->name('task.edit');
-        Route::get('/task/{task_id}/destroy', [StaffController::class, 'listTasks'])->name('task.destroy');
-        Route::get('/task', [StaffController::class, 'listTasks'])->name('staff.task');
         Route::get('/member', [StaffController::class, 'listMembers'])->name('pm.member');
         Route::get('/chart', [StaffController::class, 'viewChart'])->name('pm.chart');
     });

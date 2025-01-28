@@ -49,7 +49,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('pm.task', 1) }}" class="nav-link">
+                                    <a href="{{ route('pm.task', $project->id) }}" class="nav-link">
                                         <i class="far fa-dot-circle nav-icon"></i>
                                         <p>{{ __('messages.task_lists') }}</p>
                                     </a>
@@ -71,6 +71,34 @@
                         @endforeach
                     </ul>
                 </li>
+                @endrole
+
+                @role('client|pm|staff')
+                @foreach ($projects as $project)
+                <li class="nav-item {{ request()->is('pages*') ? 'menu-open' : '' }}">
+                    <a href="pages/gallery.html" class="nav-link {{ request()->is('pages*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>
+                            {{ $project->name }}
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('staff.task', $project->id) }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('messages.task_lists') }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('messages.chart') }}</p>
+                            </a>
+                    </ul>
+                </li>
+                @endforeach
+
                 @endrole
 
                 @auth

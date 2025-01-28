@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Services\TenantService;
 use App\Services\ImageUploadService;
-use Illuminate\Http\Request;
 use App\Http\Requests\CreateTenantRequest;
 use App\Http\Requests\UpdateTenantRequest;
 use App\Models\Tenant;

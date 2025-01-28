@@ -34,6 +34,8 @@ class ShareProjectManagerData
                             ->where('head_user.id', $userId) // Lọc theo userId là head user
                             ->where('head_user.head_account_flg', true); // Chỉ lấy head user
                     })->get();
+                } elseif (Auth::user()->hasRole('staff')) {
+                    $projects = Auth::user()->projects;
                 } else {
                     // Nếu không phải PM hay Client, không lấy dự án nào
                     $projects = collect();
