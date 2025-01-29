@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class TaskSeeder extends Seeder
+class TasksTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -31,7 +31,7 @@ class TaskSeeder extends Seeder
                 'estimate_effort' => rand(20, 50), // Random MD
                 'actual_effort' => rand(20, 50),  // Random MD
                 'progress' => rand(0, 100), // Random progress
-                'priority' => rand(1, 3), // 1: High, 2: Medium, 3: Low
+                'priority' => rand(0, 4), // 1: High, 2: Medium, 3: Low
                 'status' => rand(0, 4),   // 0: Open, 1: In Progress, etc.
                 'created_by' => 1, // Assume admin user
                 'created_at' => now(),

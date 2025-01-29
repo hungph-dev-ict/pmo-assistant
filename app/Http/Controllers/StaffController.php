@@ -23,9 +23,10 @@ class StaffController extends Controller
         $project = Project::with('tasks')->findOrFail($projectId);
 
         // Gọi service để lấy task tree
-        $taskTree = $this->taskService->getTaskTreeByProject($projectId);
+        // $taskTree = $this->taskService->getTaskTreeByProject($projectId);
+        $tasks = $this->taskService->getTasksByProject($projectId);
 
-        return view('staff.task', compact('project', 'taskTree'));
+        return view('staff.task', compact('project', 'tasks'));
     }
 
     public function listMembers()
