@@ -25,8 +25,9 @@ class StaffController extends Controller
         // Gọi service để lấy task tree
         // $taskTree = $this->taskService->getTaskTreeByProject($projectId);
         $tasks = $this->taskService->getTasksByProject($projectId);
+        $ownTasks = $this->taskService->getOwnTasksByProject($projectId);
 
-        return view('staff.task', compact('project', 'tasks'));
+        return view('staff.task', compact('project', 'tasks', 'ownTasks'));
     }
 
     public function listMembers()

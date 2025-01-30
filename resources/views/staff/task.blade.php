@@ -17,9 +17,14 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card collapsed-card">
                     <div class="card-header">
                         <h3 class="card-title">List Task</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -270,6 +275,136 @@
                 <!-- /.card -->
             </div>
             <!-- /.col -->
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Own Task</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="ownTaskTreeTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Epic/Task</th>
+                                    <th>Priority</th>
+                                    <th>Assignee</th>
+                                    <th>Status</th> <!-- Thay cột Progress thành Status -->
+                                    <th>Plan Start Date</th> <!-- Thay cột Progress thành Status -->
+                                    <th>Plan End Date</th> <!-- Thay cột Progress thành Status -->
+                                    <th>Actual Start Date</th> <!-- Thay cột Progress thành Status -->
+                                    <th>Actual End Date</th> <!-- Thay cột Progress thành Status -->
+                                    <th>Estimated Effort</th>
+                                    <th>Actual Effort</th>
+                                    <th>Action</th>
+                                    <th>Order</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($ownTasks as $task)
+                                    <tr @if ($task['type'] == 'epic') style="background-color: #e9ecef;" @endif>
+                                        <td>{{ $task['name'] }}</td>
+                                        <td>
+                                            @if ($task['priority'] == 'On Hold')
+                                                <span
+                                                    class="badge badge-secondary">{{ $task['priority'] ?? 'On Hold' }}</span>
+                                                <!-- Màu xám cho On Hold -->
+                                            @elseif ($task['priority'] == 'Low')
+                                                <span class="badge badge-info">{{ $task['priority'] ?? 'Low' }}</span>
+                                                <!-- Màu xanh lam cho Low -->
+                                            @elseif ($task['priority'] == 'Medium')
+                                                <span class="badge badge-warning">{{ $task['priority'] ?? 'Medium' }}</span>
+                                                <!-- Màu vàng cho Medium -->
+                                            @elseif ($task['priority'] == 'High')
+                                                <span class="badge badge-danger">{{ $task['priority'] ?? 'High' }}</span>
+                                                <!-- Màu đỏ cho High -->
+                                            @elseif ($task['priority'] == 'Critical')
+                                                <span class="badge badge-dark">{{ $task['priority'] ?? 'Critical' }}</span>
+                                                <!-- Màu đen cho Critical -->
+                                            @else
+                                                <span class="badge badge-light">N/A</span> <!-- Trạng thái chưa xác định -->
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a>
+                                                {{ $task['assignee']->account }}
+                                            </a>
+                                            <br />
+                                            <small>
+                                                {{ $task['assignee']->name }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            @if ($task['status'] == 'Not Started')
+                                                <span
+                                                    class="badge badge-secondary">{{ $task['status'] ?? 'Not Started' }}</span>
+                                                <!-- Màu xám cho Not Started -->
+                                            @elseif ($task['status'] == 'In Progress')
+                                                <span
+                                                    class="badge badge-primary">{{ $task['status'] ?? 'In Progress' }}</span>
+                                                <!-- Màu xanh dương cho In Progress -->
+                                            @elseif ($task['status'] == 'Resolved')
+                                                <span
+                                                    class="badge badge-success">{{ $task['status'] ?? 'Resolved' }}</span>
+                                                <!-- Màu xanh lá cho Resolved -->
+                                            @elseif ($task['status'] == 'Feedback')
+                                                <span
+                                                    class="badge badge-warning">{{ $task['status'] ?? 'Feedback' }}</span>
+                                                <!-- Màu vàng cho Feedback -->
+                                            @elseif ($task['status'] == 'Done')
+                                                <span class="badge badge-dark">{{ $task['status'] ?? 'Done' }}</span>
+                                                <!-- Màu đen cho Done -->
+                                            @else
+                                                <span class="badge badge-light">N/A</span> <!-- Trạng thái chưa xác định -->
+                                            @endif
+                                        </td>
+                                        <td>{{ $task['plan_start_date'] }}</td>
+                                        <td>{{ $task['plan_end_date'] }}</td>
+                                        <td>{{ $task['actual_start_date'] }}</td>
+                                        <td>{{ $task['actual_end_date'] }}</td>
+                                        <td>{{ $task['estimate_effort'] }}</td>
+                                        <td>{{ $task['actual_effort'] }}</td>
+                                        <td>
+                                            <a href="" class="btn btn-sm btn-primary">Edit</a>
+                                            <form action="" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Are you sure?')">Delete</button>
+                                            </form>
+                                        </td>
+                                        <td>{{ $task['display_order'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Epic/Task</th>
+                                    <th>Priority</th>
+                                    <th>Assignee</th>
+                                    <th>Status</th> <!-- Thay Progress thành Status -->
+                                    <th>Plan Start Date</th> <!-- Thay cột Progress thành Status -->
+                                    <th>Plan End Date</th> <!-- Thay cột Progress thành Status -->
+                                    <th>Actual Start Date</th> <!-- Thay cột Progress thành Status -->
+                                    <th>Actual End Date</th> <!-- Thay cột Progress thành Status -->
+                                    <th>Estimated Effort</th>
+                                    <th>Actual Effort</th>
+                                    <th>Action</th>
+                                    <th>Order</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
         </div>
         <!-- /.row -->
     </div>
@@ -291,16 +426,16 @@
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print",
-                    {
-                        extend: "colvis", // Tạo button cho column visibility
-                        columns: ':not(:eq(11))' // Không hiển thị cột thứ 11 (cột `display_order`)
-                    }, {
+                "buttons": ["copy", "csv", "excel", "pdf", "print", {
                         // Tạo nút custom "Reset Sort"
                         text: 'Reset Sort',
                         action: function(e, dt, node, config) {
                             dt.order([11, 'asc']).draw();
                         }
+                    },
+                    {
+                        extend: "colvis", // Tạo button cho column visibility
+                        columns: ':not(:eq(11))' // Không hiển thị cột thứ 11 (cột `display_order`)
                     }
                 ],
                 "paging": false, // Không phân trang
@@ -318,6 +453,60 @@
                 ],
                 "stateSave": false, // Lưu trạng thái của DataTable,
             }).buttons().container().appendTo('#taskTreeTable_wrapper .col-md-6:eq(0)');
+
+            // $('#resetSortBtn').click(function() {
+            //     $('#taskTreeTable').replaceWith(tableHtml);
+            // });
+
+            // Toggle Epic-Task visibility và thay đổi icon
+            /*$('#taskTreeTable').on('click', '.toggle-icon', function() {
+                var parentRow = $(this).closest('tr');
+                var parentId = parentRow.data('id');
+                var childRows = $(".child-row[data-parent-id='" + parentId + "']");
+
+                // Nếu các task con đang hiển thị, ẩn chúng và thay đổi icon
+                if (childRows.is(':visible')) {
+                    childRows.hide();
+                    $(this).html('<i class="fas fa-chevron-right"></i>'); // Thay đổi icon
+                } else {
+                    childRows.show();
+                    $(this).html('<i class="fas fa-chevron-down"></i>'); // Thay đổi icon
+                }
+            });*/
+        });
+
+        $(function() {
+            $("#ownTaskTreeTable").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", {
+                        // Tạo nút custom "Reset Sort"
+                        text: 'Reset Sort',
+                        action: function(e, dt, node, config) {
+                            dt.order([11, 'asc']).draw();
+                        }
+                    },
+                    {
+                        extend: "colvis", // Tạo button cho column visibility
+                        columns: ':not(:eq(11))' // Không hiển thị cột thứ 11 (cột `display_order`)
+                    }
+                ],
+                "paging": false, // Không phân trang
+                "order": [
+                    [11, 'asc']
+                ], // Tắt sắp xếp mặc định
+                "columnDefs": [{
+                        "targets": [4, 5, 6, 7, 8, 9], // Ẩn cột date và progress khi load trang
+                        "visible": false
+                    },
+                    {
+                        "targets": [11], // Ẩn cột display_order
+                        "visible": false
+                    }
+                ],
+                "stateSave": false, // Lưu trạng thái của DataTable,
+            }).buttons().container().appendTo('#ownTaskTreeTable_wrapper .col-md-6:eq(0)');
 
             // $('#resetSortBtn').click(function() {
             //     $('#taskTreeTable').replaceWith(tableHtml);

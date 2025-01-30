@@ -22,7 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             ShareProjectManagerData::class,
             SetLocale::class,
-            SetLocaleByIp::class,
+            // SetLocaleByIp::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
