@@ -23,19 +23,21 @@ class UserTableSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'account' => 'CLIENT',
-            'name' => 'Client',
+            'account' => 'CLIENT_HA',
+            'name' => 'Client Head Account',
             'email' => 'client@gmail.com',
+            'tenant_id' => '1',
+            'head_account_flg' => '1',
             'job_position' => '1',
             'status' => '1',
             'password' => bcrypt('client@123') // Mã hóa mật khẩu
         ]);
 
         User::factory()->create([
-            'account' => 'PMO',
-            'name' => 'PMO Account',
+            'account' => 'PM',
+            'name' => 'PM Account',
             'email' => 'pm@gmail.com',
-            'tenant_id' => NULL,
+            'tenant_id' => '1',
             'job_position' => '1',
             'status' => '1',
             'password' => bcrypt('pm@12345') // Mã hóa mật khẩu
@@ -45,7 +47,7 @@ class UserTableSeeder extends Seeder
             'account' => 'DEV',
             'name' => 'Dev Account',
             'email' => 'dev@gmail.com',
-            'tenant_id' => NULL,
+            'tenant_id' => '1',
             'job_position' => '4',
             'status' => '1',
             'password' => bcrypt('dev@12345') // Mã hóa mật khẩu
@@ -55,7 +57,7 @@ class UserTableSeeder extends Seeder
             'account' => 'TEST',
             'name' => 'Test Account',
             'email' => 'test@gmail.com',
-            'tenant_id' => NULL,
+            'tenant_id' => '1',
             'job_position' => '5',
             'status' => '1',
             'password' => bcrypt('test@12345') // Mã hóa mật khẩu

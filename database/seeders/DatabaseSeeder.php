@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         // Xóa toàn bộ dữ liệu trước khi seed
         DB::table('plans')->truncate();
+        DB::table('tasks')->truncate();
         DB::table('projects')->truncate();
         DB::table('project_user')->truncate();
         User::truncate();
@@ -32,13 +33,49 @@ class DatabaseSeeder extends Seeder
             ConstantsTableSeeder::class,
             RolesAndPermissionsSeeder::class,
             PlansTableSeeder::class,
+            TenantsTableSeeder::class,
             UserTableSeeder::class,
             ProjectsTableSeeder::class,
-            TenantsTableSeeder::class,
+            TasksTableSeeder::class,
         ]);
 
-        // Cập nhật tất cả các users để có tenant_id = 2
-        DB::table('users')
-            ->update(['tenant_id' => 2]);
+        DB::table('project_user')->insert([
+            [
+                'project_id' => '1',
+                'user_id' => '3',
+            ],
+            [
+                'project_id' => '1',
+                'user_id' => '4',
+            ],
+            [
+                'project_id' => '1',
+                'user_id' => '5',
+            ],
+            [
+                'project_id' => '2',
+                'user_id' => '3',
+            ],
+            [
+                'project_id' => '2',
+                'user_id' => '4',
+            ],
+            [
+                'project_id' => '2',
+                'user_id' => '5',
+            ],
+            [
+                'project_id' => '3',
+                'user_id' => '3',
+            ],
+            [
+                'project_id' => '3',
+                'user_id' => '4',
+            ],
+            [
+                'project_id' => '3',
+                'user_id' => '5',
+            ],
+        ]);
     }
 }
