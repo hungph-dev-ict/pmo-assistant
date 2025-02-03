@@ -16,16 +16,29 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        // Xóa toàn bộ dữ liệu trước khi seed
-        DB::table('plans')->truncate();
-        DB::table('tasks')->truncate();
-        DB::table('projects')->truncate();
-        DB::table('project_user')->truncate();
-        User::truncate();
-        DB::table('tenants')->truncate();
-        Permission::truncate();
-        DB::table('constants')->truncate();
-        Role::truncate();
+
+        // Danh sách các bảng cần truncate
+        $tables = [
+            'plans',
+            'tasks',
+            'projects',
+            'project_user',
+            'tenants',
+            'constants',
+            'model_has_roles',       // Bảng quan hệ giữa user và role
+            'role_has_permissions',  // Bảng quan hệ giữa role và permission
+            'model_has_permissions', // Bảng quan hệ giữa user và permission
+        ];
+
+        // Xóa dữ liệu tất cả các bảng trong danh sách
+        foreach ($tables as $table) {
+            DB::table($table)->truncate();
+        }
+
+        // Xóa dữ liệu của các Model liên quan (Eloquent)
+        foreach ([User::class, Role::class, Permission::class] as $model) {
+            $model::truncate();
+        }
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 

@@ -73,7 +73,7 @@
                 </li>
                 @endrole
 
-                @role('client|pm|staff')
+                @role('pm|staff')
                 @foreach ($projects as $project)
                 <li class="nav-item {{ request()->is('pages*') ? 'menu-open' : '' }}">
                     <a href="pages/gallery.html" class="nav-link {{ request()->is('pages*') ? 'active' : '' }}">

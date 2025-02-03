@@ -33,7 +33,9 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 });
 
 Route::group(['middleware' => ['auth', 'role:client']], function () {
-    Route::resource('users', UserController::class);
+    // Route::resource('users', UserController::class);
+    Route::get('tenant/{tenant_id}/users', [UserController::class, 'getTenantUsers'])->name('client.users.list');
+    Route::get('tenant/{tenant_id}/users/create', [UserController::class, 'createTenantUser'])->name('client.users.create');
 });
 
 Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {

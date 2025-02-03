@@ -22,7 +22,19 @@ class UserController extends Controller
         return view('users.index', compact('users')); // Trả về view với danh sách người dùng
     }
 
+    public function getTenantUsers($tenant_id)
+    {
+        // Lấy tất cả người dùng
+        $users = User::where('tenant_id', $tenant_id)->with('jobPosition')->paginate(10);
+        return view('users.index', compact('users')); // Trả về view với danh sách người dùng
+    }
+
     public function create()
+    {
+        return view('users.create');
+    }
+
+    public function createTenantUser($tenant_id)
     {
         return view('users.create');
     }
