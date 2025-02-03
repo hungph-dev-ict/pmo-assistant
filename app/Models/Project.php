@@ -33,12 +33,6 @@ class Project extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
-    // protected $casts = [
-    //     'start_date' => 'datetime',
-    //     'end_date' => 'datetime',
-    //     'created_at' => 'datetime',
-    //     'updated_at' => 'datetime',
-    // ];
 
     public function users()
     {

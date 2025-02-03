@@ -10,7 +10,6 @@ class PmController extends Controller
 {
     public function listTasks()
     {
-
         $users = User::where('tenant_id', Auth::user()->tenant_id)->get();
         return view('pm.task', compact('users'));
     }
