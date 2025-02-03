@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
+@section('page_title')
+    Projects
+@endsection
 
-@section('title', 'Custom Page')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active">Projects</li>
+@endsection
 
 @section('inline_css')
     <link rel="stylesheet" href="{{ asset('build/css/plugins/select2-min-css.css') }}">
@@ -9,27 +15,8 @@
 @endsection
 
 @section('content')
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Projects</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Projects</li>
-                    </ol>
-                </div>
-            </div>
-        </div><!-- /.container-fluid -->
-    </section>
-
-    <!-- Main content -->
-    <section class="content">
         <!-- Default box -->
-        <div class="card">
+        <div class="card card-success collapsed-card">
             <div class="card-header">
                 <h3 class="card-title">Add new task</h3>
                 <a class="btn btn-success btn-sm float-right" data-toggle="modal" data-target="#modal-default">
@@ -183,120 +170,110 @@
                     Add new Task
                 </a>
             </div>
-            <div class="modal fade" id="modal-xl">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Task Add</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="exampleInputBorder">Parent Task</label>
-                                        <input type="text" class="form-control form-control-border"
-                                            id="exampleInputBorder" placeholder="">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputBorderWidth2">Sub Task</label>
-                                        <input type="text" class="form-control form-control-border border-width-2"
-                                            id="exampleInputBorderWidth2" placeholder="">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleSelectBorder">PIC</label>
-                                        <select
-                                            class="form-control select2 @error('project_project_manager') is-invalid @enderror"
-                                            style="width: 100%;>
-                                            @foreach ($users as $user)
-<option value="{{ $user->id }}">{{ $user->name }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+            <!-- /.modal -->
+            <!-- /.card-header -->
+            <div class="card-body p-0">
 
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputBorder">Parent Task</label>
+                                <input type="text" class="form-control form-control-border" id="exampleInputBorder"
+                                    placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputBorderWidth2">Sub Task</label>
+                                <input type="text" class="form-control form-control-border border-width-2"
+                                    id="exampleInputBorderWidth2" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleSelectBorder">PIC</label>
+                                <select class="form-control select2 @error('project_project_manager') is-invalid @enderror"
+                                    style="width: 100%;>
+                                        @foreach ($users as $user)
+<option value="{{ $user->id }}">{{ $user->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Plan Start Date</label>
+                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                        data-target="#reservationdate" />
+                                    <div class="input-group-append" data-target="#reservationdate"
+                                        data-toggle="datetimepicker">
+                                        <div class="input-group-text">
+                                            <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true"
+                                                focusable="false" data-prefix="fa" data-icon="calendar" role="img"
+                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
+                                                <path fill="currentColor"
+                                                    d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Plan Start Date</label>
-                                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input"
-                                                data-target="#reservationdate" />
-                                            <div class="input-group-append" data-target="#reservationdate"
-                                                data-toggle="datetimepicker">
-                                                <div class="input-group-text">
-                                                    <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true"
-                                                        focusable="false" data-prefix="fa" data-icon="calendar"
-                                                        role="img" xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 448 512" data-fa-i2svg="">
-                                                        <path fill="currentColor"
-                                                            d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
-                                                        </path>
-                                                    </svg>
-                                                </div>
-                                            </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Plan End Date</label>
+                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                        data-target="#reservationdate" />
+                                    <div class="input-group-append" data-target="#reservationdate"
+                                        data-toggle="datetimepicker">
+                                        <div class="input-group-text">
+                                            <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true"
+                                                focusable="false" data-prefix="fa" data-icon="calendar" role="img"
+                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
+                                                <path fill="currentColor"
+                                                    d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
+                                                </path>
+                                            </svg>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Plan End Date</label>
-                                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input"
-                                                data-target="#reservationdate" />
-                                            <div class="input-group-append" data-target="#reservationdate"
-                                                data-toggle="datetimepicker">
-                                                <div class="input-group-text">
-                                                    <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true"
-                                                        focusable="false" data-prefix="fa" data-icon="calendar"
-                                                        role="img" xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 448 512" data-fa-i2svg="">
-                                                        <path fill="currentColor"
-                                                            d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
-                                                        </path>
-                                                    </svg>
-                                                </div>
-                                            </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Actual Start Date</label>
+                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                        data-target="#reservationdate" />
+                                    <div class="input-group-append" data-target="#reservationdate"
+                                        data-toggle="datetimepicker">
+                                        <div class="input-group-text">
+                                            <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true"
+                                                focusable="false" data-prefix="fa" data-icon="calendar" role="img"
+                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                                                data-fa-i2svg="">
+                                                <path fill="currentColor"
+                                                    d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
+                                                </path>
+                                            </svg>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Actual Start Date</label>
-                                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input"
-                                                data-target="#reservationdate" />
-                                            <div class="input-group-append" data-target="#reservationdate"
-                                                data-toggle="datetimepicker">
-                                                <div class="input-group-text">
-                                                    <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true"
-                                                        focusable="false" data-prefix="fa" data-icon="calendar"
-                                                        role="img" xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 448 512" data-fa-i2svg="">
-                                                        <path fill="currentColor"
-                                                            d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
-                                                        </path>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Actual End Date</label>
-                                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input"
-                                                data-target="#reservationdate" />
-                                            <div class="input-group-append" data-target="#reservationdate"
-                                                data-toggle="datetimepicker">
-                                                <div class="input-group-text">
-                                                    <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true"
-                                                        focusable="false" data-prefix="fa" data-icon="calendar"
-                                                        role="img" xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 448 512" data-fa-i2svg="">
-                                                        <path fill="currentColor"
-                                                            d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
-                                                        </path>
-                                                    </svg>
-                                                </div>
-                                            </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Actual End Date</label>
+                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                        data-target="#reservationdate" />
+                                    <div class="input-group-append" data-target="#reservationdate"
+                                        data-toggle="datetimepicker">
+                                        <div class="input-group-text">
+                                            <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true"
+                                                focusable="false" data-prefix="fa" data-icon="calendar" role="img"
+                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                                                data-fa-i2svg="">
+                                                <path fill="currentColor"
+                                                    d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
+                                                </path>
+                                            </svg>
                                         </div>
                                     </div>
                                 </div>
@@ -304,9 +281,21 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-primary">Create</button>
                         </div>
                     </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">List Task</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
                 </div>
             </div>
             <!-- /.modal -->
@@ -388,7 +377,6 @@
             </div>
             <!-- /.card-body -->
         </div>
-    </section>
 @endsection
 
 @section('inline_js')
