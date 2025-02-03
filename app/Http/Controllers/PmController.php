@@ -10,14 +10,8 @@ class PmController extends Controller
 {
     public function listTasks()
     {
-        $users = [];
 
-        if (Auth::user()->hasRole('client')) {
-            $users = User::where('tenant_id', Auth::id())->get();
-        } elseif (Auth::user()->hasRole('pm')) {
-            $users = User::where('tenant_id', Auth::user()->tenant_id)->get();
-        }
-
+        $users = User::where('tenant_id', Auth::user()->tenant_id)->get();
         return view('pm.task', compact('users'));
     }
 
@@ -25,7 +19,6 @@ class PmController extends Controller
     {
         return view('pm.member');
     }
-
 
     public function viewChart()
     {
