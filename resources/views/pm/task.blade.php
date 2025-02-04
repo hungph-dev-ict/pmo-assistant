@@ -31,23 +31,23 @@ Projects
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputBorder">Parent Task</label>
+                    <label for="exampleInputBorder">Epic</label>
                     <input type="text" class="form-control form-control-border" id="exampleInputBorder"
                         placeholder="">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputBorderWidth2">Sub Task</label>
+                    <label for="exampleInputBorderWidth2">Task</label>
                     <input type="text" class="form-control form-control-border border-width-2"
                         id="exampleInputBorderWidth2" placeholder="">
                 </div>
                 <div class="form-group">
                     <label for="projectProjectManager">Assignee</label>
-                    <select id="projectProjectManager" name="project_project_manager"
-                        class="form-control select2 @error('project_project_manager') is-invalid @enderror"
+                    <select id="projectProjectManager" name="assignee"
+                        class="form-control select2 @error('assignee') is-invalid @enderror"
                         style="width: 100%;">
                         <option value="">Assignee</option>
                         @foreach ($users as $user)
-                        <option value="{{ $user->id }}" @selected(old('project_project_manager')==$user->id)>
+                        <option value="{{ $user->id }}" {{ old('assignee') == $user->id ? selected' : '' }}>
                             {{ $user->name }}
                         </option>
                         @endforeach
@@ -129,7 +129,6 @@ Projects
                         @enderror
                     </div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
