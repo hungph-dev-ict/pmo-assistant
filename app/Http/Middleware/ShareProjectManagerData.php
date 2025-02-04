@@ -21,6 +21,8 @@ class ShareProjectManagerData
             // Lấy id người dùng hiện tại
             $userId = Auth::id();
             if ($userId) {
+                //Lấy tenant_id của user
+                $tenant_id = Auth::user()->tenant_id;
                 // Kiểm tra role của user
                 if (Auth::user()->hasRole('pm')) {
                     // Nếu người dùng là PM, lấy các dự án mà họ là project manager
@@ -43,6 +45,7 @@ class ShareProjectManagerData
 
                 // Chia sẻ dữ liệu này với tất cả view
                 view()->share('projects', $projects);
+                view()->share('tenant_id', $tenant_id);
             }
         }
 

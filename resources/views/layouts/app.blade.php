@@ -248,9 +248,9 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="nav-item {{ request()->is('users*') ? 'menu-open' : '' }}">
+                            <li class="nav-item {{ request()->is('tenant/*/users*') ? 'menu-open' : '' }}">
                                 <a href="pages/gallery.html"
-                                    class="nav-link {{ request()->is('users*') ? 'active' : '' }}">
+                                    class="nav-link {{ request()->is('tenant/*/users*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-users"></i>
                                     <p>
                                         User setting
@@ -259,15 +259,15 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="{{ route('users.index') }}"
-                                            class="nav-link  {{ request()->is('users*') && !request()->routeIs('users.create') ? 'active' : '' }}">
+                                        <a href="{{ route('client.users.list', ['tenant_id' => $tenant_id]) }}"
+                                            class="nav-link  {{ request()->is('tenant/*/users*') && !request()->routeIs('client.users.create') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Users</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ route('users.create') }}"
-                                            class="nav-link  {{ request()->routeIs('users.create') ? 'active' : '' }}">
+                                        <a href="{{ route('client.users.create', ['tenant_id' => $tenant_id]) }}"
+                                            class="nav-link  {{ request()->routeIs('client.users.create') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>User Add</p>
                                         </a>
