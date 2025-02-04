@@ -66,6 +66,5 @@ php artisan db:seed
 
     // Tùy chọn PHP Formatter
     "intelephense.format.enable": true,         // Bật định dạng PHP
-    "phpformatter.indent_with_space": true      // Sử dụng spaces thay vì tabs
 }
 ```

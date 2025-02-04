@@ -23,9 +23,7 @@
     </div>
     <!-- Inline JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    @vite([
-        'resources/js/plugins/bootstrap/js/bootstrap.bundle.min.js'
-    ])
+    @vite(['resources/js/plugins/bootstrap/js/bootstrap.bundle.min.js'])
     @yield('inline_js')
     @vite(['resources/js/app.js'])
     @yield('custom_inline_js')

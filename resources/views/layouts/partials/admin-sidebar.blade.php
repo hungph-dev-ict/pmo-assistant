@@ -19,7 +19,7 @@
             <a href="<?= route('tenants.create') ?>"
                 class="nav-link <?= request()->routeIs('tenants.create') ? 'active' : '' ?>">
                 <i class="fas fa-plus nav-icon"></i>
-                <p>{{ __('messages.tenant_setting') }}</p>
+                <p>{{ __('messages.tenant_add') }}</p>
             </a>
         </li>
     </ul>

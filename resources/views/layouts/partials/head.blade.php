@@ -5,7 +5,7 @@
 @vite(['resources/js/plugins/fontawesome-free/css/all.min.css'])
 @vite(['resources/js/plugins/flag-icon-css/css/flag-icon.min.css'])
 <!-- Font Awesome Icons -->
-{{-- <script src="https://code.jscharting.com/latest/jscharting.js"></script> --}}
+<script src="https://code.jscharting.com/latest/jscharting.js"></script>
 <!-- Inline CSS -->
 @yield('inline_css')
 @vite(['resources/css/app.css'])

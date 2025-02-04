@@ -10,7 +10,6 @@ use App\Models\Tenant;
 use App\Models\Plan;
 use App\Helpers\ImageHelper;
 use Illuminate\Support\Facades\Cache;
-use Log;
 
 class TenantController extends Controller
 {
@@ -32,8 +31,8 @@ class TenantController extends Controller
         // Lấy danh sách tenants
         $tenants = Tenant::withTrashed()->with(['headUser:id,account,name,avatar,tenant_id', 'plan:id,name'])->paginate(5);
         // Đường dẫn ảnh mặc định
-        $defaultTenantLogo = 'https://drive.google.com/uc?export=view&id=191jpGTBMy5o_ZyQLbNOBTKiOUYiPhG2X';
-        $defaultHaAvatar = 'https://drive.google.com/uc?export=view&id=1lv0f70ekHE_5AH7o6NQPEF9PmCPgc6Mk';
+        $defaultTenantLogo = 'drive.google.com/uc?export=view&id=191jpGTBMy5o_ZyQLbNOBTKiOUYiPhG2X';
+        $defaultHaAvatar = 'drive.google.com/uc?export=view&id=1lv0f70ekHE_5AH7o6NQPEF9PmCPgc6Mk';
 
         // Lấy base64 của ảnh mặc định từ cache hoặc mã hóa một lần
         $defaultTenantLogoBase64 = Cache::rememberForever('default_tenant_logo_base64', function () use ($defaultTenantLogo) {
@@ -56,7 +55,7 @@ class TenantController extends Controller
                 // Gọi helper để xử lý base64
                 $tenant->logo_base64 = ImageHelper::imageToBase64($tenantLogoLink);
             }
-
+            
             $haAvatarLink = $tenant->headUser->avatar; // Hoặc null nếu không có ảnh
             // Nếu không có ảnh, sử dụng ảnh mặc định
             if (!$haAvatarLink) {
