@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use App\Services\ProjectService;
+use App\Models\User;
+use App\Models\Constant;
 use Illuminate\Http\Request;
+use App\Services\ProjectService;
+use App\Http\Requests\CreateProjectRequest;
 
 class ProjectController extends Controller
 {
@@ -27,15 +30,27 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return view('projects.create');
+        $listProjectManager  = User::role('pm')->get();
+        $projectStatuses = Constant::where('group', 'project_status')->get();
+        return view('projects.create', compact('listProjectManager', 'projectStatuses'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateProjectRequest $request)
     {
-        //
+        // Dữ liệu đã được validate
+        $newProjectInfo = $request->validated();
+
+        $createNewProject = $this->projectService->createProject($newProjectInfo);
+
+        if ($createNewProject) {
+            return redirect()->route('projects.index')
+                ->with('success', 'Project created successfully.');
+        }
+
+        return 500;
     }
 
     /**
@@ -65,30 +80,9 @@ class ProjectController extends Controller
         /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Project $project)
     {
-        // Xóa project bằng projectService
-        $result = $this->projectService->deleteprojectById($id);
-        
-        if ($result) {
-            return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
-        }
-
-        return redirect()->route('projects.index')->with('error', 'Failed to delete project.');
+        //
     }
 
-    /**
-     * Restore the specified project from soft deletes.
-     */
-    public function restore(string $id)
-    {
-        // Khôi phục project bằng projectService
-        $result = $this->projectService->restoreProjectById($id);
-
-        if ($result) {
-            return redirect()->route('projects.index')->with('success', 'Project restored successfully.');
-        }
-
-        return redirect()->route('projects.index')->with('error', 'Failed to restore project.');
-    }
 }
