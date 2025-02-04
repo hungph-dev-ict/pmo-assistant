@@ -6,7 +6,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Projects</li>
+    <li class="breadcrumb-item active"><a href="{{ route('projects.index') }}">Projects</a></li>
 @endsection
 
 @section('inline_css')
@@ -44,14 +44,13 @@
                         <div class="form-group">
                             <label for="exampleSelectBorder">PIC</label>
                             <select class="form-control select2 @error('project_project_manager') is-invalid @enderror"
-                                style="width: 100%;>
-                                        @foreach ($users as $user)
-<option value="{{ $user->id }}">{{ $user->name }}
-                                </option>
+                                style="width: 100%;">
+                                <option value="" disabled selected>Assigned</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
@@ -231,16 +230,4 @@
 @section('inline_js')
     <!-- Select2 -->
     <script src="{{ asset('build/js/plugins/select2-full-js.js') }}"></script>
-@endsection
-
-@section('inline_js_custom')
-    <script>
-        $(function() {
-            //Initialize Select2 Elements
-            $('.select2').select2({
-                placeholder: "-- Select Project Manager --", // Placeholder hiển thị khi không có lựa chọn
-                allowClear: true // Bật tính năng xóa lựa chọn
-            })
-        });
-    </script>
 @endsection
