@@ -10,6 +10,7 @@
 @endsection
 
 @section('inline_css')
+    <link rel="stylesheet" href="{{ asset('build/css/plugins/tempusdominus-bootstrap-4-css.css') }}">
     <link rel="stylesheet" href="{{ asset('build/css/plugins/select2-min-css.css') }}">
     <link rel="stylesheet" href="{{ asset('build/css/plugins/select2-bootstrap4-css.css') }}">
 @endsection
@@ -42,94 +43,101 @@
                                 id="exampleInputBorderWidth2" placeholder="">
                         </div>
                         <div class="form-group">
-                            <label for="exampleSelectBorder">PIC</label>
-                            <select class="form-control select2 @error('project_project_manager') is-invalid @enderror"
+                            <label for="projectProjectManager">Assignee</label>
+                            <select id="projectProjectManager" name="project_project_manager"
+                                class="form-control select2 @error('project_project_manager') is-invalid @enderror"
                                 style="width: 100%;">
-                                <option value="" disabled selected>Assigned</option>
+                                <option value="">Assignee</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}" @selected(old('project_project_manager') == $user->id)>
+                                        {{ $user->name }}
+                                    </option>
                                 @endforeach
                             </select>
+                            @error('project_project_manager')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
+
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Plan Start Date</label>
-                            <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input"
-                                    data-target="#reservationdate" />
-                                <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                    <div class="input-group-text">
-                                        <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true" focusable="false"
-                                            data-prefix="fa" data-icon="calendar" role="img"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                                            <path fill="currentColor"
-                                                d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Plan End Date</label>
-                            <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input"
-                                    data-target="#reservationdate" />
-                                <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                    <div class="input-group-text">
-                                        <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true" focusable="false"
-                                            data-prefix="fa" data-icon="calendar" role="img"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                                            <path fill="currentColor"
-                                                d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Actual Start Date</label>
-                            <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input"
-                                    data-target="#reservationdate" />
-                                <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                    <div class="input-group-text">
-                                        <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true" focusable="false"
-                                            data-prefix="fa" data-icon="calendar" role="img"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                                            <path fill="currentColor"
-                                                d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Actual End Date</label>
-                            <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input"
-                                    data-target="#reservationdate" />
-                                <div class="input-group-append" data-target="#reservationdate"
+                            <label for="planStartDate">Plan Start Date</label>
+                            <div class="input-group date" id="planStartDatePicker" data-target-input="nearest">
+                                <input type="text" id="planStartDate" name="plan_start_date"
+                                    class="form-control datetimepicker-input @error('plan_start_date') is-invalid @enderror"
+                                    data-target="#planStartDatePicker" value="{{ old('plan_start_date') }}" />
+                                <div class="input-group-append" data-target="#planStartDatePicker"
                                     data-toggle="datetimepicker">
-                                    <div class="input-group-text">
-                                        <svg class="svg-inline--fa fa-calendar fa-w-14" aria-hidden="true"
-                                            focusable="false" data-prefix="fa" data-icon="calendar" role="img"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                                            <path fill="currentColor"
-                                                d="M112 192h224c8.8 0 16 7.2 16 16v224c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm192 32h-64v64h64v-64zM96 64h16V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h128V40c0-13.2 10.8-24 24-24s24 10.8 24 24v24h16c35.3 0 64 28.7 64 64v352c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm-48 96h352V128c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16v32z">
-                                            </path>
-                                        </svg>
-                                    </div>
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
+                                @error('plan_start_date')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('plan_start_date') }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="planEndDate">Plan End Date</label>
+                            <div class="input-group date" id="planEndDatePicker" data-target-input="nearest">
+                                <input type="text" id="planEndDate" name="plant_end_date"
+                                    class="form-control datetimepicker-input @error('plan_end_date') is-invalid @enderror"
+                                    data-target="#planEndDatePicker" value="{{ old('plan_end_dates') }}" />
+                                <div class="input-group-append" data-target="#planEndDatePicker"
+                                    data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                                @error('plan_end_date')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('plan_end_date') }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="actualStartDate">Actual Start Date</label>
+                            <div class="input-group date" id="actualStartDatePicker" data-target-input="nearest">
+                                <input type="text" id="actualStartDate" name="actual_start_date"
+                                    class="form-control datetimepicker-input @error('actual_start_date') is-invalid @enderror"
+                                    data-target="#actualStartDatePicker" value="{{ old('actual_start_date') }}" />
+                                <div class="input-group-append" data-target="#actualStartDatePicker"
+                                    data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                                @error('actual_start_date')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('actual_start_date') }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="actualEndDate">Actual End Date</label>
+                            <div class="input-group date" id="actualEndDatePicker" data-target-input="nearest">
+                                <input type="text" id="actualEndDate" name="actual_end_date"
+                                    class="form-control datetimepicker-input @error('actual_end_date') is-invalid @enderror"
+                                    data-target="#actualEndDatePicker" value="{{ old('actual_end_date') }}" />
+                                <div class="input-group-append" data-target="#actualEndDatePicker"
+                                    data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                                @error('actual_end_date')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('actual_end_date') }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary">Create</button>
                     </div>
                 </div>
             </div>
@@ -178,8 +186,8 @@
                         </td>
                         <td>
                             <div class="d-flex align-items-center">
-                                <img src="{{ Vite::asset('resources/images/adminlte/user2-160x160.jpg') }}" alt="Avatar"
-                                    class="img-circle elevation-2"
+                                <img src="{{ Vite::asset('resources/images/adminlte/user2-160x160.jpg') }}"
+                                    alt="Avatar" class="img-circle elevation-2"
                                     style="width: 25px; height: 25px; object-fit: cover; margin-right: 10px;">
                                 <span>HungPH5</span>
                             </div>
@@ -230,4 +238,51 @@
 @section('inline_js')
     <!-- Select2 -->
     <script src="{{ asset('build/js/plugins/select2-full-js.js') }}"></script>
+    <!-- Moment.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    {{-- <script src="{{ asset('build/js/plugins/moment-js.js') }}"></script> --}}
+    <!-- Tempus Dominus JS -->
+    <script src="{{ asset('build/js/plugins/tempusdominus-bootstrap-4-js.js') }}"></script>
+@endsection
+
+@section('custom_inline_js')
+    <script>
+        $(function() {
+            //Initialize Select2 Elements
+            $('.select2').select2({
+                placeholder: "Choose an assignee", // Placeholder hiển thị khi không có lựa chọn
+                allowClear: true // Bật tính năng xóa lựa chọn
+            })
+            $('#planStartDatePicker').datetimepicker({
+                format: 'YYYY-MM-DD', // Định dạng ngày
+                useCurrent: false,
+            });
+            // Khởi tạo datetimepicker cho reservationdate
+            $('#planEndDatePicker').datetimepicker({
+                format: 'YYYY-MM-DD',
+                useCurrent: false,
+            });
+            $('#actualStartDatePicker').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('#actualEndDatePicker').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            // Ràng buộc khi thay đổi Start Date
+            $('#planStartDatePicker').on('change.datetimepicker', function(e) {
+                // Cập nhật minDate cho End Date khi Start Date thay đổi
+                $('#planStartDatePicker').datetimepicker('minDate', e.date);
+            });
+            // Ràng buộc khi thay đổi End Date
+            $('#actualStartDatePicker').on('change.datetimepicker', function(e) {
+                // Cập nhật maxDate cho Start Date khi End Date thay đổi
+                $('#actualStartDatePicker').datetimepicker('maxDate', e.date);
+            });
+            $('#actualEndDatePicker').on('change.datetimepicker', function(e) {
+                // Cập nhật minDate cho End Date khi Start Date thay đổi
+                $('#actualEndDatePicker').datetimepicker('minDate', e.date);
+            });
+
+        })
+    </script>
 @endsection
