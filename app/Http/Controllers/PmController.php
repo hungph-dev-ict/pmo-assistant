@@ -7,6 +7,8 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\TaskService;
+use App\Http\Requests\StoreTaskRequest;
+
 
 class PmController extends Controller
 {
@@ -39,5 +41,11 @@ class PmController extends Controller
     public function viewChart()
     {
         return view('pm.chart');
+    }
+
+    public function store(StoreTaskRequest $request, $project_id)
+    {
+        dd(123);
+        dd($request->all());
     }
 }

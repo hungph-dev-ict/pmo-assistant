@@ -70,4 +70,6 @@ class Task extends Model
         return $this->hasOne(Constant::class, 'key', 'priority')
             ->where('group', 'task_priority');
     }
+
+    
 }

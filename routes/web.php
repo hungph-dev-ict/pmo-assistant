@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::get('/api/pm/{project_id}/tasks', [PmController::class, 'listTasks']);
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');
+        Route::post('/store', [PmController::class, 'store'])->name('pm.tasks.store');
         Route::get('/member', [PmController::class, 'listMembers'])->name('pm.member');
         Route::get('/chart', [PmController::class, 'viewChart'])->name('pm.chart');
     });
@@ -65,6 +66,8 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
     // Route::get('tasks', [TaskController::class, 'index']);
 });
 
+
+
 Route::get('/db-check', function () {
     try {
         DB::connection()->getPdo();
@@ -81,5 +84,7 @@ Route::get('locale/{lang}', function ($lang) {
     }
     return redirect()->back();
 });
+
+
 
 require __DIR__ . '/auth.php';
