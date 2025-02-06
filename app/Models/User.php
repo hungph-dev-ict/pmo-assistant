@@ -78,4 +78,16 @@ class User extends Authenticatable
         return $this->hasOne(Constant::class, 'key', 'status')
             ->where('group', 'user_status');
     }
+
+    public static function createUser($userData)
+    {
+        $newUser = self::create([
+            'email' => $userData['bi_email'],
+            'account' => $userData['bi_account'],
+            'name' => $userData['bi_full_name'],
+            'password' => bcrypt($userData['bi_password']),
+            'head_account_flg' => '0',
+            'status' => '1'
+        ]);
+    }
 }

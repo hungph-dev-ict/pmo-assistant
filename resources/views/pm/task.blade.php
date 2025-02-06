@@ -47,7 +47,7 @@ Projects
                         style="width: 100%;">
                         <option value="">Assignee</option>
                         @foreach ($users as $user)
-                        <option value="{{ $user->id }}" {{ old('assignee') == $user->id ? selected' : '' }}>
+                        <option value="{{ $user->id }}" {{ old('assignee') == $user->id ? 'selected' : '' }}>
                             {{ $user->name }}
                         </option>
                         @endforeach
