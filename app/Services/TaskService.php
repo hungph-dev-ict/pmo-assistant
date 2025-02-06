@@ -135,4 +135,17 @@ class TaskService
 
         return $ownTasks;
     }
+    Public function createTask(array $data)
+    {
+        // dd($data);
+        $newTask = Task::createTask($data);
+        // $createdPassword = $data['ha_password'];
+
+        // // Gửi email cho head tenant
+        // Mail::to($newTenant->headUser->email)->send(new TenantRegisteredMail($newTenant, $createdPassword));
+
+        // return $newTenant;
+    }
+
+
 }

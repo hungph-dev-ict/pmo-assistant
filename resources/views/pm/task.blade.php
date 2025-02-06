@@ -63,6 +63,13 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label for="task_type">Task Type</label>
+                            <select id="task_type" name="task_type" class="form-control">
+                                <option value="0">Epic</option>
+                                <option value="1">Task</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="exampleInputBorderWidth2">Estimate Effort (MD)</label>
                             <input type="number" name="estimate_effort"
                                 class="form-control form-control-border border-width-2" id="exampleInputBorderWidth2"
@@ -221,6 +228,15 @@
             function submitTaskForm() {
                 document.getElementById('TaskForm').submit();
             }
+            document.getElementById('type').addEventListener('change', function () {
+        var parentTaskGroup = document.getElementById('parentTaskGroup');
+        if (this.value == "1") {
+            parentTaskGroup.style.display = "block";
+        } else {
+            parentTaskGroup.style.display = "none";
+            document.getElementById('parent_id').value = "";
+        }
+    });
 
         });
     </script>

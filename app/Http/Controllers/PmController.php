@@ -43,9 +43,16 @@ class PmController extends Controller
         return view('pm.chart');
     }
 
-    public function store(StoreTaskRequest $request, $project_id)
+    public function store(Request $request, $project_id)
     {
-        dd(123);
-        dd($request->all());
+        // dd($request->all());
+        $newTaskInfo = $request->all();
+        $createNewTask = $this->taskService->createTask($newTaskInfo);
+        // if ($createNewTask) {
+        //     return redirect()->route('pm.tasks.store')
+        //         ->with('success', 'Task created successfully.');
+        // }
+
+        // return 500;
     }
 }
