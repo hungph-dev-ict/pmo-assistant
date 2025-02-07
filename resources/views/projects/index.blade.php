@@ -4,6 +4,15 @@
     @vite(['resources/js/plugins/toastr/toastr.min.css'])
 @endsection
 
+@section('page_title')
+    Projects
+@endsection
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active">Projects</li>
+@endsection
+
 @section('content')
     <!-- Default box -->
     <div class="card">
@@ -72,11 +81,11 @@
                                     </i>
                                     View
                                 </a>
-                                <!-- <a class="btn btn-info btn-sm" href="#">
-                                                                                            <i class="fas fa-pencil-alt">
-                                                                                            </i>
-                                                                                            Edit
-                                                                                        </a> -->
+                                <a class="btn btn-info btn-sm" href="{{ route('projects.edit', $project->id) }}">
+                                    <i class="fas fa-pencil-alt">
+                                    </i>
+                                    Edit
+                                </a>
                                 <a class="btn btn-danger btn-sm" href="#">
                                     <i class="fas fa-trash">
                                     </i>
@@ -116,7 +125,7 @@
     <script>
         @if (session('success'))
             $(function() {
-                toastr.success("{{ session('success ') }}");
+                toastr.success("{{ session('success') }}");
             });
         @endif
     </script>
