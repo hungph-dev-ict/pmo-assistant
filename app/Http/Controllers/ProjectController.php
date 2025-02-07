@@ -8,6 +8,7 @@ use App\Models\Constant;
 use Illuminate\Http\Request;
 use App\Services\ProjectService;
 use App\Http\Requests\CreateProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 
 class ProjectController extends Controller
 {
@@ -30,7 +31,7 @@ class ProjectController extends Controller
 
     public function create()
     {
-        $listProjectManager  = User::role('pm')->get();
+        $listProjectManager  = User::role('pm')->where('tenant_id', auth()->user()->tenant_id)->get();
         $projectStatuses = Constant::where('group', 'project_status')->get();
         return view('projects.create', compact('listProjectManager', 'projectStatuses'));
     }
@@ -64,17 +65,31 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Project $project)
+    public function edit(string $id)
     {
-        return view('projects.edit');
+        $project = Project::findOrFail($id);
+
+        $listProjectManager = User::role('pm')->where('tenant_id', auth()->user()->tenant_id)->get();
+        $projectStatuses = Constant::where('group', 'project_status')->get();
+
+        return view('projects.edit', compact('project', 'listProjectManager', 'projectStatuses'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project)
+    public function update(UpdateProjectRequest $request, string $idProject)
     {
-        //
+        // Dữ liệu đã được validate
+        $updateProjectInfo = $request->validated();
+
+        $updateNewProject = $this->projectService->updateProject($idProject, $updateProjectInfo);
+        if ($updateNewProject) {
+            return redirect()->route('projects.index')
+                ->with('success', 'Project edited successfully.');
+        }
+
+        return 500;
     }
 
         /**
