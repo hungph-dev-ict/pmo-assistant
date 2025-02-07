@@ -6,7 +6,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('tenants.index') }}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('projects.index') }}">Projects</a></li>
     <li class="breadcrumb-item active">{{ $project->name }}</li>
 @endsection
 
