@@ -3,16 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\TaskService;
 
 class PmController extends Controller
 {
-    public function listTasks()
+    protected $taskService;
+
+    public function __construct(TaskService $taskService)
     {
-        $users = User::where('tenant_id', Auth::user()->tenant_id)->get();
-        return view('pm.task', compact('users'));
+        $this->taskService = $taskService;
     }
+
+    public function listTasks(Request $request, $project_id)
+    {
+        if ($request->ajax()) {
+            // $tasks = Task::where('project_id', $project_id)->with('assigneeUser')->get();
+            $data = $this->taskService->getTaskTreeByProject($project_id);
+
+            // Debug: Kiểm tra dữ liệu trước khi trả về
+            return response()->json($data);
+        }
+
+        return view('pm.task', compact('project_id'));
+    }
+
 
     public function listMembers()
     {

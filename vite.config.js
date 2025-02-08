@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 import laravel from "laravel-vite-plugin";
 import path from "path";
 import { globSync } from "glob"; // Thay thế cách import
@@ -13,13 +14,15 @@ export default defineConfig({
                     "resources/images/adminlte/**/*.{png,jpg,jpeg,svg,gif}"
                 ), // Thêm tất cả hình ảnh từ thư mục images/adminlte
             ],
-            refresh: true,
+            refresh: false,
         }),
+        vue(),
     ],
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "resources"),
             "admin-lte": path.resolve(__dirname, "node_modules/admin-lte"),
+            vue: "vue/dist/vue.esm-bundler.js",
         },
     },
     build: {

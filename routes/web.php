@@ -42,6 +42,7 @@ Route::group(['middleware' => ['auth', 'role:client']], function () {
 Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::resource('projects', ProjectController::class);
     Route::post('projects/{id}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
+    Route::get('/api/pm/{project_id}/tasks', [PmController::class, 'listTasks']);
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');
         Route::get('/member', [PmController::class, 'listMembers'])->name('pm.member');

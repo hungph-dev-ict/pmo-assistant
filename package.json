@@ -17,7 +17,9 @@
         "vite": "^6.0"
     },
     "dependencies": {
+        "@vitejs/plugin-vue": "^5.2.1",
         "admin-lte": "^3.2.0",
-        "jscharting": "^3.4.0"
+        "jscharting": "^3.4.0",
+        "vue": "^3.5.13"
     }
 }
