@@ -25,4 +25,11 @@ class ProjectService
     {
         return Project::createProject($data);
     }
+
+    public function updateProject($idProject, array $data)
+    {
+        $updateProject = Project::updateProject($idProject, $data);
+
+        return $updateProject;
+    }
 }
