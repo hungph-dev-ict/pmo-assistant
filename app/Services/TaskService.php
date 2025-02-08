@@ -85,6 +85,7 @@ class TaskService
                     'priority' => $task->taskPriority->value1 ?? 'N/A',
                     'assignee' => $task->assigneeUser ? [
                         'id' => $task->assigneeUser->id,
+                        'account' => $task->assigneeUser->account,
                         'name' => $task->assigneeUser->name
                     ] : null,
                     'status' => $task->taskStatus->value1 ?? 'N/A',

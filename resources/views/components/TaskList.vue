@@ -9,34 +9,80 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Epic</th>
-                        <th>Task</th>
-                        <th>Assignee</th>
-                        <th>Plan Start Date</th>
-                        <th>Plan End Date</th>
-                        <th>Status</th>
+                        <th
+                            v-if="isColumnVisible('epic_task')"
+                            data-column="epic_task"
+                        >
+                            Epic/Task
+                        </th>
+                        <th
+                            v-if="isColumnVisible('assignee')"
+                            data-column="assignee"
+                        >
+                            Assignee
+                        </th>
+                        <th
+                            v-if="isColumnVisible('plan_start_date')"
+                            data-column="plan_start_date"
+                        >
+                            Plan Start Date
+                        </th>
+                        <th
+                            v-if="isColumnVisible('plan_end_date')"
+                            data-column="plan_end_date"
+                        >
+                            Plan End Date
+                        </th>
+                        <th
+                            v-if="isColumnVisible('actual_start_date')"
+                            data-column="actual_start_date"
+                        >
+                            Actual Start Date
+                        </th>
+                        <th
+                            v-if="isColumnVisible('actual_end_date')"
+                            data-column="actual_end_date"
+                        >
+                            Actual End Date
+                        </th>
+                        <th
+                            v-if="isColumnVisible('status')"
+                            data-column="status"
+                        >
+                            Status
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <template v-for="epic in filteredTasks" :key="epic.id">
+                    <template v-for="task in visibleTasks" :key="task.id">
                         <tr class="bg-light">
-                            <td>{{ epic.id }}</td>
-                            <td>{{ epic.name }}</td>
-                            <td></td>
-                            <td>{{ epic.assignee.account }}</td>
-                            <td>{{ epic.plan_start_date }}</td>
-                            <td>{{ epic.plan_end_date }}</td>
-                            <td>{{ epic.status }}</td>
-                        </tr>
-
-                        <tr v-for="task in epic.children" :key="task.id">
                             <td>{{ task.id }}</td>
-                            <td></td>
-                            <td>└ {{ task.name }}</td>
-                            <td>{{ task.assignee.account }}</td>
-                            <td>{{ task.plan_start_date }}</td>
-                            <td>{{ task.plan_end_date }}</td>
-                            <td>{{ task.status }}</td>
+                            <td v-if="isColumnVisible('epic_task')">
+                                <span
+                                    v-if="task.type === 'task' && isBlankQuery"
+                                >
+                                    └
+                                </span>
+                                {{ task.name }}
+                            </td>
+                            <td v-if="isColumnVisible('assignee')">
+                                {{ task.assignee?.account || "N/A" }}
+                            </td>
+                            <td v-if="isColumnVisible('plan_start_date')">
+                                {{ task.plan_start_date }}
+                            </td>
+                            <td v-if="isColumnVisible('plan_end_date')">
+                                {{ task.plan_end_date }}
+                            </td>
+                            <td v-if="isColumnVisible('actual_start_date')">
+                                {{ task.actual_start_date }}
+                            </td>
+                            <td v-if="isColumnVisible('actual_end_date')">
+                                {{ task.actual_end_date }}
+                            </td>
+                            <td v-if="isColumnVisible('status')">
+                                {{ task.status }}
+                            </td>
                         </tr>
                     </template>
                 </tbody>
@@ -46,7 +92,23 @@
 </template>
 
 <script setup>
-defineProps({
-    filteredTasks: Array, // Danh sách đã lọc từ TaskSearchBox.vue
+import { defineProps, computed } from "vue";
+
+const props = defineProps({
+    filteredTasks: Array,
+    blankQuery: Boolean,
+    visibleColumns: Array, // Nhận danh sách cột hiển thị từ component cha
 });
+
+const isBlankQuery = computed(() => props.blankQuery ?? true);
+
+const visibleTasks = computed(() => {
+    let tasks = props.filteredTasks;
+    return tasks;
+});
+
+// Hàm kiểm tra cột có hiển thị không
+const isColumnVisible = (column) => {
+    return props.visibleColumns.includes(column);
+};
 </script>

@@ -145,7 +145,6 @@
                             </span>
                             @enderror
                         </div>
-
                     </div>
                     <!-- Date -->
                     <div class="form-group">
