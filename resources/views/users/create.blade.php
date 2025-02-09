@@ -14,19 +14,6 @@
     <li class="breadcrumb-item active">User Add</li>
 @endsection
 
-@section('inline_css')
-    <style>
-        #toast-container {
-            z-index: 99999 !important;
-            position: fixed !important;
-            top: 20px !important;
-            right: 20px !important;
-            opacity: 1 !important;
-            display: block !important;
-        }
-    </style>
-@endsection
-
 @section('content')
     <div class="row">
         <div class="col-md-6">
