@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('inline_css')
+    @vite(['resources/js/plugins/toastr/toastr.min.css'])
+@endsection
+
 @section('page_title')
     User Add
 @endsection
@@ -8,6 +12,19 @@
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{{ route('client.users.list', auth()->user()->tenant_id) }}">Users</a></li>
     <li class="breadcrumb-item active">User Add</li>
+@endsection
+
+@section('inline_css')
+    <style>
+        #toast-container {
+            z-index: 99999 !important;
+            position: fixed !important;
+            top: 20px !important;
+            right: 20px !important;
+            opacity: 1 !important;
+            display: block !important;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -33,11 +50,11 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Account</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                            <input type="text" class="form-control" id="account" placeholder="account">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Full Name</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                            <input type="text" class="form-control" id="fullName" placeholder="fullName">
                         </div>
 
                         <div class="form-group">
@@ -96,58 +113,17 @@
             </div>
             <!-- /.card -->
         </div>
-
-        <div class="col-md-12">
-            <div class="card card-secondary">
-                <div class="card-header">
-                    <h3 class="card-title">Bulk Insert</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <form id="bulkInsertForm" action="{{ route('client.users.store', auth()->user()->tenant_id) }}" method="POST">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <textarea name="bi_email" class="form-control" rows="10" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Account</label>
-                                    <textarea name="bi_account" class="form-control" rows="10" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Full Name</label>
-                                    <textarea name="bi_full_name" class="form-control" rows="10" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <textarea name="bi_password" class="form-control" rows="10" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary" onclick="submitBulkInsertForm()">Submit</button>
-                </div>
-            </div>
+        <div class="col-md-12" id="bulk-insert-element">
+            <bulk-insert-users
+                submit-url="{{ route('client.users.store', ['tenant_id' => auth()->user()->tenant_id]) }}"></bulk-insert-users>
             <!-- /.card -->
         </div>
     </div>
     <!-- /.content -->
+@endsection
+
+@section('inline_js')
+    @vite(['resources/js/plugins/toastr/toastr.min.js'])
 @endsection
 
 @section('custom_inline_js')
