@@ -1,7 +1,16 @@
 @extends('layouts.app')
+
+@section('page_title')
+    Project {{ $project->name }}
+@endsection
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('projects.index') }}">Projects</a></li>
+    <li class="breadcrumb-item active">{{ $project->name }}</li>
+@endsection
+
 @section('content')
-<!-- Main content -->
-<section class="content">
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
@@ -25,7 +34,7 @@
                                 <div class="info-box-content">
                                     <span class="info-box-text text-center text-muted">Estimated budget</span>
                                     <span
-                                        class="info-box-number text-center text-muted mb-0">{{$project->estimated_budget}}</span>
+                                        class="info-box-number text-center text-muted mb-0">{{ $project->estimated_budget }}</span>
                                 </div>
                             </div>
                             <div class="info-box bg-light">
@@ -48,7 +57,7 @@
                                 <div class="info-box-content">
                                     <span class="info-box-text text-center text-muted">Start date</span>
                                     <span
-                                        class="info-box-number text-center text-muted mb-0">{{$project->start_date}}</span>
+                                        class="info-box-number text-center text-muted mb-0">{{ $project->start_date }}</span>
                                 </div>
                             </div>
                         </div>
@@ -57,14 +66,14 @@
                                 <div class="info-box-content">
                                     <span class="info-box-text text-center text-muted">Estimated project duration</span>
                                     <span
-                                        class="info-box-number text-center text-muted mb-0">{{$project->estimated_project_duration}}</span>
+                                        class="info-box-number text-center text-muted mb-0">{{ $project->estimated_project_duration }}</span>
                                 </div>
                             </div>
                             <div class="info-box bg-light">
                                 <div class="info-box-content">
                                     <span class="info-box-text text-center text-muted">End date</span>
                                     <span
-                                        class="info-box-number text-center text-muted mb-0">{{$project->end_date}}</span>
+                                        class="info-box-number text-center text-muted mb-0">{{ $project->end_date }}</span>
                                 </div>
                             </div>
                         </div>
@@ -97,12 +106,12 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
-                    <h3 class="text-primary"><i class="fas fa-paint-brush"></i> {{$project->name}}</h3>
-                    <p class="text-muted">{{$project->description}}</p>
+                    <h3 class="text-primary"><i class="fas fa-paint-brush"></i> {{ $project->name }}</h3>
+                    <p class="text-muted">{{ $project->description }}</p>
                     <br>
                     <div class="text-muted">
                         <p class="text-sm">Client Company
-                            <b class="d-block">{{$project->client_company}}</b>
+                            <b class="d-block">{{ $project->client_company }}</b>
                         </p>
                         <p class="text-sm">Project Manager
                             <b class="d-block">
@@ -146,6 +155,4 @@
         <!-- /.card-body -->
     </div>
     <!-- /.card -->
-</section>
-<!-- /.content -->
 @endsection

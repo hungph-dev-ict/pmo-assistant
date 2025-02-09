@@ -5,19 +5,22 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class TenantRegisteredMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $tenant;
+    public $tenantPassword;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($tenant)
+    public function __construct($tenant, $tenantPassword)
     {
         $this->tenant = $tenant;
+        $this->tenantPassword = $tenantPassword;
     }
 
     /**
@@ -30,6 +33,7 @@ class TenantRegisteredMail extends Mailable
                     ->with([
                         'tenantName' => $this->tenant->name,
                         'tenantEmail' => $this->tenant->headUser->email,
+                        'tenantPassword' => $this->tenantPassword,
                     ]);
     }
 }

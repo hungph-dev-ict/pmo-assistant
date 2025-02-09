@@ -23,19 +23,21 @@ class UserTableSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'account' => 'CLIENT',
-            'name' => 'Client',
+            'account' => 'Apple',
+            'name' => 'Apple Head Account',
             'email' => 'client@gmail.com',
+            'tenant_id' => '1',
+            'head_account_flg' => '1',
             'job_position' => '1',
             'status' => '1',
             'password' => bcrypt('client@123') // Mã hóa mật khẩu
         ]);
 
         User::factory()->create([
-            'account' => 'PMO',
-            'name' => 'PMO Account',
+            'account' => 'PM',
+            'name' => 'PM Account',
             'email' => 'pm@gmail.com',
-            'tenant_id' => NULL,
+            'tenant_id' => '1',
             'job_position' => '1',
             'status' => '1',
             'password' => bcrypt('pm@12345') // Mã hóa mật khẩu
@@ -45,7 +47,7 @@ class UserTableSeeder extends Seeder
             'account' => 'DEV',
             'name' => 'Dev Account',
             'email' => 'dev@gmail.com',
-            'tenant_id' => NULL,
+            'tenant_id' => '1',
             'job_position' => '4',
             'status' => '1',
             'password' => bcrypt('dev@12345') // Mã hóa mật khẩu
@@ -55,10 +57,32 @@ class UserTableSeeder extends Seeder
             'account' => 'TEST',
             'name' => 'Test Account',
             'email' => 'test@gmail.com',
-            'tenant_id' => NULL,
+            'tenant_id' => '1',
             'job_position' => '5',
             'status' => '1',
             'password' => bcrypt('test@12345') // Mã hóa mật khẩu
+        ]);
+
+        User::factory()->create([
+            'account' => 'Microsoft',
+            'name' => 'Microsoft Head Account',
+            'email' => 'microsoft@gmail.com',
+            'tenant_id' => '2',
+            'head_account_flg' => '1',
+            'job_position' => '1',
+            'status' => '1',
+            'password' => bcrypt('client@123') // Mã hóa mật khẩu
+        ]);
+
+        User::factory()->create([
+            'account' => 'Tesla',
+            'name' => 'Tesla Head Account',
+            'email' => 'tesla@gmail.com',
+            'tenant_id' => '3',
+            'head_account_flg' => '1',
+            'job_position' => '1',
+            'status' => '1',
+            'password' => bcrypt('client@123') // Mã hóa mật khẩu
         ]);
 
         //Gán vai trò admin cho user có email admin@gmail.com
@@ -69,6 +93,16 @@ class UserTableSeeder extends Seeder
 
         //Gán vai trò admin cho user có email admin@gmail.com
         $admin = User::where('email', 'client@gmail.com')->first();
+        if ($admin) {
+            $admin->assignRole('client');
+        }
+
+        $admin = User::where('email', 'microsoft@gmail.com')->first();
+        if ($admin) {
+            $admin->assignRole('client');
+        }
+
+        $admin = User::where('email', 'tesla@gmail.com')->first();
         if ($admin) {
             $admin->assignRole('client');
         }

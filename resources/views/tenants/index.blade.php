@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inline_css')
-    <link rel="stylesheet" href="{{ asset('build/css/plugins/toastr-css.css') }}">
+    @vite(['resources/js/plugins/toastr/toastr.min.css'])
 @endsection
 
 @section('page_title')
@@ -73,17 +73,8 @@
                                 {{ $tenant->description }}
                             </td>
                             <td>
-                                <ul class="list-inline">
-                                    @if ($tenant->headUser->avatar)
-                                        <img src="{{ $tenant->ha_avatar_base64 }}" alt="Avatar of {{ $tenant->headUser->name }}"
-                                            style="max-width: 100%; max-height: 3.8rem;" loading="lazy" />
-                                    @else
-                                        <li class="list-inline-item">
-                                            <img alt="Avatar" class="table-avatar"
-                                                src="{{ Vite::asset('resources/images/adminlte/avatar4.png') }}">
-                                        </li>
-                                    @endif
-                                </ul>
+                                <img src="{{ $tenant->ha_avatar_base64 }}" alt="Avatar of {{ $tenant->headUser->name }}"
+                                    style="max-width: 100%; max-height: 3.8rem;" loading="lazy" />
                             </td>
                             <td>
                                 <a>
@@ -110,7 +101,8 @@
                                         </form>
                                     @else
                                         <!-- Nút Edit -->
-                                        <a class="btn btn-info btn-sm mr-2" href="#">
+                                        <a class="btn btn-info btn-sm mr-2"
+                                            href="{{ route('tenants.edit', $tenant->id) }}">
                                             <i class="fas fa-pencil-alt"></i> Edit
                                         </a>
                                         <a class="btn btn-danger btn-sm" data-toggle="modal"
@@ -138,7 +130,7 @@
                 entries
             </div>
             <div class="pagination-wrapper ml-auto">
-                {{ $tenants->links('vendor.pagination.default') }}
+                {{ $tenants->links('vendor.pagination.bootstrap-4') }}
             </div>
         </div>
     </div>
@@ -172,7 +164,7 @@
 @endsection
 
 @section('inline_js')
-    <script src="{{ asset('build/js/plugins/toastr-js.js') }}"></script>
+    @vite(['resources/js/plugins/toastr/toastr.min.js'])
 @endsection
 
 @section('custom_inline_js')

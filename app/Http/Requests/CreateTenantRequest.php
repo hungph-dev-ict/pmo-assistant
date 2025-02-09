@@ -31,6 +31,7 @@ class CreateTenantRequest extends FormRequest
             'ha_account' => 'required|string|max:10',
             'ha_full_name' => 'required|string|max:60',
             'ha_avatar' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:20480',
+            'ha_password' => 'required|min:8|max:30',
         ];
     }
 
@@ -50,6 +51,7 @@ class CreateTenantRequest extends FormRequest
             'ha_account' => 'Head Account',
             'ha_full_name' => 'Head Account Full Name',
             'ha_avatar' => 'Head Account Avatar',
+            'ha_password' => 'Head Account Password',
         ];
     }
 

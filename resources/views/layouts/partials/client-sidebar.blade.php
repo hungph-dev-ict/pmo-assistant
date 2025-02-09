@@ -24,9 +24,8 @@
         </li>
     </ul>
 </li>
-<li class="nav-item {{ request()->is('users*') ? 'menu-open' : '' }}">
-    <a href="pages/gallery.html"
-        class="nav-link {{ request()->is('users*') ? 'active' : '' }}">
+<li class="nav-item {{ request()->routeIs('client.users.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('client.users.*') ? 'active' : '' }}">
         <i class="nav-icon fas fa-users"></i>
         <p>
             User setting
@@ -35,15 +34,15 @@
     </a>
     <ul class="nav nav-treeview">
         <li class="nav-item">
-            <a href="{{ route('users.index') }}"
-                class="nav-link  {{ request()->routeIs('users.index') ? 'active' : '' }}">
+            <a href="{{ route('client.users.list', auth()->user()->tenant_id) }}"
+                class="nav-link  {{ request()->routeIs('client.users.list') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Users</p>
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('users.create') }}"
-                class="nav-link  {{ request()->routeIs('users.create') ? 'active' : '' }}">
+            <a href="{{ route('client.users.create', auth()->user()->tenant_id) }}"
+                class="nav-link {{ request()->routeIs('client.users.create') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>User Add</p>
             </a>

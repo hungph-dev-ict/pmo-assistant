@@ -49,4 +49,44 @@ class Project extends Model
         return $this->belongsTo(Constant::class, 'status', 'key')
             ->where('group', 'project_status');
     }
+    public static function createProject($projectData)
+    {
+        $newProject = self::create([
+            'name' => $projectData['project_name'],
+            'description' => $projectData['project_description'],
+            'status' => $projectData['project_status'],
+            'client_company' => $projectData['project_client_company'],
+            'project_manager' => $projectData['project_project_manager'],
+            'start_date' => $projectData['project_start_date'],
+            'end_date' => $projectData['project_end_date'],
+            'estimated_budget' => $projectData['project_estimated_budget'],
+            'estimated_project_duration' => $projectData['project_estimated_project_duration'],
+        ]);
+
+        return $newProject;
+    }
+
+    public static function updateProject($idProject, $projectData)
+    {
+        // Lấy thông tin tenant hiện tại
+        $project = self::find($idProject);
+        if (!$project) {
+            throw new \Exception("Project không tồn tại.");
+        }
+
+        // Cập nhật thông tin tenant
+        $project->update([
+            'name' => $projectData['project_name'],
+            'description' => $projectData['project_description'],
+            'status' => $projectData['project_status'],
+            'client_company' => $projectData['project_client_company'],
+            'project_manager' => $projectData['project_project_manager'],
+            'start_date' => $projectData['project_start_date'],
+            'end_date' => $projectData['project_end_date'],
+            'estimated_budget' => $projectData['project_estimated_budget'],
+            'estimated_project_duration' => $projectData['project_estimated_project_duration'],
+        ]);
+
+        return $project;
+    }
 }

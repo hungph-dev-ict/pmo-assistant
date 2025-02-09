@@ -25,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'tenant_id',
+        'head_account_flg',
         'password',
         'job_position',
         'status',
@@ -74,7 +75,19 @@ class User extends Authenticatable
 
     public function userStatus()
     {
-        return $this->hasOne(Constant::class, 'key', 'user_status')
+        return $this->hasOne(Constant::class, 'key', 'status')
             ->where('group', 'user_status');
+    }
+
+    public static function createUser($userData)
+    {
+        $newUser = self::create([
+            'email' => $userData['bi_email'],
+            'account' => $userData['bi_account'],
+            'name' => $userData['bi_full_name'],
+            'password' => bcrypt($userData['bi_password']),
+            'head_account_flg' => '0',
+            'status' => '1'
+        ]);
     }
 }

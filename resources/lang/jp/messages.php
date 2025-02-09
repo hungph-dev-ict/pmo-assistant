@@ -8,4 +8,7 @@ return [
     'members' => 'メンバー',
     'chart' => 'チャート',
     'logout' => 'ログアウト',
+    'tenant_setting' => 'テナント設定',
+    'tenants' => 'テナント',
+    'tenant_add' => 'テナント追加',
 ];

@@ -16,15 +16,29 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        // Xóa toàn bộ dữ liệu trước khi seed
-        DB::table('plans')->truncate();
-        DB::table('projects')->truncate();
-        DB::table('project_user')->truncate();
-        User::truncate();
-        DB::table('tenants')->truncate();
-        Permission::truncate();
-        DB::table('constants')->truncate();
-        Role::truncate();
+
+        // Danh sách các bảng cần truncate
+        $tables = [
+            'plans',
+            'tasks',
+            'projects',
+            'project_user',
+            'tenants',
+            'constants',
+            'model_has_roles',       // Bảng quan hệ giữa user và role
+            'role_has_permissions',  // Bảng quan hệ giữa role và permission
+            'model_has_permissions', // Bảng quan hệ giữa user và permission
+        ];
+
+        // Xóa dữ liệu tất cả các bảng trong danh sách
+        foreach ($tables as $table) {
+            DB::table($table)->truncate();
+        }
+
+        // Xóa dữ liệu của các Model liên quan (Eloquent)
+        foreach ([User::class, Role::class, Permission::class] as $model) {
+            $model::truncate();
+        }
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
@@ -32,13 +46,49 @@ class DatabaseSeeder extends Seeder
             ConstantsTableSeeder::class,
             RolesAndPermissionsSeeder::class,
             PlansTableSeeder::class,
+            TenantsTableSeeder::class,
             UserTableSeeder::class,
             ProjectsTableSeeder::class,
-            TenantsTableSeeder::class,
+            TasksTableSeeder::class,
         ]);
 
-        // Cập nhật tất cả các users để có tenant_id = 2
-        DB::table('users')
-            ->update(['tenant_id' => 2]);
+        DB::table('project_user')->insert([
+            [
+                'project_id' => '1',
+                'user_id' => '3',
+            ],
+            [
+                'project_id' => '1',
+                'user_id' => '4',
+            ],
+            [
+                'project_id' => '1',
+                'user_id' => '5',
+            ],
+            [
+                'project_id' => '2',
+                'user_id' => '3',
+            ],
+            [
+                'project_id' => '2',
+                'user_id' => '4',
+            ],
+            [
+                'project_id' => '2',
+                'user_id' => '5',
+            ],
+            [
+                'project_id' => '3',
+                'user_id' => '3',
+            ],
+            [
+                'project_id' => '3',
+                'user_id' => '4',
+            ],
+            [
+                'project_id' => '3',
+                'user_id' => '5',
+            ],
+        ]);
     }
 }

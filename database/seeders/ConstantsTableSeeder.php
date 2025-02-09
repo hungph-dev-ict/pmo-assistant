@@ -106,6 +106,86 @@ class ConstantsTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'group' => 'task_status', 
+                'key' => '0',
+                'value1' => 'Not Started', // Trạng thái chưa bắt đầu
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'task_status', 
+                'key' => '1',
+                'value1' => 'In Progress', // Trạng thái đang tiến hành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'task_status', 
+                'key' => '2',
+                'value1' => 'Resolved', // Trạng thái đã hoàn thành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'task_status', 
+                'key' => '3',
+                'value1' => 'Feedback', // Trạng thái đang tiến hành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'task_status', 
+                'key' => '4',
+                'value1' => 'Done', // Trạng thái đã hoàn thành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'task_priority', 
+                'key' => '0',
+                'value1' => 'On Hold', // Trạng thái chưa bắt đầu
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'task_priority', 
+                'key' => '1',
+                'value1' => 'Low', // Trạng thái đang tiến hành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'task_priority', 
+                'key' => '2',
+                'value1' => 'Medium', // Trạng thái đã hoàn thành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'task_priority', 
+                'key' => '3',
+                'value1' => 'High', // Trạng thái đang tiến hành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'task_priority', 
+                'key' => '4',
+                'value1' => 'Critical', // Trạng thái đã hoàn thành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
         ]);
     }
 }

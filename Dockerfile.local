@@ -32,6 +32,7 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 # Copy file cấu hình Nginx
 COPY nginx.conf.local /etc/nginx/nginx.conf
+COPY php.ini /usr/local/etc/php/php.ini
 
 # Mở cổng 9000 cho Nginx
 EXPOSE 9000

@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use App\Models\Tenant;
 
 class ImageUploadService
 {
@@ -13,7 +12,7 @@ class ImageUploadService
         try {
             // Check if file is null
             if (!$file) {
-                Log::error('No file uploaded.');
+                Log::warning('No file uploaded.');
                 return null;
             }
 
