@@ -11,14 +11,14 @@
         <li class="nav-item">
             <a href="{{ route('projects.index') }}"
                 class="nav-link {{ request()->routeIs('projects.index') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="fas fa-list nav-icon"></i>
                 <p>Projects</p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ route('projects.create') }}"
                 class="nav-link {{ request()->routeIs('projects.create') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="fas fa-plus nav-icon"></i>
                 <p>Project Add</p>
             </a>
         </li>
@@ -36,14 +36,14 @@
         <li class="nav-item">
             <a href="{{ route('client.users.list', auth()->user()->tenant_id) }}"
                 class="nav-link  {{ request()->routeIs('client.users.list') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="fas fa-list nav-icon"></i>
                 <p>Users</p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ route('client.users.create', auth()->user()->tenant_id) }}"
                 class="nav-link {{ request()->routeIs('client.users.create') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="fas fa-plus nav-icon"></i>
                 <p>User Add</p>
             </a>
         </li>

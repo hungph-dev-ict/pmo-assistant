@@ -55,19 +55,19 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="{{ route('pm.task', $project->id) }}" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <i class="fas fa-list-ul nav-icon"></i>
                                         <p>{{ __('messages.task_lists') }}</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('pm.member', 1) }}" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <i class="fas fa-user-friends nav-icon"></i>
                                         <p>{{ __('messages.members') }}</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('pm.chart', 1) }}" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <i class="fas fa-chart-line nav-icon"></i>
                                         <p>{{ __('messages.chart') }}</p>
                                     </a>
                                 </li>

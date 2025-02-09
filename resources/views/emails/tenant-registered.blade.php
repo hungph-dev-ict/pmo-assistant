@@ -68,6 +68,7 @@
 
         <div class="info">
             <h3>Your Account Information:</h3>
+            <p><strong>Login URL:</strong> <a href="{{ config('app.url') }}/dashboard">{{ config('app.url') }}/dashboard</a></p>
             <p><strong>Email:</strong> {{ $tenantEmail }}</p>
             <p><strong>Password:</strong> {{ $tenantPassword }}</p>
         </div>
