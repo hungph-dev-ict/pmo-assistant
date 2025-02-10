@@ -41,42 +41,84 @@
                     </div>
                 </div>
                 <!-- /.card-header -->
-                <!-- form start -->
-                <div class="card-body">
-                    <form id="addByForm">
+                <form action="{{ route('client.users.store.form', ['tenant_id' => auth()->user()->tenant_id]) }}"
+                    method="POST">
+                    @csrf
+                    <!-- form start -->
+                    <div class="card-body">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Email address</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                            <label for="userEmail">Email Address</label>
+                            <input type="email" id="userEmail" name="user_email" placeholder="Enter Email"
+                                class="form-control @error('user_email') is-invalid @enderror"
+                                value="{{ old('user_email') }}">
+                            @error('user_email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('user_email') }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Account</label>
-                            <input type="text" class="form-control" id="account" placeholder="account">
+                            <label for="userAccount">Account</label>
+                            <input type="text" id="userAccount" name="user_account" placeholder="Enter Account"
+                                class="form-control @error('user_account') is-invalid @enderror"
+                                value="{{ old('user_account') }}">
+                            @error('user_account')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('user_account') }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Full Name</label>
-                            <input type="text" class="form-control" id="fullName" placeholder="fullName">
+                            <label for="userName">Full Name</label>
+                            <input type="text" id="userName" name="user_name" placeholder="Enter Name"
+                                class="form-control @error('user_name') is-invalid @enderror"
+                                value="{{ old('user_name') }}">
+                            @error('user_name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('user_name') }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="userJobPosition">Job Position</label>
+                            <select id="userJobPosition" name="user_job_position"
+                                class="form-control select @error('user_job_position') is-invalid @enderror">
+                                <option selected disabled>-- Select Job Position --</option>
+                                @foreach ($jobPositions as $jobPosition)
+                                    <option value="{{ $jobPosition->key }}"
+                                        {{ old('user_job_position') == $jobPosition->key ? 'selected' : '' }}>
+                                        {{ $jobPosition->value1 . ' - ' . $jobPosition->value2 }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('user_job_position')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('user_job_position') }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="tenantPassword">Mật khẩu <span style="color: red;">*</span></label>
-                            <input type="password" id="tenantPassword" name="ha_password" value="{{ old('ha_password') }}"
-                                class="form-control @error('ha_password') is-invalid @enderror">
-                            @error('ha_password')
+                            <label for="userPassword">Password<span style="color: red;">*</span></label>
+                            <input type="password" id="userPassword" name="user_password"
+                                value="{{ old('user_password') }}"
+                                class="form-control @error('user_password') is-invalid @enderror">
+                            @error('user_password')
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('ha_password') }}</strong>
+                                    <strong>{{ $errors->first('user_password') }}</strong>
                                 </span>
                             @enderror
                         </div>
                         <div class="form-check">
                             <input type="checkbox" id="showPassword" class="form-check-input">
-                            <label class="form-check-label" for="showPassword">Hiện mật khẩu</label>
+                            <label class="form-check-label" for="showPassword">Show Password</label>
                         </div>
-                    </form>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary" onclick="submitAddByForm()">Submit</button>
-                </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <input type="submit" value="Submit" class="btn btn-primary">
+                    </div>
+                </form>
             </div>
             <!-- /.card -->
         </div>
@@ -149,7 +191,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const passwordInput = document.getElementById('tenantPassword');
+            const passwordInput = document.getElementById('userPassword');
             const showPasswordCheckbox = document.getElementById('showPassword');
             passwordInput.value = generateRandomString(12);
 

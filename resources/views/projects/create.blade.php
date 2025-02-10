@@ -76,7 +76,7 @@
                             <label for="projectStatus">Status</label>
                             <select id="projectStatus" name="project_status"
                                 class="form-control custom-select @error('project_status') is-invalid @enderror">
-                                <option selected disabled>Select Status</option>
+                                <option selected disabled>-- Select Status --</option>
                                 @foreach ($projectStatuses as $projectStatus)
                                     <option value="{{ $projectStatus->key }}"
                                         {{ old('project_status') == $projectStatus->key ? 'selected' : '' }}>
