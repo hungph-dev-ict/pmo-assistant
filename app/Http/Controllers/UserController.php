@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Tenant;
+use App\Models\Constant;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\TenantUserRegisteredMail;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\CreateUserRequest;
 
 class UserController extends Controller
 {
@@ -43,7 +45,8 @@ class UserController extends Controller
 
     public function createTenantUser($tenant_id)
     {
-        return view('users.create');
+        $jobPositions = Constant::where('group', 'job_position')->get();
+        return view('users.create', compact('jobPositions'));
     }
 
     public function storeTenantUser(Request $request, $tenant_id)
@@ -130,5 +133,18 @@ class UserController extends Controller
             'success' => "✅ Đã thêm thành công {$userCount} user!",
             'user_count' => $userCount,
         ], 201);
+    }
+    public function storeByForm(CreateUserRequest $request)
+    {
+        $newUserInfo = $request->validated();
+
+        $createNewUser = $this->userService->createUserByForm($newUserInfo);
+
+        if ($createNewUser) {
+            return redirect()->route('client.users.list', auth()->user()->tenant_id)
+                ->with('success', 'User created successfully.');
+        }
+
+        return 500;
     }
 }

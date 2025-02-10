@@ -27,6 +27,11 @@ class Tenant extends Model
             ->where('head_account_flg', true);
     }
 
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
     public function plan()
     {
         return $this->belongsTo(Plan::class, 'plan_id');
