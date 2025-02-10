@@ -92,7 +92,16 @@ class PmController extends Controller
 
     public function viewChart()
     {
-        return view('pm.chart');
+        $tasks = Task::select('name', 'plan_start_date', 'plan_end_date')->get();
+        $taskData = $tasks->map(function ($task) {
+            return [
+                'name' => $task->name,
+                'y' => [date('n/j/Y', strtotime($task->plan_start_date)), date('n/j/Y', strtotime($task->plan_end_date))]
+            ];
+        });
+        $minDate = $tasks->min('plan_start_date');
+        $maxDate = $tasks->max('plan_end_date');
+        return view('pm.chart', compact('taskData', 'minDate', 'maxDate'));
     }
 
     public function store(Request $request, $project_id)

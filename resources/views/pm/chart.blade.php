@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Custom Page')
+@section('page_title')
+    Gantt Chart
+@endsection
 
 @section('inline_css')
     @vite(['resources/js/jscharting.js'])
@@ -26,13 +28,12 @@
 
     <!-- Main content -->
     <section class="content">
-        <!-- Default box -->
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Gantt Chart</h3>
             </div>
             <!-- /.card-header -->
-            <div class="card-body p-0">
+            <div class="card-body">
                 <div id="chartDiv" style="width: 100%;height: 400px;margin: 0px auto">
                 </div>
             </div>
@@ -43,51 +44,38 @@
 
 @section('inline_js')
     <script>
-        var columnWidths = [120, 75, 65];
+        var tasks = {!! json_encode($taskData) !!};
+
+        var columnWidths = [140, 80, 80];
         var span = function(val, width) {
-            return (
-                '<span style="width:' +
-                width +
-                'px;">' +
-                val +
-                '</span>'
-            );
+            return '<span style="display: inline-block; width:' + width + 'px; text-align: center;">' + val + '</span>';
         };
         var mapLabels = function(labels) {
-            return labels
-                .map(function(v, i) {
-                    return span(v, columnWidths[i]);
-                })
-                .join('');
+            return labels.map((v, i) => span(v, columnWidths[i])).join('');
         };
 
-        var headerText =
-            '' + mapLabels(['Task', 'Start', 'End']) + '';
-        var tickTemplate = mapLabels([
-            '%name',
-            '%low',
-            '%high'
-        ]);
-        boldTickTemplate = '<b>' + tickTemplate + '</b>';
+        var headerText = mapLabels(['Task', 'Start', 'End']);
+        var tickTemplate = mapLabels(['%name', '%low', '%high']);
+        var boldTickTemplate = '<b>' + tickTemplate + '</b>';
 
         JSC.chart('chartDiv', {
             debug: true,
-            /*Typical Gantt setup. Horizontal columns by default.*/
             type: 'horizontal column solid',
-            /*Make columns overlap.*/
             zAxis_scale_type: 'stacked',
-
             defaultBox_boxVisible: false,
             defaultAnnotation: {
-                label_style_fontSize: '15px'
+                label_style_fontSize: '14px',
+                verticalAlign: 'middle'
             },
             annotations: [{
-                    position: '0,2',
-                    label_text: headerText
+                    position: '0,3',
+                    label_text: headerText,
+                    label_style_fontWeight: 'bold',
+                    label_style_fontSize: '16px'
                 },
                 {
                     position: 'top right',
-                    label_text: 'Project Beta from %min to %max'
+                    label_text: 'Project from {{ date('n/j/Y', strtotime($minDate)) }} to {{ date('n/j/Y', strtotime($maxDate)) }}'
                 }
             ],
             legend: {
@@ -110,25 +98,19 @@
                 alternateGridFill: 'none',
                 scale: {
                     type: 'time',
-                    range: ['1/1/2025', '3/31/2025']
+                    range: ['{{ date('n/j/Y', strtotime($minDate)) }}', '{{ date('n/j/Y', strtotime($maxDate)) }}']
                 },
                 scale_range_padding: 0.15,
                 markers: [{
-                        value: '1/18/2025',
-                        color: 'red',
-                        label_text: 'Now'
-                    },
-                    {
-                        value: ['1/25/2025', '2/2/2025'],
-                        color: ['gold', 0.6],
-                        label_text: 'Vacation'
-                    }
-                ]
+                    value: '{{ date('n/j/Y') }}',
+                    color: 'red',
+                    label_text: 'Now'
+                }]
             },
             defaultTooltip_combined: false,
             defaultPoint: {
                 xAxisTick_label_text: tickTemplate,
-                tooltip: '<b>%name</b> %low - %high<br/>{days(%high-%low)} days'
+                tooltip: '<b>%name</b><br/> %low - %high<br/> {days(%high-%low)} days'
             },
             defaultSeries: {
                 firstPoint: {
@@ -142,67 +124,9 @@
             },
             yAxis_scale_type: 'time',
             series: [{
-                    name: 'Task cha 1',
-                    points: [{
-                            name: 'Initiate Project',
-                            y: ['1/1/2025', '1/31/2025']
-                        },
-                        {
-                            name: 'Project Assignments',
-                            y: ['1/1/2025', '1/15/2025']
-                        },
-                        {
-                            name: 'Outlines/Scope',
-                            y: ['1/10/2025', '1/20/2025']
-                        },
-                        {
-                            name: 'Business Alignment',
-                            y: ['1/21/2025', '1/30/2025']
-                        }
-                    ]
-                },
-                {
-                    name: 'Task cha 2',
-                    points: [{
-                            name: 'Plan Project',
-
-                            y: ['2/1/2025', '2/28/2025']
-                        },
-                        {
-                            name: 'Determine Process',
-                            y: ['2/1/2025', '2/12/2025']
-                        },
-                        {
-                            name: 'Design Layouts',
-                            y: ['2/5/2025', '2/25/2025']
-                        },
-                        {
-                            name: 'Design Structure',
-                            y: ['2/20/2025', '2/28/2025']
-                        }
-                    ]
-                },
-                {
-                    name: 'Task cha 3',
-                    points: [{
-                            name: 'Implement Project',
-                            y: ['3/1/2025', '3/31/2025']
-                        },
-                        {
-                            name: 'Designs',
-                            y: ['3/1/2025', '3/10/2025']
-                        },
-                        {
-                            name: 'Structures',
-                            y: ['3/10/2025', '3/15/2025']
-                        },
-                        {
-                            name: 'D&S Integration',
-                            y: ['3/16/2025', '3/31/2025']
-                        }
-                    ]
-                }
-            ]
+                name: 'Tasks',
+                points: tasks
+            }]
         });
     </script>
 @endsection
