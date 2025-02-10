@@ -34,7 +34,7 @@
                     <!-- form start -->
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="userEmail">Email Address</label>
+                            <label for="userEmail">Email Address <span style="color: red;">*</span></label>
                             <input type="email" id="userEmail" name="user_email" placeholder="Enter Email"
                                 class="form-control @error('user_email') is-invalid @enderror"
                                 value="{{ old('user_email') }}">
@@ -45,7 +45,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="userAccount">Account</label>
+                            <label for="userAccount">Account <span style="color: red;">*</span></label>
                             <input type="text" id="userAccount" name="user_account" placeholder="Enter Account"
                                 class="form-control @error('user_account') is-invalid @enderror"
                                 value="{{ old('user_account') }}">
@@ -56,7 +56,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="userName">Full Name</label>
+                            <label for="userName">Full Name <span style="color: red;">*</span></label>
                             <input type="text" id="userName" name="user_name" placeholder="Enter Name"
                                 class="form-control @error('user_name') is-invalid @enderror"
                                 value="{{ old('user_name') }}">
@@ -67,7 +67,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="userJobPosition">Job Position</label>
+                            <label for="userJobPosition">Job Position <span style="color: red;">*</span></label>
                             <select id="userJobPosition" name="user_job_position"
                                 class="form-control select @error('user_job_position') is-invalid @enderror">
                                 <option selected disabled>-- Select Job Position --</option>
@@ -86,7 +86,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="userPassword">Password<span style="color: red;">*</span></label>
+                            <label for="userPassword">Password <span style="color: red;">*</span></label>
                             <input type="password" id="userPassword" name="user_password"
                                 value="{{ old('user_password') }}"
                                 class="form-control @error('user_password') is-invalid @enderror">
@@ -110,42 +110,14 @@
             <!-- /.card -->
         </div>
 
-        <div class="col-md-6">
-            <div class="card card-success">
-                <div class="card-header">
-                    <h3 class="card-title">By Excel, CSV File</h3>
-
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="exampleInputFile">File input</label>
-                        <div class="input-group">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="exampleInputFile">
-                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                            </div>
-                            <div class="input-group-append">
-                                <span class="input-group-text">Upload</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary" onclick="submitAddByForm()">Submit</button>
-                </div>
-            </div>
-            <!-- /.card -->
+        <div class="col-md-6" id="upfile-create-users-element">
+            <upfile-create-users
+                submit-url="{{ route('client.users.store', ['tenant_id' => auth()->user()->tenant_id]) }}"></upfile-create-users>
         </div>
+
         <div class="col-md-12" id="bulk-insert-element">
             <bulk-insert-users
                 submit-url="{{ route('client.users.store', ['tenant_id' => auth()->user()->tenant_id]) }}"></bulk-insert-users>
-            <!-- /.card -->
         </div>
     </div>
     <!-- /.content -->

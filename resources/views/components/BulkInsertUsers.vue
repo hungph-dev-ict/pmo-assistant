@@ -34,7 +34,7 @@
                         :key="index"
                     >
                         <div class="form-group">
-                            <label>{{ field.label }}</label>
+                            <label>{{ field.label }} <span style="color: red">*</span></label>
                             <textarea
                                 v-model="formData[field.name]"
                                 class="form-control"
@@ -72,6 +72,7 @@
             </button>
         </div>
     </div>
+    <!-- /.card -->
 </template>
 
 <script>

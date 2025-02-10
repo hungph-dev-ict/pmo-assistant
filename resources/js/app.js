@@ -13,8 +13,8 @@ import { createApp } from "vue";
 import TaskContainer from "../views/components/TaskContainer.vue";
 import TaskAdd from "../views/components/TaskAdd.vue";
 import BulkInsertUsers from "../views/components/BulkInsertUsers.vue";
+import UploadFileCreateUsers from "../views/components/UploadFileCreateUsers.vue";
 
-// 1️⃣ Mount TaskContainer nếu tồn tại
 const taskListElement = document.querySelector("#task-list");
 if (taskListElement) {
     const taskContainerElement =
@@ -35,11 +35,8 @@ if (taskAddElement) {
     const listAssignee = taskAddElement.getAttribute("list-assignee");
     const currentUserId = taskAddElement.getAttribute("current-userid");
     createApp(TaskAdd, { projectId, listAssignee, currentUserId }).mount(taskAddElement);
-} else {
-    console.error("❌ Không tìm thấy <task-add>!");
 }
 
-// 2️⃣ Mount BulkInsertUsers nếu tồn tại
 const bulkInsertElement = document.querySelector("#bulk-insert-element");
 if (bulkInsertElement) {
     const submitUrl = bulkInsertElement
@@ -51,6 +48,21 @@ if (bulkInsertElement) {
     } else {
         console.error(
             "❌ Không tìm thấy thuộc tính submit-url trên <bulk-insert-users>!"
+        );
+    }
+}
+
+const upfileCreateUsersElement = document.querySelector("#upfile-create-users-element");
+if (upfileCreateUsersElement) {
+    const submitUrl = upfileCreateUsersElement
+        .querySelector("upfile-create-users")
+        ?.getAttribute("submit-url");
+
+    if (submitUrl) {
+        createApp(UploadFileCreateUsers, { submitUrl }).mount(upfileCreateUsersElement);
+    } else {
+        console.error(
+            "❌ Không tìm thấy thuộc tính submit-url trên <upfile-create-users-element>!"
         );
     }
 }
