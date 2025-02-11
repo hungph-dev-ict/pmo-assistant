@@ -89,19 +89,42 @@ class PmController extends Controller
         return view('pm.member');
     }
 
-    public function viewChart()
+    public function viewChart($projectId)
     {
-        $tasks = Task::select('name', 'plan_start_date', 'plan_end_date')->get();
-        $taskData = $tasks->map(function ($task) {
+        // Lấy tất cả tasks thuộc dự án, bao gồm cả epic (cha) và task con
+        $tasks = Task::where('project_id', $projectId)->get();
+
+        // Tạo cấu trúc cây với epic làm cha
+        $taskTree = $tasks->whereNull('parent_id')->map(function ($epic) {
             return [
-                'name' => $task->name,
-                'y' => [date('n/j/Y', strtotime($task->plan_start_date)), date('n/j/Y', strtotime($task->plan_end_date))]
+                'name' => $epic->name, // Epic name
+                'points' => collect([
+                    (object)[ // Thêm epic vào points
+                        'name' => $epic->name,
+                        'y' => [
+                            date('n/j/Y', strtotime($epic->plan_start_date)),
+                            date('n/j/Y', strtotime($epic->plan_end_date))
+                        ]
+                    ]
+                ])->merge($epic->children->map(function ($task) {
+                    return (object)[ // Các task con
+                        'name' => $task->name,
+                        'y' => [
+                            date('n/j/Y', strtotime($task->plan_start_date)),
+                            date('n/j/Y', strtotime($task->plan_end_date))
+                        ]
+                    ];
+                }))->values()->toArray(), // Chuyển về mảng
             ];
-        });
+        })->values()->toArray(); // Chuyển về mảng
+
+        // Lấy min/max date của tất cả task trong dự án
         $minDate = $tasks->min('plan_start_date');
         $maxDate = $tasks->max('plan_end_date');
-        return view('pm.chart', compact('taskData', 'minDate', 'maxDate'));
+
+        return view('pm.chart', compact('taskTree', 'minDate', 'maxDate'));
     }
+
 
     public function store(Request $request, $project_id)
     {

@@ -28,13 +28,12 @@
     <!-- Main content -->
     <section class="content">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header p-0">
                 <h3 class="card-title">Gantt Chart</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <div id="chartDiv" style="width: 100%;height: 400px;margin: 0px auto">
-                </div>
+                <div id="chartDiv" style="width: 100%; min-height: 400px; margin: 0 auto;"></div>
             </div>
             <!-- /.card-body -->
         </div>
@@ -43,9 +42,24 @@
 
 @section('inline_js')
     <script>
-        var tasks = {!! json_encode($taskData) !!};
+        function countTotalTasks(tasks) {
+            let count = 0;
+            tasks.forEach(task => {
+                count++; // Đếm task cha
+                if (task.points) {
+                    count += countTotalTasks(task.points); // Đếm task con
+                }
+            });
+            return count;
+        }
 
-        var columnWidths = [140, 80, 80];
+        var taskTree = {!! json_encode($taskTree) !!};
+        var totalTasks = countTotalTasks(taskTree);
+
+        var chartHeight = Math.max(400, totalTasks * 30 + 30) + 'px'; // Cập nhật chiều cao dựa trên tổng số task
+        document.getElementById('chartDiv').style.height = chartHeight; // Gán height cho div chứa biểu đồ
+
+        var columnWidths = [120, 75, 65];
         var span = function(val, width) {
             return '<span style="display: inline-block; width:' + width + 'px; text-align: center;">' + val + '</span>';
         };
@@ -62,14 +76,11 @@
             zAxis_scale_type: 'stacked',
             defaultBox_boxVisible: false,
             defaultAnnotation: {
-                label_style_fontSize: '14px',
-                verticalAlign: 'middle'
+                label_style_fontSize: '15px',
             },
             annotations: [{
-                    position: '0,3',
+                    position: '0,2',
                     label_text: headerText,
-                    label_style_fontWeight: 'bold',
-                    label_style_fontSize: '16px'
                 },
                 {
                     position: 'top right',
@@ -90,7 +101,7 @@
                     }
                 }
             },
-            palette: 'fiveColor46',
+            palette: 'default',
             yAxis: {
                 id: 'yAx',
                 alternateGridFill: 'none',
@@ -100,10 +111,19 @@
                 },
                 scale_range_padding: 0.15,
                 markers: [{
-                    value: '{{ date('n/j/Y') }}',
-                    color: 'red',
-                    label_text: 'Now'
-                }]
+                        value: '{{ date('n/j/Y') }}',
+                        color: 'red',
+                        label_text: 'Now '
+                    },
+                    {
+                        value: ['1/25/2025', '2/2/2025'],
+                        color: ['gold', 0.6],
+                        label_text: 'Vacation'
+                    }
+                ]
+            },
+            chartArea: {
+                height: chartHeight
             },
             defaultTooltip_combined: false,
             defaultPoint: {
@@ -121,10 +141,7 @@
                 }
             },
             yAxis_scale_type: 'time',
-            series: [{
-                name: 'Tasks',
-                points: tasks
-            }]
+            series: taskTree
         });
     </script>
 @endsection
