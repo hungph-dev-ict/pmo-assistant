@@ -25,7 +25,6 @@
             </div>
         </div><!-- /.container-fluid -->
     </section>
-
     <!-- Main content -->
     <section class="content">
         <div class="card">
@@ -57,7 +56,6 @@
         var headerText = mapLabels(['Task', 'Start', 'End']);
         var tickTemplate = mapLabels(['%name', '%low', '%high']);
         var boldTickTemplate = '<b>' + tickTemplate + '</b>';
-
         JSC.chart('chartDiv', {
             debug: true,
             type: 'horizontal column solid',

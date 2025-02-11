@@ -24,7 +24,6 @@ class PmController extends Controller
 
             return response()->json($data);
         }
-
         $listAssignee = Project::with('users')->find($project_id)->users;
 
         return view('pm.task', compact('project_id', 'listAssignee'));
