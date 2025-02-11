@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
 @section('page_title')
-    Gantt Chart
+    {{ $project->name }} - Chart
+@endsection
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active">{{ $project->name }}</li>
 @endsection
 
 @section('inline_css')
@@ -10,25 +15,10 @@
 
 @section('content')
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Projects</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Projects</li>
-                    </ol>
-                </div>
-            </div>
-        </div><!-- /.container-fluid -->
-    </section>
     <!-- Main content -->
     <section class="content">
         <div class="card">
-            <div class="card-header p-0">
+            <div class="card-header">
                 <h3 class="card-title">Gantt Chart</h3>
             </div>
             <!-- /.card-header -->
@@ -84,7 +74,7 @@
                 },
                 {
                     position: 'top right',
-                    label_text: 'Project from {{ date('n/j/Y', strtotime($minDate)) }} to {{ date('n/j/Y', strtotime($maxDate)) }}'
+                    label_text: 'Project {{ $project->name }} from {{ date('n/j/Y', strtotime($minDate)) }} to {{ date('n/j/Y', strtotime($maxDate)) }}'
                 }
             ],
             legend: {

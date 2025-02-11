@@ -91,6 +91,7 @@ class PmController extends Controller
 
     public function viewChart($projectId)
     {
+        $project = Project::find($projectId);
         // Lấy tất cả tasks thuộc dự án, bao gồm cả epic (cha) và task con
         $tasks = Task::where('project_id', $projectId)->get();
 
@@ -122,7 +123,7 @@ class PmController extends Controller
         $minDate = $tasks->min('plan_start_date');
         $maxDate = $tasks->max('plan_end_date');
 
-        return view('pm.chart', compact('taskTree', 'minDate', 'maxDate'));
+        return view('pm.chart', compact('taskTree', 'minDate', 'maxDate','project'));
     }
 
 
@@ -135,7 +136,6 @@ class PmController extends Controller
         //     return redirect()->route('pm.tasks.store')
         //         ->with('success', 'Task created successfully.');
         // }
-
         // return 500;
     }
 }
