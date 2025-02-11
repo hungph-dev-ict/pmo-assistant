@@ -1,6 +1,5 @@
 <li class="nav-item {{ request()->is('projects*') ? 'menu-open' : '' }}">
-    <a href="pages/gallery.html"
-        class="nav-link {{ request()->is('projects*') ? 'active' : '' }}">
+    <a href="pages/gallery.html" class="nav-link {{ request()->is('projects*') ? 'active' : '' }}">
         <i class="nav-icon fab fa-stack-overflow"></i>
         <p>
             Project setting
@@ -10,7 +9,7 @@
     <ul class="nav nav-treeview">
         <li class="nav-item">
             <a href="{{ route('projects.index') }}"
-                class="nav-link {{ request()->routeIs('projects.index') ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('projects.*') && !request()->routeIs('projects.create') ? 'active' : '' }}">
                 <i class="fas fa-list nav-icon"></i>
                 <p>Projects</p>
             </a>
@@ -35,7 +34,7 @@
     <ul class="nav nav-treeview">
         <li class="nav-item">
             <a href="{{ route('client.users.list', auth()->user()->tenant_id) }}"
-                class="nav-link  {{ request()->routeIs('client.users.list') ? 'active' : '' }}">
+                class="nav-link  {{ request()->routeIs('client.users.*') && !request()->routeIs('client.users.create') ? 'active' : '' }}">
                 <i class="fas fa-list nav-icon"></i>
                 <p>Users</p>
             </a>

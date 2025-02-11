@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
+use App\Models\User;
 use App\Models\Task;
+use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Services\TaskService;
 
 class PmController extends Controller
@@ -85,9 +88,41 @@ class PmController extends Controller
         return response()->json($data);
     }
 
-    public function listMembers()
+    public function listMembers($project_id)
     {
-        return view('pm.member');
+        $project = Project::findOrFail($project_id);
+        
+        $membersInProject = $project->users()->with('jobPosition')->get(); // Danh sách user trong dự án
+        $membersNotInProject = User::whereDoesntHave('projects', function ($query) use ($project_id) {
+            $query->where('projects.id', $project_id);
+        })->where('tenant_id', auth()->user()->tenant_id)->with('jobPosition')->get(); // Danh sách user chưa tham gia
+
+        return view('pm.member', compact('project', 'membersInProject', 'membersNotInProject'));
+    }
+
+    public function updateMembers(Request $request, $project_id)
+    {
+        try {
+            DB::beginTransaction(); // 🔹 Bắt đầu transaction
+
+            // Decode JSON từ input ẩn
+            $selected_user_list = json_decode($request->input('selected_user_list', '[]'), true);
+            
+            $project = Project::findOrFail($project_id);
+            $syncResult = $project->users()->sync($selected_user_list);
+
+            if (empty($syncResult['attached']) && empty($syncResult['detached']) && empty($syncResult['updated'])) {
+                DB::rollBack(); // 🔹 Không có thay đổi, rollback để tránh cập nhật không cần thiết
+                return redirect()->route('pm.member', ['project_id' => $project_id])->with('warning', 'No changes were made!');
+            }
+
+            DB::commit(); // 🔹 Xác nhận thay đổi nếu không có lỗi
+            return redirect()->route('pm.member', ['project_id' => $project_id])->with('success', 'Project members updated successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack(); // 🔹 Nếu có lỗi, hủy bỏ tất cả thay đổi
+            return redirect()->route('pm.member', ['project_id' => $project_id])->with('error', 'Error updating members: ' . $e->getMessage());
+        }
     }
 
     public function viewChart()
