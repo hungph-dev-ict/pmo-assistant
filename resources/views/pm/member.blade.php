@@ -10,8 +10,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="#">{{ $project->name }}</a></li>
-    <li class="breadcrumb-item active">Member</li>
+    <li class="breadcrumb-item active">{{ $project->name }} - Member</li>
 @endsection
 
 @section('content')
@@ -40,7 +39,7 @@
                         <select id="available-users" class="form-control" size="10" multiple>
                             @foreach ($membersNotInProject as $memberNotInProject)
                                 <option value="{{ $memberNotInProject->id }}">
-                                    {{ $memberNotInProject->name . ' - ' . $memberNotInProject->jobPosition->value1 }}
+                                    {{ $memberNotInProject->name . ' - ' . $memberNotInProject->name . ' - ' . $memberNotInProject->jobPosition->value1 }}
                                 </option>
                             @endforeach
                         </select>
@@ -57,7 +56,7 @@
                         <select id="selected-users" class="form-control" size="10" multiple>
                             @foreach ($membersInProject as $memberInProject)
                                 <option value="{{ $memberInProject->id }}">
-                                    {{ $memberInProject->name . ' - ' . $memberInProject->jobPosition->value1 }}
+                                    {{ $memberInProject->account . ' - ' . $memberInProject->name . ' - ' . $memberInProject->jobPosition->value1 }}
                                 </option>
                             @endforeach
                         </select>
