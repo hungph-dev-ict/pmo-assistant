@@ -27,7 +27,6 @@ class PmController extends Controller
 
             return response()->json($data);
         }
-
         $listAssignee = Project::with('users')->find($project_id)->users;
 
         return view('pm.task', compact('project_id', 'listAssignee'));
@@ -125,10 +124,43 @@ class PmController extends Controller
         }
     }
 
-    public function viewChart()
+    public function viewChart($projectId)
     {
-        return view('pm.chart');
+        $project = Project::find($projectId);
+        // Lấy tất cả tasks thuộc dự án, bao gồm cả epic (cha) và task con
+        $tasks = Task::where('project_id', $projectId)->get();
+
+        // Tạo cấu trúc cây với epic làm cha
+        $taskTree = $tasks->whereNull('parent_id')->map(function ($epic) {
+            return [
+                'name' => $epic->name, // Epic name
+                'points' => collect([
+                    (object)[ // Thêm epic vào points
+                        'name' => $epic->name,
+                        'y' => [
+                            date('n/j/Y', strtotime($epic->plan_start_date)),
+                            date('n/j/Y', strtotime($epic->plan_end_date))
+                        ]
+                    ]
+                ])->merge($epic->children->map(function ($task) {
+                    return (object)[ // Các task con
+                        'name' => $task->name,
+                        'y' => [
+                            date('n/j/Y', strtotime($task->plan_start_date)),
+                            date('n/j/Y', strtotime($task->plan_end_date))
+                        ]
+                    ];
+                }))->values()->toArray(), // Chuyển về mảng
+            ];
+        })->values()->toArray(); // Chuyển về mảng
+
+        // Lấy min/max date của tất cả task trong dự án
+        $minDate = $tasks->min('plan_start_date');
+        $maxDate = $tasks->max('plan_end_date');
+
+        return view('pm.chart', compact('taskTree', 'minDate', 'maxDate','project'));
     }
+
 
     public function store(Request $request, $project_id)
     {
@@ -139,7 +171,6 @@ class PmController extends Controller
         //     return redirect()->route('pm.tasks.store')
         //         ->with('success', 'Task created successfully.');
         // }
-
         // return 500;
     }
 }
