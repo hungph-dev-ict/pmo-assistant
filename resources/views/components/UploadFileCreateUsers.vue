@@ -27,23 +27,36 @@
         </div>
 
         <div class="card-footer">
-            <button type="button" class="btn btn-primary" @click="submitFile" :disabled="!selectedFile">
-                Submit
-            </button>
+            <span v-if="isLoading">
+                <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
+            </span>
+            <span v-else> <button type="button" class="btn btn-primary" @click="submitFile(users)"
+                    :disabled="!selectedFile || isLoading">
+                    Submit
+                </button> </span>
+
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import axios from "axios";
 import toastr from "toastr";
 
 const selectedFile = ref(null);
 const fileName = ref("Choose file");
 const isCollapsed = ref(false);
 const validationErrors = ref([]);
+const users = ref([]);
+const isLoading = ref(false);
 
-const validJobPositions = ["Developer", "BA", "PM", "QA"]; // Danh sách job hợp lệ
+const props = defineProps({
+    submitUrl: {
+        type: String,
+        required: true,
+    },
+});
 
 const toggleCollapse = () => {
     isCollapsed.value = !isCollapsed.value;
@@ -57,34 +70,32 @@ const handleFileChange = (event) => {
         return;
     }
 
-    // Kiểm tra định dạng file
     if (!file.name.endsWith(".csv")) {
         toastr.error("Only CSV files are allowed!");
         fileName.value = "Choose file";
         selectedFile.value = null;
-        event.target.value = ""; // Reset input file
+        event.target.value = "";
         return;
     }
 
     fileName.value = file.name;
     selectedFile.value = file;
 
-    // Đọc file để kiểm tra nội dung
     const reader = new FileReader();
-    reader.onload = (e) => validateCsv(e.target.result);
+    reader.onload = (e) => processCsv(e.target.result);
     reader.readAsText(file);
 };
 
-const validateCsv = (csvText) => {
+const processCsv = (csvText) => {
     validationErrors.value = [];
-    const lines = csvText.trim().split("\n").map((line) => line.split(",").map((cell) => cell.trim()));
+    users.value = [];
 
+    const lines = csvText.trim().split("\n").map((line) => line.split(",").map((cell) => cell.trim()));
     if (lines.length < 2) {
         validationErrors.value.push("⚠️ File CSV phải có ít nhất 1 dòng dữ liệu.");
         return;
     }
 
-    // Kiểm tra headers
     const headers = lines[0];
     const requiredHeaders = ["email", "account", "full_name", "job_position", "password"];
     if (!arraysEqual(headers, requiredHeaders)) {
@@ -92,67 +103,64 @@ const validateCsv = (csvText) => {
         return;
     }
 
-    // Kiểm tra dữ liệu từng dòng
-    const emails = [];
-    const accounts = [];
+    const emails = new Set();
+    const accounts = new Set();
 
     lines.slice(1).forEach((row, index) => {
-        const lineNumber = index + 2; // Vì index 0 là headers
+        const lineNumber = index + 2;
         if (row.length !== requiredHeaders.length) {
             validationErrors.value.push(`⚠️ Dòng ${lineNumber} không đủ ${requiredHeaders.length} cột.`);
             return;
         }
 
         const [email, account, fullName, jobPosition, password] = row;
-
-        // Kiểm tra email hợp lệ
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
         if (!emailRegex.test(email)) {
             validationErrors.value.push(`⚠️ Email dòng ${lineNumber} không hợp lệ: "${email}".`);
         }
 
-        // Kiểm tra job position hợp lệ
-        if (!validJobPositions.includes(jobPosition)) {
-            validationErrors.value.push(`⚠️ Job Position dòng ${lineNumber} không hợp lệ: "${jobPosition}". Giá trị hợp lệ: ${validJobPositions.join(", ")}`);
-        }
-
-        // Kiểm tra trùng lặp email & account
-        if (emails.includes(email)) {
+        if (emails.has(email)) {
             validationErrors.value.push(`⚠️ Email dòng ${lineNumber} bị trùng.`);
         }
-        if (accounts.includes(account)) {
+        if (accounts.has(account)) {
             validationErrors.value.push(`⚠️ Account dòng ${lineNumber} bị trùng.`);
         }
 
-        emails.push(email);
-        accounts.push(account);
+        emails.add(email);
+        accounts.add(account);
+        users.value.push({ email, account, full_name: fullName, job_position: jobPosition, password });
     });
 };
 
-const arraysEqual = (arr1, arr2) => {
-    return arr1.length === arr2.length && arr1.every((val, index) => val === arr2[index]);
-};
-
-const submitFile = async () => {
-    if (!selectedFile.value) {
-        toastr.error("Please select a file before submitting.");
+const submitFile = async (userList) => {
+    if (!Array.isArray(userList) || userList.length === 0) {
+        toastr.error("No valid users to submit!");
         return;
     }
 
-    const formData = new FormData();
-    formData.append("file", selectedFile.value);
+    if (isLoading.value) return; // Tránh spam submit
+    isLoading.value = true;
 
     try {
-        console.log("File is ready to be uploaded");
-        // Gửi file lên server (bỏ comment nếu cần)
-        // const response = await axios.post("/api/import-file", formData, {
-        //     headers: { "Content-Type": "multipart/form-data" },
-        // });
-        // toastr.success(response.data.message);
+        const payload = {
+            emails: userList.map((u) => u.email),
+            accounts: userList.map((u) => u.account),
+            full_names: userList.map((u) => u.full_name),
+            job_positions: userList.map((u) => u.job_position),
+            passwords: userList.map((u) => u.password),
+        };
+
+        const response = await axios.post(props.submitUrl, payload);
+        toastr.success(response.data.success || "Upload successful!");
     } catch (error) {
-        toastr.error(error.response?.data?.message || "File upload failed!");
+        toastr.error(error.response?.data?.error || "Upload failed!");
+    } finally {
+        isLoading.value = false;
     }
 };
+
+const arraysEqual = (arr1, arr2) => arr1.length === arr2.length && arr1.every((val, index) => val === arr2[index]);
 </script>
 
 <style scoped>
