@@ -11,4 +11,6 @@ return [
     'tenant_setting' => 'Cài đặt Tenant',
     'tenants' => 'Danh sách Tenant',
     'tenant_add' => 'Thêm mới Tenant',
+    'duplicate_emails' => '⚠️ Danh sách email có dòng trùng lặp.',
+    'invalid_email' => '⚠️ Email dòng :index không hợp lệ: ":email"',
 ];

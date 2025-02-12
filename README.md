@@ -69,3 +69,5 @@ php artisan optimize:clear
     "intelephense.format.enable": true,         // Bật định dạng PHP
 }
 ```
+# Laravel localization to Vue
+php artisan export:translations

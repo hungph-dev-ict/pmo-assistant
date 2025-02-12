@@ -26,6 +26,21 @@
     @vite(['resources/js/plugins/bootstrap/js/bootstrap.bundle.min.js'])
     @yield('inline_js')
     @vite(['resources/js/app.js'])
+    <script src="{{ asset('translations.js') }}"></script>
+    <script>
+        window.appLang = "{{ session('lang', 'en') }}";
+        window.t = function(type, key, replacements = {}) {
+            let lang = window.appLang || "en"; // Lấy ngôn ngữ hiện tại
+            let text = window.translations?.[lang]?.[type]?.[key] || key;
+
+            Object.keys(replacements).forEach(k => {
+                text = text.replace(`:${k}`, replacements[k]);
+                text = text.replace(`{${k}}`, replacements[k]);
+            });
+
+            return text;
+        };
+    </script>
     @yield('custom_inline_js')
 </body>
 

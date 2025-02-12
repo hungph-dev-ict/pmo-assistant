@@ -11,4 +11,6 @@ return [
     'tenant_setting' => 'テナント設定',
     'tenants' => 'テナント',
     'tenant_add' => 'テナント追加',
+    'duplicate_emails' => '⚠️ メールリストに重複したエントリーがあります。',
+    'invalid_email' => '⚠️ 行 :index のメールアドレスが無効です: ":email"',
 ];
