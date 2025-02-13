@@ -162,25 +162,19 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from "vue";
+import { ref, computed, onMounted, nextTick, defineEmits } from "vue";
 import axios from "axios";
 
 const props = defineProps({
     projectId: String, listAssignee: {
         type: [Array, String], // Có thể là Array hoặc String
         default: () => []
-    }, currentUserId: {
-        type: [Number, String], // Có thể là Number hoặc String
-        default: 0
-    }
+    },
+    currentUserId: Number
 });
 
 const parsedListAssignee = computed(() => {
     return typeof props.listAssignee === "string" ? JSON.parse(props.listAssignee) : props.listAssignee;
-});
-
-const numberCurrentUserId = computed(() => {
-    return typeof props.currentUserId === "string" ? Number(props.currentUserId) : props.currentUserId;
 });
 
 const taskTitle = ref("");
@@ -235,6 +229,9 @@ const handlePriorityChange = async (e) => {
     selectedPriority.value = e.target.value;
 };
 
+// Emit sự kiện update để thông báo lên component cha
+const emit = defineEmits(["update-task"]);
+
 // Gửi API lưu task
 const handleSubmit = async () => {
     try {
@@ -251,14 +248,16 @@ const handleSubmit = async () => {
             actual_start_date: actualStartDate.value, // Ngày bắt đầu thực tế
             actual_end_date: actualEndDate.value, // Ngày kết thúc thực tế
             project_id: props.projectId, // ID dự án
-            status: 1, // Mặc định status = 1
+            status: 0, // Mặc định status = 1
             progress: 0, // Tiến độ ban đầu = 0
-            created_by: numberCurrentUserId.value, // Người tạo task
+            created_by: props.currentUserId, // Người tạo task
         };
 
         await axios.post(`/api/pm/${props.projectId}/tasks/store`, payload);
-
         toastr.success("Task created successfully!");
+
+        // Emit để component cha xử lý
+        emit("update-task");
     } catch (error) {
         // Lấy thông tin lỗi từ response
         const errorMessage = error.response?.data?.message || "Failed to create task!";

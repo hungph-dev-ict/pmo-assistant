@@ -17,13 +17,8 @@
 @endsection
 
 @section('content')
-    <div id="task-add">
-        <task-add project-id="{{ $project_id }}" list-assignee="{{ $listAssignee }}"
-            current-userid="{{ auth()->user()->id }}"></task-add>
-    </div>
-
     <div id="task-list">
-        <task-container project-id="{{ $project_id }}" list-assignee="{{ $listAssignee }}"></task-container>
+        <task-container project-id="{{ $project_id }}" list-assignee="{{ $listAssignee }}" current-userid="{{ auth()->user()->id }}"></task-container>
     </div>
 @endsection
 

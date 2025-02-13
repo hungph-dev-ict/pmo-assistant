@@ -33,7 +33,7 @@
                         <th v-if="isColumnVisible('status')" data-column="status">
                             Status
                         </th>
-                        <th v-if="isColumnVisible('action')">
+                        <th v-if="isColumnVisible('action')" class="text-center">
                             Action
                         </th>
                     </tr>
@@ -128,24 +128,25 @@
                                     </option>
                                 </select>
                             </td>
-                            <td v-if="isColumnVisible('action')">
-                                <template v-if="!task.isEditing">
-                                    <a class="btn btn-info btn-sm" href="#" @click.prevent="editTask(task)">
-                                        <i class="fas fa-pencil-alt"></i> Edit
-                                    </a>
-                                    <a class="btn btn-danger btn-sm" href="#">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </a>
-                                </template>
+                            <td v-if="isColumnVisible('action')" class="project-actions text-center">
+                                    <template v-if="!task.isEditing">
+                                        <a class="btn btn-info btn-sm mr-2" href="#" @click.prevent="editTask(task)">
+                                            <i class="fas fa-pencil-alt"></i> Edit
+                                        </a>
+                                        <a class="btn btn-danger btn-sm" href="#">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </a>
+                                    </template>
 
-                                <template v-else>
-                                    <a class="btn btn-success btn-sm" href="#" @click.prevent="updateTask(task)">
-                                        <i class="fas fa-save"></i> Update
-                                    </a>
-                                    <a class="btn btn-secondary btn-sm" href="#" @click.prevent="cancelEdit(task)">
-                                        <i class="fas fa-times"></i> Cancel
-                                    </a>
-                                </template>
+                                    <template v-else>
+                                        <a class="btn btn-success btn-sm mr-2" href="#"
+                                            @click.prevent="updateTask(task)">
+                                            <i class="fas fa-save"></i> Update
+                                        </a>
+                                        <a class="btn btn-secondary btn-sm" href="#" @click.prevent="cancelEdit(task)">
+                                            <i class="fas fa-times"></i> Cancel
+                                        </a>
+                                    </template>
                             </td>
 
                         </tr>
@@ -313,7 +314,7 @@ const updateTask = async (task) => {
     }
     task.isEditing = false;
     // Emit để component cha xử lý
-    emit("update-task", task);
+    emit("update-task");
 };
 
 const cancelEdit = (task) => {

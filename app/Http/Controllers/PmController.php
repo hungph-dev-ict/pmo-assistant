@@ -47,14 +47,14 @@ class PmController extends Controller
                 'parent_id' => 'nullable|exists:tasks,id',
                 'assignee' => 'nullable|integer|exists:users,id',
                 'priority' => 'required|integer|min:0|max:4',
-                'estimate_effort' => 'required|numeric|min:0',
+                'estimate_effort' => 'numeric|min:0',
                 'actual_effort' => 'nullable|numeric|min:0',
                 'plan_start_date' => 'nullable|date',
                 'plan_end_date' => 'nullable|date|after_or_equal:plan_start_date',
                 'actual_start_date' => 'nullable|date',
                 'actual_end_date' => 'nullable|date|after_or_equal:actual_start_date',
-                'status' => 'required|integer',
-                'progress' => 'required|integer|min:0|max:100',
+                'status' => 'integer',
+                'progress' => 'integer|min:0|max:100',
                 'created_by' => 'required|exists:users,id',
             ]);
 

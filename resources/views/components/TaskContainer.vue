@@ -1,28 +1,42 @@
 <template>
     <div>
+        <upload-file-create-tasks :projectId="projectId" :listAssignee="parsedListAssignee" :currentUserId="numberCurrentUserId"
+            @update-task="handleTaskUpdate"></upload-file-create-tasks>
+        <task-add :projectId="projectId" :listAssignee="parsedListAssignee" :currentUserId="numberCurrentUserId"
+            @update-task="handleTaskUpdate"></task-add>
         <task-search-box :tasks="tasks" @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
             @updateVisibleColumns="updateVisibleColumns"></task-search-box>
 
-        <task-list :projectId="projectId" :filteredTasks="filteredTasks" :blankQuery="blankQuery" :visibleColumns="visibleColumns"
-            :listAssignee="parsedListAssignee" @update-task="handleTaskUpdate"></task-list>
+        <task-list :projectId="projectId" :filteredTasks="filteredTasks" :blankQuery="blankQuery"
+            :visibleColumns="visibleColumns" :listAssignee="parsedListAssignee"
+            @update-task="handleTaskUpdate"></task-list>
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import axios from "axios";
+import TaskAdd from "./TaskAdd.vue";
 import TaskSearchBox from "./TaskSearchBox.vue";
 import TaskList from "./TaskList.vue";
+import UploadFileCreateTasks from "./UploadFileCreateTasks.vue";
 
 const props = defineProps({
     projectId: String, listAssignee: {
         type: [Array, String], // Có thể là Array hoặc String
         default: () => []
+    }, currentUserId: {
+        type: [Number, String], // Có thể là Number hoặc String
+        default: 0
     }
 });
 
 const parsedListAssignee = computed(() => {
     return typeof props.listAssignee === "string" ? JSON.parse(props.listAssignee) : props.listAssignee;
+});
+
+const numberCurrentUserId = computed(() => {
+    return typeof props.currentUserId === "string" ? Number(props.currentUserId) : props.currentUserId;
 });
 
 const tasks = ref([]); // Danh sách task gốc

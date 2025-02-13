@@ -22,7 +22,8 @@ if (taskListElement) {
     if (taskContainerElement) {
         const projectId = taskContainerElement.getAttribute("project-id");
         const listAssignee = taskContainerElement.getAttribute("list-assignee");
-        createApp(TaskContainer, { projectId, listAssignee }).mount(taskListElement);
+        const currentUserId = taskContainerElement.getAttribute("current-userid");
+        createApp(TaskContainer, { projectId, listAssignee, currentUserId }).mount(taskListElement);
     } else {
         console.error(
             "❌ Không tìm thấy <task-container> bên trong #task-list!"
@@ -30,13 +31,13 @@ if (taskListElement) {
     }
 }
 
-const taskAddElement = document.querySelector("task-add");
-if (taskAddElement) {
-    const projectId = taskAddElement.getAttribute("project-id");
-    const listAssignee = taskAddElement.getAttribute("list-assignee");
-    const currentUserId = taskAddElement.getAttribute("current-userid");
-    createApp(TaskAdd, { projectId, listAssignee, currentUserId }).mount(taskAddElement);
-}
+// const taskAddElement = document.querySelector("task-add");
+// if (taskAddElement) {
+//     const projectId = taskAddElement.getAttribute("project-id");
+//     const listAssignee = taskAddElement.getAttribute("list-assignee");
+//     const currentUserId = taskAddElement.getAttribute("current-userid");
+//     createApp(TaskAdd, { projectId, listAssignee, currentUserId }).mount(taskAddElement);
+// }
 
 const bulkInsertElement = document.querySelector("#bulk-insert-element");
 if (bulkInsertElement) {
