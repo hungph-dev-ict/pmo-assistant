@@ -179,8 +179,8 @@ const parsedListAssignee = computed(() => {
 
 const taskTitle = ref("");
 const epicTitle = ref("");
-const estimateEffort = ref(0);
-const actualEffort = ref(0);
+const estimateEffort = ref(null);
+const actualEffort = ref(null);
 const planStartDate = ref("");
 const planEndDate = ref("");
 const actualStartDate = ref("");
@@ -294,40 +294,46 @@ onMounted(() => {
         $("#planStartDatePicker").datetimepicker({
             format: "YYYY-MM-DD",
             useCurrent: false,
+            allowInputToggle: true,
         });
 
         $("#planStartDatePicker").on("change.datetimepicker", function (e) {
-            let newPlanStartDate = e.date ? e.date.format("YYYY-MM-DD") : "";
+            let newPlanStartDate = e.date
+                ? e.date.format("YYYY-MM-DD")
+                : (e.target.value ? e.target.value : "");
             planStartDate.value = newPlanStartDate;
         });
 
         $("#planEndDatePicker").datetimepicker({
             format: "YYYY-MM-DD",
             useCurrent: false,
+            allowInputToggle: true,
         });
 
         $("#planEndDatePicker").on("change.datetimepicker", function (e) {
-            let newPlanEndDate = e.date ? e.date.format("YYYY-MM-DD") : "";
+            let newPlanEndDate = e.date ? e.date.format("YYYY-MM-DD") : (e.target.value ? e.target.value : "");
             planEndDate.value = newPlanEndDate;
         });
 
         $("#actualStartDatePicker").datetimepicker({
             format: "YYYY-MM-DD",
             useCurrent: false,
+            allowInputToggle: true,
         });
 
         $("#actualStartDatePicker").on("change.datetimepicker", function (e) {
-            let newActualStartDate = e.date ? e.date.format("YYYY-MM-DD") : "";
+            let newActualStartDate = e.date ? e.date.format("YYYY-MM-DD") : (e.target.value ? e.target.value : "");
             actualStartDate.value = newActualStartDate;
         });
 
         $("#actualEndDatePicker").datetimepicker({
             format: "YYYY-MM-DD",
             useCurrent: false,
+            allowInputToggle: true,
         });
 
         $("#actualEndDatePicker").on("change.datetimepicker", function (e) {
-            let newActualEndDate = e.date ? e.date.format("YYYY-MM-DD") : "";
+            let newActualEndDate = e.date ? e.date.format("YYYY-MM-DD") : (e.target.value ? e.target.value : "");
             actualEndDate.value = newActualEndDate;
         });
     });
