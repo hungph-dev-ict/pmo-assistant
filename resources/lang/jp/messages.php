@@ -13,5 +13,8 @@ return [
     'tenant_add' => 'テナント追加',
     'duplicate_emails' => '⚠️ メールリストに重複したエントリーがあります。',
     'invalid_email' => '⚠️ 行 :index のメールアドレスが無効です: ":email"',
+
+    //Project
     'project_created_success' => 'プロジェクトが正常に作成されました。',
+    'project_updated_success' => 'プロジェクトが正常に更新されました。',
 ];

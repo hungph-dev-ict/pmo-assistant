@@ -111,7 +111,7 @@ class ProjectController extends Controller
         $updateNewProject = $this->projectService->updateProject($idProject, $updateProjectInfo);
         if ($updateNewProject) {
             return redirect()->route('projects.index')
-                ->with('success', 'Project edited successfully.');
+                ->with('success', __('messages.project_updated_success'));
         }
 
         return 500;

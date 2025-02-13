@@ -5,12 +5,12 @@
 @endsection
 
 @section('page_title')
-    Projects
+    {{ __('labels.projects') }}
 @endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Projects</li>
+    <li class="breadcrumb-item active">{{ __('labels.projects') }}</li>
 @endsection
 
 @section('content')
@@ -36,16 +36,16 @@
                             #
                         </th>
                         <th style="width: 20%">
-                            Project Name
+                            {{ __('labels.project_name') }}
                         </th>
                         <th style="width: 30%">
-                            Description
+                            {{ __('labels.project_description') }}
                         </th>
                         <th>
-                            Start Date
+                            {{ __('labels.project_start_date') }}
                         </th>
                         <th style="width: 8%" class="text-center">
-                            End Date
+                            {{ __('labels.project_end_date') }}
                         </th>
                         <th style="width: 20%">
                         </th>
@@ -101,6 +101,22 @@
                                         Delete
                                     </a>
                                 @endif
+                            <td class="project-actions text-right">
+                                <a class="btn btn-primary btn-sm" href="{{ route('projects.show', $project->id) }}">
+                                    <i class="fas fa-folder">
+                                    </i>
+                                    {{ __('labels.view') }}
+                                </a>
+                                <a class="btn btn-info btn-sm" href="{{ route('projects.edit', $project->id) }}">
+                                    <i class="fas fa-pencil-alt">
+                                    </i>
+                                    {{ __('labels.edit') }}
+                                </a>
+                                <a class="btn btn-danger btn-sm" href="#">
+                                    <i class="fas fa-trash">
+                                    </i>
+                                    {{ __('labels.delete') }}
+                                </a>
                             </td>
                         </tr>
                     @endforeach
@@ -111,13 +127,13 @@
         <!-- /.card-body -->
         <div class="card-footer d-flex justify-content-between align-items-center" style="padding: 0.5rem 1rem;">
             <div class="d-flex">
-                Showing
+                {{ __('labels.showing') }}
                 <strong class="mx-1">{{ $projects->firstItem() }}</strong>
-                to
+                {{ __('labels.to') }}
                 <strong class="mx-1">{{ $projects->lastItem() }}</strong>
-                of
+                {{ __('labels.of') }}
                 <strong class="mx-1">{{ $projects->total() }}</strong>
-                entries
+                {{ __('labels.entries') }}
             </div>
             <div class="pagination-wrapper ml-auto">
                 {{ $projects->links('vendor.pagination.default') }}

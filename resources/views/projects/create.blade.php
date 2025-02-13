@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('page_title')
-    Project Add
+    {{ __('labels.project_add') }}
 @endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('projects.index') }}">Projects</a></li>
-    <li class="breadcrumb-item active">Project Add</li>
+    <li class="breadcrumb-item"><a href="{{ route('projects.index') }}">{{ __('labels.projects') }}</a></li>
+    <li class="breadcrumb-item active">{{ __('labels.project_add') }}</li>
 @endsection
 
 @section('inline_css')
@@ -42,7 +42,7 @@
             <div class="col-md-6">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">General</h3>
+                        <h3 class="card-title">{{ __('labels.general') }}</h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -52,7 +52,7 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="projectName">Project Name</label>
+                            <label for="projectName">{{ __('labels.project_name') }}</label>
                             <input type="text" id="projectName" name="project_name"
                                 class="form-control @error('project_name') is-invalid @enderror"
                                 value="{{ old('project_name') }}">
@@ -63,7 +63,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="projectDescription">Project Description</label>
+                            <label for="projectDescription">{{ __('labels.project_description') }}</label>
                             <textarea id="projectDescription" name="project_description"
                                 class="form-control @error('project_description') is-invalid @enderror" rows="3">{{ old('project_description') }}</textarea>
                             @error('project_description')
@@ -73,10 +73,10 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="projectStatus">Status</label>
+                            <label for="projectStatus">{{ __('labels.project_status') }}</label>
                             <select id="projectStatus" name="project_status"
                                 class="form-control custom-select @error('project_status') is-invalid @enderror">
-                                <option selected disabled>-- Select Status --</option>
+                                <option selected disabled>{{ __('labels.project_select_status') }}</option>
                                 @foreach ($projectStatuses as $projectStatus)
                                     <option value="{{ $projectStatus->key }}"
                                         {{ old('project_status') == $projectStatus->key ? 'selected' : '' }}>
@@ -91,7 +91,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="projectClientCompany">Client Company</label>
+                            <label for="projectClientCompany">{{ __('labels.project_client_company') }}</label>
                             <input type="text" id="projectClientCompany" name="project_client_company"
                                 class="form-control @error('project_client_company') is-invalid @enderror"
                                 value="{{ old('project_client_company') }}">
@@ -102,11 +102,11 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="projectProjectManager">Project Manager</label>
+                            <label for="projectProjectManager">{{ __('labels.project_manager') }}</label>
                             <select id="projectProjectManager" name="project_project_manager"
                                 class="form-control select2 @error('project_project_manager') is-invalid @enderror"
                                 style="width: 100%;">
-                                <option value="" disabled selected>-- Select Project Manager --</option>
+                                <option value="" disabled selected>{{ __('labels.project_select_manager') }}</option>
                                 @foreach ($listProjectManager as $projectManager)
                                     <option value="{{ $projectManager->id }}"
                                         {{ old('project_project_manager') == $projectManager->id ? 'selected' : '' }}>
@@ -128,7 +128,7 @@
             <div class="col-md-6">
                 <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">Time & Budget</h3>
+                        <h3 class="card-title">{{ __('labels.time_budget') }}</h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -139,7 +139,7 @@
                     <div class="card-body">
                         <!-- Date -->
                         <div class="form-group">
-                            <label for="projectStartDate">Start Date:</label>
+                            <label for="projectStartDate">{{ __('labels.project_start_date') }}</label>
                             <div class="input-group date" id="projectStartDatePicker" data-target-input="nearest">
                                 <input type="text" id="projectStartDate" name="project_start_date"
                                     class="form-control datetimepicker-input @error('project_start_date') is-invalid @enderror"
@@ -158,7 +158,7 @@
                         </div>
                         <!-- Date -->
                         <div class="form-group">
-                            <label for="projectEndDate">End Date:</label>
+                            <label for="projectEndDate">{{ __('labels.project_end_date') }}</label>
                             <div class="input-group date" id="projectEndDatePicker" data-target-input="nearest">
                                 <input type="text" id="projectEndDate" name="project_end_date"
                                     class="form-control datetimepicker-input @error('project_end_date') is-invalid @enderror"
@@ -175,7 +175,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="projectEstimatedBudget">Estimated budget (MM)</label>
+                            <label for="projectEstimatedBudget">{{ __('labels.project_estimated_budget') }}</label>
                             <input type="text" id="projectEstimatedBudget" name="project_estimated_budget"
                                 class="form-control @error('project_estimated_budget') is-invalid @enderror"
                                 value="{{ old('project_estimated_budget') }}">
@@ -186,12 +186,13 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="inputSpentBudget">Total amount spent (MM)</label>
+                            <label for="inputSpentBudget">{{ __('labels.project_total_amount_spent') }}</label>
                             <input type="number" id="inputSpentBudget" name="total_amount_spent" class="form-control"
                                 value="{{ old('total_amount_spent') }}" disabled>
                         </div>
-                        {{-- <div class="form-group">
-                            <label for="projectEstimatedProjectDuration">Estimated project duration (months)</label>
+                        <div class="form-group">
+                            <label
+                                for="projectEstimatedProjectDuration">{{ __('labels.project_estimated_project_duration') }}</label>
                             <input type="text" id="projectEstimatedProjectDuration"
                                 name="project_estimated_project_duration"
                                 class="form-control @error('project_estimated_project_duration') is-invalid @enderror"
@@ -211,9 +212,11 @@
 
         <div class="row">
             <div class="col-12">
-                <a href="#" class="btn btn-secondary">Cancel</a>
-                <input type="submit" value="Create new Project" class="btn btn-success float-right">
+                <a href="#" class="btn btn-secondary">{{ __('labels.cancel') }}</a>
+                <input type="submit" value="{{ __('labels.project_create_new_project') }}"
+                    class="btn btn-success float-right">
             </div>
+        </div>
         </div>
         </section>
         <!-- /.content -->
@@ -235,7 +238,7 @@
         $(function() {
             //Initialize Select2 Elements
             $('.select2').select2({
-                placeholder: "-- Select Project Manager --", // Placeholder hiển thị khi không có lựa chọn
+                placeholder: {{ __('labels.project_select_manager') }}, // Placeholder hiển thị khi không có lựa chọn
                 allowClear: true // Bật tính năng xóa lựa chọn
             })
 
