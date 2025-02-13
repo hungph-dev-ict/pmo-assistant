@@ -202,6 +202,7 @@
                         <select id="selectDisplayColumns" class="select2" multiple="multiple"
                             data-placeholder="Select Columns" style="width: 100%">
                             <option value="epic_task">Epic/Task</option>
+                            <option value="priority">Priority</option>
                             <option value="assignee">Assignee</option>
                             <option value="plan_start_date">
                                 Plan Start Date
@@ -440,6 +441,7 @@ onMounted(() => {
 
             let defaultColumns = [
                 "epic_task",
+                "priority",
                 "assignee",
                 "plan_start_date",
                 "plan_end_date",

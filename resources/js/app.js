@@ -21,7 +21,8 @@ if (taskListElement) {
         taskListElement.querySelector("task-container");
     if (taskContainerElement) {
         const projectId = taskContainerElement.getAttribute("project-id");
-        createApp(TaskContainer, { projectId }).mount(taskListElement);
+        const listAssignee = taskContainerElement.getAttribute("list-assignee");
+        createApp(TaskContainer, { projectId, listAssignee }).mount(taskListElement);
     } else {
         console.error(
             "❌ Không tìm thấy <task-container> bên trong #task-list!"

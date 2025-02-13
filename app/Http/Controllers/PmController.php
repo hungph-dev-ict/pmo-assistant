@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\TaskService;
-
 class PmController extends Controller
 {
     protected $taskService;
@@ -80,6 +79,44 @@ class PmController extends Controller
         }
     }
 
+    public function updateTask(Request $request, $project_id, $task_id)
+    {
+        try {
+            // Kiểm tra task có tồn tại không
+            $task = Task::where('project_id', $project_id)->findOrFail($task_id);
+
+            // Validate dữ liệu đầu vào
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'priority' => 'required|integer|min:0|max:4',
+                'assignee' => 'nullable|integer|exists:users,id',
+                'status' => 'required|integer',
+                'plan_start_date' => 'nullable|date',
+                'plan_end_date' => 'nullable|date|after_or_equal:plan_start_date',
+                'actual_start_date' => 'nullable|date',
+                'actual_end_date' => 'nullable|date|after_or_equal:actual_start_date',
+            ]);
+
+            // Cập nhật thông tin task
+            $task->update($validatedData);
+
+            return response()->json([
+                'message' => 'Task updated successfully!',
+                'task' => $task,
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Task not found!',
+                'error' => $e->getMessage(),
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update task!',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function listEpics($project_id)
     {
         $data = Task::where('project_id', $project_id)->where('type', '0')->get();
@@ -90,7 +127,7 @@ class PmController extends Controller
     public function listMembers($project_id)
     {
         $project = Project::findOrFail($project_id);
-        
+
         $membersInProject = $project->users()->with('jobPosition')->get(); // Danh sách user trong dự án
         $membersNotInProject = User::whereDoesntHave('projects', function ($query) use ($project_id) {
             $query->where('projects.id', $project_id);
@@ -106,7 +143,7 @@ class PmController extends Controller
 
             // Decode JSON từ input ẩn
             $selected_user_list = json_decode($request->input('selected_user_list', '[]'), true);
-            
+
             $project = Project::findOrFail($project_id);
             $syncResult = $project->users()->sync($selected_user_list);
 
@@ -117,7 +154,6 @@ class PmController extends Controller
 
             DB::commit(); // 🔹 Xác nhận thay đổi nếu không có lỗi
             return redirect()->route('pm.member', ['project_id' => $project_id])->with('success', 'Project members updated successfully!');
-
         } catch (\Exception $e) {
             DB::rollBack(); // 🔹 Nếu có lỗi, hủy bỏ tất cả thay đổi
             return redirect()->route('pm.member', ['project_id' => $project_id])->with('error', 'Error updating members: ' . $e->getMessage());
@@ -158,7 +194,7 @@ class PmController extends Controller
         $minDate = $tasks->min('plan_start_date');
         $maxDate = $tasks->max('plan_end_date');
 
-        return view('pm.chart', compact('taskTree', 'minDate', 'maxDate','project'));
+        return view('pm.chart', compact('taskTree', 'minDate', 'maxDate', 'project'));
     }
 
 

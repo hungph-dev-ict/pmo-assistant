@@ -1,27 +1,29 @@
 <template>
     <div>
-        <task-search-box
-            :tasks="tasks"
-            @updateFilteredTasks="filteredTasks = $event"
-            @blankQuery="handleBlankQuery"
-            @updateVisibleColumns="updateVisibleColumns"
-        ></task-search-box>
+        <task-search-box :tasks="tasks" @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
+            @updateVisibleColumns="updateVisibleColumns"></task-search-box>
 
-        <task-list
-            :filteredTasks="filteredTasks"
-            :blankQuery="blankQuery"
-            :visibleColumns="visibleColumns"
-        ></task-list>
+        <task-list :projectId="projectId" :filteredTasks="filteredTasks" :blankQuery="blankQuery" :visibleColumns="visibleColumns"
+            :listAssignee="parsedListAssignee" @update-task="handleTaskUpdate"></task-list>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import TaskSearchBox from "./TaskSearchBox.vue";
 import TaskList from "./TaskList.vue";
 
-const props = defineProps({ projectId: String });
+const props = defineProps({
+    projectId: String, listAssignee: {
+        type: [Array, String], // Có thể là Array hoặc String
+        default: () => []
+    }
+});
+
+const parsedListAssignee = computed(() => {
+    return typeof props.listAssignee === "string" ? JSON.parse(props.listAssignee) : props.listAssignee;
+});
 
 const tasks = ref([]); // Danh sách task gốc
 const filteredTasks = ref([]); // Danh sách task đã lọc
@@ -47,6 +49,7 @@ const handleBlankQuery = (value) => {
 
 const visibleColumns = ref([
     "epic_task",
+    "priority",
     "assignee",
     "plan_start_date",
     "plan_end_date",
@@ -55,6 +58,11 @@ const visibleColumns = ref([
 
 const updateVisibleColumns = (columns) => {
     visibleColumns.value = columns;
+};
+
+// Khi task được cập nhật, fetch lại danh sách task
+const handleTaskUpdate = async () => {
+    await fetchTasks();
 };
 
 onMounted(fetchTasks);

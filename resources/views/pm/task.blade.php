@@ -23,7 +23,7 @@
     </div>
 
     <div id="task-list">
-        <task-container project-id="{{ $project_id }}"></task-container>
+        <task-container project-id="{{ $project_id }}" list-assignee="{{ $listAssignee }}"></task-container>
     </div>
 @endsection
 

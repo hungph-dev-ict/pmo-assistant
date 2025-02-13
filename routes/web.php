@@ -46,6 +46,7 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::get('/api/pm/{project_id}/tasks', [PmController::class, 'listTasks']);
     Route::get('/api/pm/{project_id}/epics', [PmController::class, 'listEpics']);
     Route::post('/api/pm/{project_id}/tasks/store', [PmController::class, 'storeTask']);
+    Route::put('/api/pm/{project_id}/tasks/{task_id}/update', [PmController::class, 'updateTask']);
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');
         Route::get('/member', [PmController::class, 'listMembers'])->name('pm.member');
