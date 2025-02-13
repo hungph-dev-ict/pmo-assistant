@@ -214,6 +214,7 @@
                                 Actual End Date
                             </option>
                             <option value="status">Status</option>
+                            <option value="action">Action</option>
                         </select>
                     </div>
                 </div>
@@ -442,7 +443,8 @@ onMounted(() => {
                 "assignee",
                 "plan_start_date",
                 "plan_end_date",
-                "status"
+                "status",
+                "action"
             ];
             $("#selectDisplayColumns").val(defaultColumns).trigger("change");
 

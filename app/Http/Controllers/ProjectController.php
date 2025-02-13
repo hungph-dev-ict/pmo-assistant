@@ -73,7 +73,7 @@ class ProjectController extends Controller
 
         if ($createNewProject) {
             return redirect()->route('projects.index')
-                ->with('success', 'Project created successfully.');
+                ->with('success', __('messages.project_created_success'));
         }
 
         return 500;

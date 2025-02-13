@@ -12,7 +12,8 @@ window.translations = {
             "tenants": "Tenants",
             "tenant_add": "Tenant Add",
             "duplicate_emails": "\u26a0\ufe0f The email list contains duplicate entries.",
-            "invalid_email": "\u26a0\ufe0f Email at line :index is invalid: \":email\""
+            "invalid_email": "\u26a0\ufe0f Email at line :index is invalid: \":email\"",
+            "project_created_success": "Project created successfully."
         },
         "validation": {
             "accepted": "The :attribute field must be accepted.",
@@ -170,7 +171,10 @@ window.translations = {
             "attributes": []
         },
         "labels": {
-            "bulk_insert": "Bulk Insert"
+            "bulk_insert": "Bulk Insert",
+            "projects": "Projects",
+            "full_name": "Full Name",
+            "submit": "Submit"
         }
     },
     "jp": {
@@ -186,7 +190,8 @@ window.translations = {
             "tenants": "\u30c6\u30ca\u30f3\u30c8",
             "tenant_add": "\u30c6\u30ca\u30f3\u30c8\u8ffd\u52a0",
             "duplicate_emails": "\u26a0\ufe0f \u30e1\u30fc\u30eb\u30ea\u30b9\u30c8\u306b\u91cd\u8907\u3057\u305f\u30a8\u30f3\u30c8\u30ea\u30fc\u304c\u3042\u308a\u307e\u3059\u3002",
-            "invalid_email": "\u26a0\ufe0f \u884c :index \u306e\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\u304c\u7121\u52b9\u3067\u3059: \":email\""
+            "invalid_email": "\u26a0\ufe0f \u884c :index \u306e\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\u304c\u7121\u52b9\u3067\u3059: \":email\"",
+            "project_created_success": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u304c\u6b63\u5e38\u306b\u4f5c\u6210\u3055\u308c\u307e\u3057\u305f\u3002"
         },
         "validation": {
             "accepted": "The :attribute field must be accepted.",
@@ -344,7 +349,10 @@ window.translations = {
             "attributes": []
         },
         "labels": {
-            "bulk_insert": "\u4e00\u62ec\u633f\u5165"
+            "bulk_insert": "\u4e00\u62ec\u633f\u5165",
+            "projects": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8",
+            "full_name": "\u6c0f\u540d",
+            "submit": "\u767b\u9332"
         }
     },
     "vi": {
@@ -360,7 +368,8 @@ window.translations = {
             "tenants": "Danh s\u00e1ch Tenant",
             "tenant_add": "Th\u00eam m\u1edbi Tenant",
             "duplicate_emails": "\u26a0\ufe0f Danh s\u00e1ch email c\u00f3 d\u00f2ng tr\u00f9ng l\u1eb7p.",
-            "invalid_email": "\u26a0\ufe0f Email d\u00f2ng :index kh\u00f4ng h\u1ee3p l\u1ec7: \":email\""
+            "invalid_email": "\u26a0\ufe0f Email d\u00f2ng :index kh\u00f4ng h\u1ee3p l\u1ec7: \":email\"",
+            "project_created_success": "D\u1ef1 \u00e1n \u0111\u00e3 \u0111\u01b0\u1ee3c t\u1ea1o th\u00e0nh c\u00f4ng."
         },
         "validation": {
             "accepted": "The :attribute field must be accepted.",
@@ -518,7 +527,10 @@ window.translations = {
             "attributes": []
         },
         "labels": {
-            "bulk_insert": "Th\u00eam h\u00e0ng lo\u1ea1t"
+            "bulk_insert": "Th\u00eam h\u00e0ng lo\u1ea1t",
+            "projects": "D\u1ef1 \u00e1n",
+            "full_name": "T\u00ean \u0111\u1ea7y \u0111\u1ee7",
+            "submit": "L\u01b0u"
         }
     }
 };

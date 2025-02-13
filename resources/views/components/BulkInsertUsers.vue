@@ -42,7 +42,7 @@
                 <span v-if="isLoading">
                     <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
                 </span>
-                <span v-else> Submit </span>
+                <span v-else> {{ translations?.labels?.submit || 'Submit'  }} </span>
             </button>
         </div>
     </div>
@@ -57,6 +57,7 @@ const currentLang = ref(window.appLang || "en");
 
 // Khởi tạo translations là một ref
 const translations = ref(window.translations?.[currentLang.value] || {});
+console.log(translations.value);
 
 // Cập nhật translations khi `currentLang` thay đổi
 watch(currentLang, (newLang) => {
@@ -92,7 +93,7 @@ const validJobPositions = [
 const fields = [
     { name: "bi_email", label: "Email", placeholder: "Enter emails..." },
     { name: "bi_account", label: "Account", placeholder: "Enter accounts..." },
-    { name: "bi_full_name", label: "Full Name", placeholder: "Enter full names..." },
+    { name: "bi_full_name", label: t("labels", "full_name", ""), placeholder: "Enter full names..." },
     { name: "bi_job_position", label: "Job Position", placeholder: "Enter job positions..." },
     { name: "bi_password", label: "Password", placeholder: "Enter passwords..." },
 ];
@@ -191,7 +192,6 @@ const submitForm = async () => {
     });
 
     if (hasDuplicateLines(emails)) validationErrors.value.push(t("messages", "duplicate_emails", ""));
-    if (hasDuplicateLines(accounts)) validationErrors.value.push("⚠️ Danh sách account có dòng trùng lặp.");
 
     if (validationErrors.value.length > 0) return;
 
