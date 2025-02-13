@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\TaskService;
+
 class PmController extends Controller
 {
     protected $taskService;
@@ -209,4 +210,28 @@ class PmController extends Controller
         // }
         // return 500;
     }
+
+public function softDeleteTask($project_id, $task_id) {
+    $task = Task::find($task_id);
+
+    if (!$task) {
+        return response()->json(['error' => 'Task not found'], 404);
+    }
+
+    if ($task->task_type == 0) { // Nếu là Epic
+        // Lấy tất cả task con của Epic này
+        $subTasks = Task::where('parent_id', $task_id)->get();
+        foreach ($subTasks as $subTask) {
+            $subTask->delete(); // Xóa mềm từng task con
+        }
+    }
+
+    $task->delete(); // Xóa mềm task chính (Epic hoặc Task thường)
+
+    return response()->json([
+        'success' => 'Task deleted successfully',
+        'deleted_tasks' => $task->task_type == 0 ? $subTasks->pluck('id') : [$task_id]
+    ], 200);
+}
+
 }

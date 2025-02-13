@@ -129,24 +129,23 @@
                                 </select>
                             </td>
                             <td v-if="isColumnVisible('action')" class="project-actions text-center">
-                                    <template v-if="!task.isEditing">
-                                        <a class="btn btn-info btn-sm mr-2" href="#" @click.prevent="editTask(task)">
-                                            <i class="fas fa-pencil-alt"></i> Edit
-                                        </a>
-                                        <a class="btn btn-danger btn-sm" href="#">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </a>
-                                    </template>
+                                <template v-if="!task.isEditing">
+                                    <a class="btn btn-info btn-sm mr-2" href="#" @click.prevent="editTask(task)">
+                                        <i class="fas fa-pencil-alt"></i> Edit
+                                    </a>
+                                    <a class="btn btn-danger btn-sm" href="#" @click="confirmDelete(task)">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </template>
 
-                                    <template v-else>
-                                        <a class="btn btn-success btn-sm mr-2" href="#"
-                                            @click.prevent="updateTask(task)">
-                                            <i class="fas fa-save"></i> Update
-                                        </a>
-                                        <a class="btn btn-secondary btn-sm" href="#" @click.prevent="cancelEdit(task)">
-                                            <i class="fas fa-times"></i> Cancel
-                                        </a>
-                                    </template>
+                                <template v-else>
+                                    <a class="btn btn-success btn-sm mr-2" href="#" @click.prevent="updateTask(task)">
+                                        <i class="fas fa-save"></i> Update
+                                    </a>
+                                    <a class="btn btn-secondary btn-sm" href="#" @click.prevent="cancelEdit(task)">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </a>
+                                </template>
                             </td>
 
                         </tr>
@@ -159,6 +158,7 @@
 
 <script setup>
 import { defineProps, computed, ref, nextTick, onMounted, defineEmits } from "vue";
+import Swal from "sweetalert2";
 
 const props = defineProps({
     projectId: String,
@@ -329,5 +329,45 @@ const destroySelect2 = () => {
     $(".assignee-select").select2("destroy");
     $(".priority-select").select2("destroy");
     $(".status-select").select2("destroy");
+};
+
+const confirmDelete = async (task) => {
+    let warningMessage = "Bạn có chắc chắn muốn xoá task này?";
+    
+
+    if (task.type === "epic") {
+        warningMessage = "⚠️ Task này là một Epic! Nếu bạn xoá nó, tất cả task con cũng sẽ bị xoá. Bạn có chắc chắn muốn tiếp tục?";
+    }
+
+    const result = await Swal.fire({
+        title: warningMessage,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "OK",
+        cancelButtonText: "Hủy",
+    });
+
+    if (result.isConfirmed) {
+        softDelete(task.id);
+    }
+};
+
+const softDelete = async (taskId) => {
+    try {
+        const url = `/api/pm/${props.projectId}/tasks/${taskId}/destroy`; // API xoá mềm
+        const response = await axios.delete(url);
+        toastr.success("Task deleted successfully!");
+        // Emit để component cha xử lý
+        emit("update-task");
+    } catch (error) {
+        // Lấy thông tin lỗi từ response
+        const errorMessage = error.response?.data?.message || "Failed to create task!";
+        const errorDetail = error.response?.data?.error || "Unknown error";
+
+        // Hiển thị toastr lỗi với cả message và error detail
+        toastr.error(`${errorMessage}: ${errorDetail}`);
+    }
 };
 </script>
