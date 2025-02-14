@@ -151,12 +151,12 @@
                         undone.</p>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
                     <form method="POST" id="deleteTenantForm" action="{{ route('tenants.destroy', $tenant->id) }}">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-outline-light">Delete</button>
                     </form>
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>

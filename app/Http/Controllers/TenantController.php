@@ -31,10 +31,8 @@ class TenantController extends Controller
         // Lấy danh sách tenants
         $tenants = Tenant::withTrashed()->with(['headUser:id,account,name,avatar,tenant_id', 'plan:id,name'])->paginate(5);
         // Đường dẫn ảnh mặc định
-        $defaultTenantLogo = 'drive.google.com/uc?export=view&id=191jpGTBMy5o_ZyQLbNOBTKiOUYiPhG2X';
-        $defaultHaAvatar = 'drive.google.com/uc?export=view&id=1lv0f70ekHE_5AH7o6NQPEF9PmCPgc6Mk';
-
-        // Lấy base64 của ảnh mặc định từ cache hoặc mã hóa một lần
+        $defaultTenantLogo = 'https://drive.google.com/file/d/191jpGTBMy5o_ZyQLbNOBTKiOUYiPhG2X/view?usp=drive_link';
+        $defaultHaAvatar = 'https://drive.google.com/uc?export=view&id=1lv0f70ekHE_5AH7o6NQPEF9PmCPgc6Mk';
         $defaultTenantLogoBase64 = Cache::rememberForever('default_tenant_logo_base64', function () use ($defaultTenantLogo) {
             return ImageHelper::imageToBase64($defaultTenantLogo);
         });
@@ -50,12 +48,13 @@ class TenantController extends Controller
 
             // Nếu không có ảnh, sử dụng ảnh mặc định
             if (!$tenantLogoLink) {
+                // dd(123);
                 $tenant->logo_base64 = $defaultTenantLogoBase64;
             } else {
                 // Gọi helper để xử lý base64
                 $tenant->logo_base64 = ImageHelper::imageToBase64($tenantLogoLink);
             }
-            
+
             $haAvatarLink = $tenant->headUser->avatar; // Hoặc null nếu không có ảnh
             // Nếu không có ảnh, sử dụng ảnh mặc định
             if (!$haAvatarLink) {
@@ -65,6 +64,8 @@ class TenantController extends Controller
                 $tenant->ha_avatar_base64 = ImageHelper::imageToBase64($haAvatarLink);
             }
         }
+
+        // dd($tenants);
 
         return view('tenants.index', compact('tenants'));
     }
