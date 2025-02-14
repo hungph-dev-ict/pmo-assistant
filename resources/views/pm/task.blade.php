@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('page_title')
-    Task List
+    {{ $project->name }} - Task List
 @endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active"><a href="{{ route('projects.index') }}">Tasks</a></li>
+    <li class="breadcrumb-item active">{{ $project->name }} - Task List</li>
 @endsection
 
 @section('inline_css')

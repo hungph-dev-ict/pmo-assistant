@@ -18,6 +18,7 @@ class StaffController extends Controller
 
     public function listTasks(Request $request, $project_id)
     {
+        $project = Project::findOrFail($project_id);
         if ($request->ajax()) {
             $tasks = Task::where('project_id', $project_id)->with('assigneeUser')->get();
             $data = $this->taskService->getTasksByProject($project_id);
@@ -26,7 +27,7 @@ class StaffController extends Controller
         }
         $listAssignee = Project::with('users')->find($project_id)->users;
         
-        return view('staff.task', compact('project_id', 'listAssignee'));
+        return view('staff.task', compact('project_id', 'listAssignee', 'project'));
     }
 
     public function updateTask(Request $request, $project_id, $task_id)

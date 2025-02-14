@@ -21,6 +21,7 @@ class PmController extends Controller
 
     public function listTasks(Request $request, $project_id)
     {
+        $project = Project::findOrFail($project_id);
         if ($request->ajax()) {
             $tasks = Task::where('project_id', $project_id)->with('assigneeUser')->get();
             $data = $this->taskService->getTasksByProject($project_id);
@@ -29,7 +30,7 @@ class PmController extends Controller
         }
         $listAssignee = Project::with('users')->find($project_id)->users;
 
-        return view('pm.task', compact('project_id', 'listAssignee'));
+        return view('pm.task', compact('project_id', 'listAssignee', 'project'));
     }
 
     public function storeTask(Request $request, $project_id)

@@ -6,7 +6,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">{{ $project->name }}</li>
+    <li class="breadcrumb-item active">{{ $project->name }} - Chart</li>
 @endsection
 
 @section('inline_css')
