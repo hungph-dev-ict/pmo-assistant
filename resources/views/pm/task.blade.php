@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('page_title')
-    Task List
+    {{ $project->name }} - Task List
 @endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active"><a href="{{ route('projects.index') }}">Tasks</a></li>
+    <li class="breadcrumb-item active">{{ $project->name }} - Task List</li>
 @endsection
 
 @section('inline_css')
@@ -20,7 +20,7 @@
 @section('content')
     <div id="task-list">
         <task-container project-id="{{ $project_id }}" list-assignee="{{ $listAssignee }}"
-            current-userid="{{ auth()->user()->id }}"></task-container>
+            current-userid="{{ auth()->user()->id }}" user-role="{{ auth()->user()->getRoleNames() }}"></task-container>
     </div>
 @endsection
 

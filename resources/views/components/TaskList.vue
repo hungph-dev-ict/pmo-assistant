@@ -9,31 +9,58 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th v-if="isColumnVisible('epic_task')" data-column="epic_task">
+                        <th
+                            v-if="isColumnVisible('epic_task')"
+                            data-column="epic_task"
+                        >
                             Epic/Task
                         </th>
-                        <th v-if="isColumnVisible('priority')" data-column="priority">
+                        <th
+                            v-if="isColumnVisible('priority')"
+                            data-column="priority"
+                        >
                             Priority
                         </th>
-                        <th v-if="isColumnVisible('assignee')" data-column="assignee">
+                        <th
+                            v-if="isColumnVisible('assignee')"
+                            data-column="assignee"
+                        >
                             Assignee
                         </th>
-                        <th v-if="isColumnVisible('plan_start_date')" data-column="plan_start_date">
+                        <th
+                            v-if="isColumnVisible('plan_start_date')"
+                            data-column="plan_start_date"
+                        >
                             Plan Start Date
                         </th>
-                        <th v-if="isColumnVisible('plan_end_date')" data-column="plan_end_date">
+                        <th
+                            v-if="isColumnVisible('plan_end_date')"
+                            data-column="plan_end_date"
+                        >
                             Plan End Date
                         </th>
-                        <th v-if="isColumnVisible('actual_start_date')" data-column="actual_start_date">
+                        <th
+                            v-if="isColumnVisible('actual_start_date')"
+                            data-column="actual_start_date"
+                        >
                             Actual Start Date
                         </th>
-                        <th v-if="isColumnVisible('actual_end_date')" data-column="actual_end_date">
+                        <th
+                            v-if="isColumnVisible('actual_end_date')"
+                            data-column="actual_end_date"
+                        >
                             Actual End Date
                         </th>
-                        <th v-if="isColumnVisible('status')" data-column="status">
+                        <th
+                            v-if="isColumnVisible('status')"
+                            data-column="status"
+                        >
                             Status
                         </th>
-                        <th v-if="isColumnVisible('action')" class="text-center">
+                        <th
+                            v-if="isColumnVisible('action')"
+                            class="text-center"
+                        >
                             Action
                         </th>
                     </tr>
@@ -43,111 +70,230 @@
                         <tr class="bg-light">
                             <td>{{ task.id }}</td>
                             <td v-if="isColumnVisible('epic_task')">
-                                <span v-if="task.type === 'task' && isBlankQuery && !task.isEditing"> └ </span>
+                                <span
+                                    v-if="
+                                        task.type === 'task' &&
+                                        isBlankQuery &&
+                                        !task.isEditing
+                                    "
+                                >
+                                    └
+                                </span>
 
-                                <span v-if="!task.isEditing">{{ task.name }}</span>
+                                <span v-if="!task.isEditing">{{
+                                    task.name
+                                }}</span>
 
-                                <input v-else type="text" v-model="task.editedName"
-                                    class="form-control form-control-sm" />
+                                <input
+                                    v-else-if="!hasPermissionStaff"
+                                    type="text"
+                                    v-model="task.editedName"
+                                    class="form-control form-control-sm"
+                                />
                             </td>
                             <td v-if="isColumnVisible('priority')">
-                                <span v-if="!task.isEditing">{{ task.priority }}</span>
-                                <select v-else class="form-control form-control-sm priority-select"
-                                    v-model="task.editedPriority">
-                                    <option :key="0" :value="'On Hold'">On Hold</option>
+                                <span v-if="!task.isEditing">{{
+                                    task.priority
+                                }}</span>
+                                <select
+                                    v-else-if="!hasPermissionStaff"
+                                    class="form-control form-control-sm priority-select"
+                                    v-model="task.editedPriority"
+                                >
+                                    <option :key="0" :value="'On Hold'">
+                                        On Hold
+                                    </option>
                                     <option :value="'Low'">Low</option>
                                     <option :value="'Medium'">Medium</option>
                                     <option :value="'High'">High</option>
-                                    <option :key="4" :value="'Critical'">Critical</option>
+                                    <option :key="4" :value="'Critical'">
+                                        Critical
+                                    </option>
                                 </select>
                             </td>
                             <td v-if="isColumnVisible('assignee')">
-                                <span v-if="!task.isEditing">{{ task.assignee?.account || "N/A" }}</span>
-                                <select v-else class="form-control form-control-sm assignee-select"
-                                    v-model="task.editedAssignee">
-                                    <option v-for="user in listAssignee" :key="user.id" :value="user.id">
+                                <span v-if="!task.isEditing">{{
+                                    task.assignee?.account || "N/A"
+                                }}</span>
+                                <select
+                                    v-else-if="!hasPermissionStaff"
+                                    class="form-control form-control-sm assignee-select"
+                                    v-model="task.editedAssignee"
+                                >
+                                    <option
+                                        v-for="user in listAssignee"
+                                        :key="user.id"
+                                        :value="user.id"
+                                    >
                                         {{ user.account }}
                                     </option>
                                 </select>
                             </td>
                             <td v-if="isColumnVisible('plan_start_date')">
-                                <span v-if="!task.isEditing">{{ task.plan_start_date }}</span>
-                                <div v-else class="input-group date plan-start-datepicker" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="task.editedPlanStartDate" data-target=".plan-start-datepicker" />
-                                    <div class="input-group-append" data-target=".plan-start-datepicker"
-                                        data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                <span v-if="!task.isEditing">{{
+                                    task.plan_start_date
+                                }}</span>
+                                <div
+                                    v-else-if="!hasPermissionStaff"
+                                    class="input-group date plan-start-datepicker"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="task.editedPlanStartDate"
+                                        data-target=".plan-start-datepicker"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target=".plan-start-datepicker"
+                                        data-toggle="datetimepicker"
+                                    >
+                                        <div class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </td>
 
                             <td v-if="isColumnVisible('plan_end_date')">
-                                <span v-if="!task.isEditing">{{ task.plan_end_date }}</span>
-                                <div v-else class="input-group date plan-end-datepicker" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="task.editedPlanEndDate" data-target=".plan-end-datepicker" />
-                                    <div class="input-group-append" data-target=".plan-end-datepicker"
-                                        data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                <span v-if="!task.isEditing">{{
+                                    task.plan_end_date
+                                }}</span>
+                                <div
+                                    v-else-if="!hasPermissionStaff"
+                                    class="input-group date plan-end-datepicker"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="task.editedPlanEndDate"
+                                        data-target=".plan-end-datepicker"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target=".plan-end-datepicker"
+                                        data-toggle="datetimepicker"
+                                    >
+                                        <div class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </td>
 
                             <td v-if="isColumnVisible('actual_start_date')">
-                                <span v-if="!task.isEditing">{{ task.actual_start_date }}</span>
-                                <div v-else class="input-group date actual-start-datepicker"
-                                    data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="task.editedActualStartDate" data-target=".actual-start-datepicker" />
-                                    <div class="input-group-append" data-target=".actual-start-datepicker"
-                                        data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                <span v-if="!task.isEditing">{{
+                                    task.actual_start_date
+                                }}</span>
+                                <div
+                                    v-else
+                                    class="input-group date actual-start-datepicker"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="task.editedActualStartDate"
+                                        data-target=".actual-start-datepicker"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target=".actual-start-datepicker"
+                                        data-toggle="datetimepicker"
+                                    >
+                                        <div class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </td>
 
                             <td v-if="isColumnVisible('actual_end_date')">
-                                <span v-if="!task.isEditing">{{ task.actual_end_date }}</span>
-                                <div v-else class="input-group date actual-end-datepicker" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="task.editedActualEndDate" data-target=".actual-end-datepicker" />
-                                    <div class="input-group-append" data-target=".actual-end-datepicker"
-                                        data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                <span v-if="!task.isEditing">{{
+                                    task.actual_end_date
+                                }}</span>
+                                <div
+                                    v-else
+                                    class="input-group date actual-end-datepicker"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="task.editedActualEndDate"
+                                        data-target=".actual-end-datepicker"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target=".actual-end-datepicker"
+                                        data-toggle="datetimepicker"
+                                    >
+                                        <div class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </td>
 
                             <td v-if="isColumnVisible('status')">
-                                <span v-if="!task.isEditing">{{ task.status }}</span>
-                                <select v-else class="form-control form-control-sm status-select"
-                                    v-model="task.editedStatus">
-                                    <option v-for="status in statusList" :key="status" :value="status">
+                                <span v-if="!task.isEditing">{{
+                                    task.status
+                                }}</span>
+                                <select
+                                    v-else
+                                    class="form-control form-control-sm status-select"
+                                    v-model="task.editedStatus"
+                                >
+                                    <option
+                                        v-for="status in statusList"
+                                        :key="status"
+                                        :value="status"
+                                    >
                                         {{ status }}
                                     </option>
                                 </select>
                             </td>
-                            <td v-if="isColumnVisible('action')" class="project-actions text-center">
+                            <td
+                                v-if="isColumnVisible('action')"
+                                class="project-actions text-center"
+                            >
                                 <template v-if="!task.isEditing">
-                                    <a class="btn btn-info btn-sm mr-2" href="#" @click.prevent="editTask(task)">
+                                    <a
+                                        class="btn btn-info btn-sm mr-2"
+                                        href="#"
+                                        @click.prevent="editTask(task)"
+                                    >
                                         <i class="fas fa-pencil-alt"></i> Edit
                                     </a>
-                                    <a class="btn btn-danger btn-sm" href="#" @click="confirmDelete(task)">
+                                    <a
+                                        v-if="!hasPermissionStaff"
+                                        class="btn btn-danger btn-sm"
+                                        href="#"
+                                        @click="confirmDelete(task)"
+                                    >
                                         <i class="fas fa-trash"></i> Delete
                                     </a>
                                 </template>
 
                                 <template v-else>
-                                    <a class="btn btn-success btn-sm mr-2" href="#" @click.prevent="updateTask(task)">
+                                    <a
+                                        class="btn btn-success btn-sm mr-2"
+                                        href="#"
+                                        @click.prevent="updateTask(task)"
+                                    >
                                         <i class="fas fa-save"></i> Update
                                     </a>
-                                    <a class="btn btn-secondary btn-sm" href="#" @click.prevent="cancelEdit(task)">
+                                    <a
+                                        class="btn btn-secondary btn-sm"
+                                        href="#"
+                                        @click.prevent="cancelEdit(task)"
+                                    >
                                         <i class="fas fa-times"></i> Cancel
                                     </a>
                                 </template>
                             </td>
-
                         </tr>
                     </template>
                 </tbody>
@@ -157,7 +303,14 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref, nextTick, onMounted, defineEmits } from "vue";
+import {
+    defineProps,
+    computed,
+    ref,
+    nextTick,
+    onMounted,
+    defineEmits,
+} from "vue";
 import Swal from "sweetalert2";
 
 const props = defineProps({
@@ -165,7 +318,8 @@ const props = defineProps({
     filteredTasks: Array,
     blankQuery: Boolean,
     visibleColumns: Array,
-    listAssignee: Array
+    listAssignee: Array,
+    hasPermissionStaff: Boolean,
 });
 
 // Tạo danh sách task dưới dạng ref để có thể cập nhật giá trị
@@ -175,10 +329,11 @@ const statusList = ref([
     "In Progress",
     "Resolved",
     "Feedback",
-    "Done"]);
+    "Done",
+]);
 
 onMounted(() => {
-    tasks.value = props.filteredTasks.map(task => ({
+    tasks.value = props.filteredTasks.map((task) => ({
         ...task,
         isEditing: false,
         editedName: task.name,
@@ -215,18 +370,26 @@ const editTask = (task) => {
 const initPlugins = (task) => {
     nextTick(() => {
         // Khởi động lại select2
-        $(".assignee-select").select2().on("change", function (e) {
-            task.editedAssignee = $(this).val();
-        });
-        $(".priority-select").select2().on("change", function (e) {
-            task.editedPriority = $(this).val();
-        });
-        $(".status-select").select2().on("change", function (e) {
-            task.editedStatus = $(this).val();
-        });
+        $(".assignee-select")
+            .select2()
+            .on("change", function (e) {
+                task.editedAssignee = $(this).val();
+            });
+        $(".priority-select")
+            .select2()
+            .on("change", function (e) {
+                task.editedPriority = $(this).val();
+            });
+        $(".status-select")
+            .select2()
+            .on("change", function (e) {
+                task.editedStatus = $(this).val();
+            });
 
         // Khởi động lại datetimepicker cho tất cả các trường ngày tháng
-        $(".plan-start-datepicker, .plan-end-datepicker, .actual-start-datepicker, .actual-end-datepicker").datetimepicker({
+        $(
+            ".plan-start-datepicker, .plan-end-datepicker, .actual-start-datepicker, .actual-end-datepicker"
+        ).datetimepicker({
             format: "YYYY-MM-DD",
             icons: { time: "fa fa-clock", date: "fa fa-calendar" },
         });
@@ -276,25 +439,29 @@ const updateTask = async (task) => {
 
     const priorityMapping = {
         "On Hold": 0,
-        "Low": 1,
-        "Medium": 2,
-        "High": 3,
-        "Critical": 4
+        Low: 1,
+        Medium: 2,
+        High: 3,
+        Critical: 4,
     };
 
     const statusMapping = {
         "Not Started": 0,
         "In Progress": 1,
-        "Resolved": 2,
-        "Feedback": 3,
-        "Done": 4
+        Resolved: 2,
+        Feedback: 3,
+        Done: 4,
     };
 
     try {
         // Gọi API cập nhật dữ liệu
-        await axios.put(`/api/pm/${props.projectId}/tasks/${task.id}/update`, {
+        const url = props.hasPermissionStaff
+            ? `/api/staff/${props.projectId}/tasks/${task.id}/update`
+            : `/api/pm/${props.projectId}/tasks/${task.id}/update`;
+        await axios.put(url, {
             name: updatedTask.name,
-            priority: priorityMapping[updatedTask.priority] ?? updatedTask.priority, // Map priority
+            priority:
+                priorityMapping[updatedTask.priority] ?? updatedTask.priority, // Map priority
             assignee: updatedTask.assignee,
             status: statusMapping[updatedTask.status] ?? updatedTask.status, // Map status            plan_start_date: task.plan_start_date,
             plan_start_date: updatedTask.plan_start_date,
@@ -306,7 +473,8 @@ const updateTask = async (task) => {
         toastr.success("Updated successfully!");
     } catch (error) {
         // Lấy thông tin lỗi từ response
-        const errorMessage = error.response?.data?.message || "Failed to create task!";
+        const errorMessage =
+            error.response?.data?.message || "Failed to create task!";
         const errorDetail = error.response?.data?.error || "Unknown error";
 
         // Hiển thị toastr lỗi với cả message và error detail
@@ -333,10 +501,10 @@ const destroySelect2 = () => {
 
 const confirmDelete = async (task) => {
     let warningMessage = "Bạn có chắc chắn muốn xoá task này?";
-    
 
     if (task.type === "epic") {
-        warningMessage = "⚠️ Task này là một Epic! Nếu bạn xoá nó, tất cả task con cũng sẽ bị xoá. Bạn có chắc chắn muốn tiếp tục?";
+        warningMessage =
+            "⚠️ Task này là một Epic! Nếu bạn xoá nó, tất cả task con cũng sẽ bị xoá. Bạn có chắc chắn muốn tiếp tục?";
     }
 
     const result = await Swal.fire({
@@ -363,7 +531,8 @@ const softDelete = async (taskId) => {
         emit("update-task");
     } catch (error) {
         // Lấy thông tin lỗi từ response
-        const errorMessage = error.response?.data?.message || "Failed to create task!";
+        const errorMessage =
+            error.response?.data?.message || "Failed to create task!";
         const errorDetail = error.response?.data?.error || "Unknown error";
 
         // Hiển thị toastr lỗi với cả message và error detail

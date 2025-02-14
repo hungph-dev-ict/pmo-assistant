@@ -83,7 +83,7 @@
                     </li>
                 @endrole
 
-                @role('pm|staff')
+                @role('staff')
                     @foreach ($projects as $project)
                         <li
                             class="nav-item {{ request()->segment(2) == $project->id && request()->routeIs('staff.*') ? 'menu-open' : '' }}">
@@ -103,13 +103,13 @@
                                         <p>{{ __('messages.task_lists') }}</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="{{ route('staff.member', $project->id) }}"
                                         class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('staff.member') ? 'active' : '' }}">
                                         <i class="fas fa-user-friends nav-icon"></i>
                                         <p>{{ __('messages.members') }}</p>
                                     </a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item">
                                     <a href="{{ route('staff.chart', $project->id) }}"
                                         class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('staff.chart') ? 'active' : '' }}">
