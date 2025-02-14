@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('page_title')
-    {{ $project->name }} - Chart
+    {{ $project->name }} - {{ __('messages.chart') }}
 @endsection
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">{{ $project->name }} - Chart</li>
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard')}}</a></li>
+    <li class="breadcrumb-item active">{{ $project->name }} - {{ __('messages.chart') }}</li>
 @endsection
 
 @section('inline_css')
@@ -19,7 +19,7 @@
     <section class="content">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Gantt Chart</h3>
+                <h3 class="card-title">{{ __('labels.gantt_chart')}}</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -57,7 +57,11 @@
             return labels.map((v, i) => span(v, columnWidths[i])).join('');
         };
 
-        var headerText = mapLabels(['Task', 'Start', 'End']);
+        var headerText = mapLabels([
+            '{{ __('labels.task') }}',
+            '{{ __('labels.start_date') }}',
+            '{{ __('labels.end_date') }}'
+        ]);
         var tickTemplate = mapLabels(['%name', '%low', '%high']);
         var boldTickTemplate = '<b>' + tickTemplate + '</b>';
         JSC.chart('chartDiv', {
@@ -74,7 +78,7 @@
                 },
                 {
                     position: 'top right',
-                    label_text: 'Project {{ $project->name }} from {{ date('n/j/Y', strtotime($minDate)) }} to {{ date('n/j/Y', strtotime($maxDate)) }}'
+                    label_text: "{{ __('labels.project')}} {{ $project->name }} {{ __('labels.from') }} {{ date('n/j/Y', strtotime($minDate)) }} {{ __('labels.to') }} {{ date('n/j/Y', strtotime($maxDate)) }}"
                 }
             ],
             legend: {
@@ -97,18 +101,20 @@
                 alternateGridFill: 'none',
                 scale: {
                     type: 'time',
-                    range: ['{{ date('n/j/Y', strtotime($minDate)) }}', '{{ date('n/j/Y', strtotime($maxDate)) }}']
+                    range: ['{{ date('n/j/Y', strtotime($minDate))}}',
+                        '{{ date('n/j/Y', strtotime($maxDate))}}'
+                    ]
                 },
                 scale_range_padding: 0.15,
                 markers: [{
                         value: '{{ date('n/j/Y') }}',
                         color: 'red',
-                        label_text: 'Now '
+                        label_text: '{{ __('labels.now') }}'
                     },
                     {
                         value: ['1/25/2025', '2/2/2025'],
                         color: ['gold', 0.6],
-                        label_text: 'Vacation'
+                        label_text: '{{ __('labels.vacation') }}'
                     }
                 ]
             },
@@ -118,7 +124,7 @@
             defaultTooltip_combined: false,
             defaultPoint: {
                 xAxisTick_label_text: tickTemplate,
-                tooltip: '<b>%name</b><br/> %low - %high<br/> {days(%high-%low)} days'
+                tooltip: '<b>%name</b><br/> {{ __('labels.start_date')}}: %low<br/> {{ __('labels.end_date')}}: %high<br/> {days(%high-%low)} days'
             },
             defaultSeries: {
                 firstPoint: {
