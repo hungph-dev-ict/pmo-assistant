@@ -56,7 +56,9 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     });
 });
 
-Route::group(['middleware' => ['auth', 'role:pm|staff']], function () {
+Route::group(['middleware' => ['auth', 'role:pm|staff']], function () {    
+    Route::get('/api/staff/{project_id}/tasks', [StaffController::class, 'listTasks']);
+    Route::put('/api/staff/{project_id}/tasks/{task_id}/update', [StaffController::class, 'updateTask']);
     Route::prefix('staff/{project_id}')->group(function () {
         Route::get('/task', [StaffController::class, 'listTasks'])->name('staff.task');
         Route::get('/task/{task_id}/edit', [StaffController::class, 'listTasks'])->name('task.edit');

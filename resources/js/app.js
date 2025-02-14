@@ -23,7 +23,8 @@ if (taskListElement) {
         const projectId = taskContainerElement.getAttribute("project-id");
         const listAssignee = taskContainerElement.getAttribute("list-assignee");
         const currentUserId = taskContainerElement.getAttribute("current-userid");
-        createApp(TaskContainer, { projectId, listAssignee, currentUserId }).mount(taskListElement);
+        const userRole = taskContainerElement.getAttribute("user-role");
+        createApp(TaskContainer, { projectId, listAssignee, currentUserId, userRole }).mount(taskListElement);
     } else {
         console.error(
             "❌ Không tìm thấy <task-container> bên trong #task-list!"
