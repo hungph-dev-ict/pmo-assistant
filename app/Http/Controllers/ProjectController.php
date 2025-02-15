@@ -117,12 +117,35 @@ class ProjectController extends Controller
         return 500;
     }
 
-        /**
+    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project)
+
+    public function destroy(string $id)
     {
-        //
+        // Xóa Project bằng ProjectService
+        $result = $this->projectService->deleteProjectById($id);
+
+        if ($result) {
+            return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
+        }
+
+        return redirect()->route('projects.index')->with('error', 'Failed to delete project.');
+    }
+
+    /**
+     * Restore the specified Project from soft deletes.
+     */
+    public function restore(string $id)
+    {
+        // Khôi phục Project bằng ProjectService
+        $result = $this->projectService->restoreProjectById($id);
+
+        if ($result) {
+            return redirect()->route('projects.index')->with('success', 'Project restored successfully.');
+        }
+
+        return redirect()->route('projects.index')->with('error', 'Failed to restore project.');
     }
 
 }

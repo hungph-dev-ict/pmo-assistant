@@ -41,4 +41,34 @@ class UserService
 
         return $user;
     }
+    public function updateUser($idUser, array $data)
+    {
+        
+        $user = User::updateUser($idUser, $data);
+
+        $tenant = $user->tenant;
+
+        // Gán vai trò cho user
+        $role = ($user->job_position <= 2) ? 'pm' : 'staff';
+        if (!$user->hasRole($role)) { 
+            $user->syncRoles($role); // Chỉ cập nhật khi role thay đổi
+        }
+
+        return $user;
+    }
+
+    public function deleteUserById(string $id): bool
+    {
+        $user = User::findOrFail($id); // Tìm User theo ID, nếu không có sẽ trả về lỗi 404
+        return $user->delete(); // Xóa mềm User
+    }
+
+    /**
+     * Restore a soft-deleted User by its ID.
+     */
+    public function restoreUserById(string $id): bool
+    {
+        $user = User::withTrashed()->findOrFail($id); // Bao gồm cả User đã bị xóa mềm
+        return $user->restore(); // Khôi phục User
+    }
 }

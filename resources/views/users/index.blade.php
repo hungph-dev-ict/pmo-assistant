@@ -116,15 +116,27 @@
                                 {{ $user->updated_at }}
                             </td>
                             <td class="project-actions text-center">
-                                <a class="btn btn-info btn-sm" href="#">
-                                    <i class="fas fa-pencil-alt">
-                                    </i>
-                                    Edit
-                                </a>
-                                <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-danger">
-                                    <i class="fas fa-trash"></i>
-                                    Delete
-                                </a>
+                                @if ($user->trashed())
+                                    <!-- Nếu tenant đã xóa mềm -->
+                                    <form method="POST"
+                                        action="{{ route('client.users.restore', ['tenant_id' => $tenant_id, 'user_id' => $user->id]) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                    </form>
+                                @else
+                                    <a class="btn btn-info btn-sm" href="{{ route('client.users.edit', ['tenant_id' => $tenant_id, 'user_id' => $user->id]) }}">
+                                        <i class="fas fa-pencil-alt">
+                                        </i>
+                                        Edit
+                                    </a>
+                                    <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
+                                        data-target="#confirmDeleteModal" data-user-id="{{ $user->id }}"
+                                        data-tenant-id="{{ $tenant_id }}" data-user-name="{{ $user->name }}">
+                                        <i class="fas fa-trash">
+                                        </i>
+                                        Delete
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -150,21 +162,27 @@
     <!-- /.card -->
 
     <!-- Modal -->
-    <div class="modal fade" id="modal-danger" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-danger">
                 <div class="modal-header">
-                    <h5 class="modal-title">Danger Modal</h5>
+                    <h5 class="modal-title">Confirm Delete User</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>One fine body&hellip;</p>
+                    <p>Are you sure you want to delete user <strong id="userName"></strong>? This action cannot be
+                        undone.</p>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-outline-light">Save changes</button>
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+                    <form method="POST" id="deleteUserForm"
+                        action="{{ route('client.users.destroy', ['tenant_id' => $tenant_id, 'user_id' => $user->id]) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-light">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -178,6 +196,17 @@
 
 @section('custom_inline_js')
     <script>
+        $('#confirmDeleteModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Nút được click để mở modal
+            var userId = button.data('user-id'); // Lấy ID của user
+            var tenantId = button.data('tenant-id');
+            var userName = button.data('user-name'); // Lấy tên của user
+
+            var modal = $(this);
+            modal.find('#userName').text(userName); // Hiển thị tên user
+            var deleteUrl = '/tenant/' + tenantId + '/users/' + userId;
+            modal.find('#deleteUserForm').attr('action', deleteUrl); // Cập nhật URL trong action
+        });
         @if (session('success'))
             $(function() {
                 toastr.success("{{ session('success') }}");

@@ -111,4 +111,21 @@ class User extends Authenticatable
         
         return $newUser;
     }
+    public static function updateUser($idUser, $userData)
+    {   
+        $user = self::find($idUser);
+        
+        if (!$user) {
+            throw new \Exception("User không tồn tại.");
+        }
+
+        $user->update([            
+            'email' => $userData['user_email'],
+            'account' => $userData['user_account'],
+            'name' => $userData['user_name'],
+            'job_position' => $userData['user_job_position'] ?? '7',
+        ]);        
+        
+        return $user;
+    }
 }
