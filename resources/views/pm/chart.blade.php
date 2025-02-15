@@ -9,10 +9,6 @@
     <li class="breadcrumb-item active">{{ $project->name }} - {{ __('messages.chart') }}</li>
 @endsection
 
-@section('inline_css')
-    @vite(['resources/js/jscharting.js'])
-@endsection
-
 @section('content')
     <!-- Content Header (Page header) -->
     <!-- Main content -->
