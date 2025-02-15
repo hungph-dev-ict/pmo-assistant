@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Mail\TenantUserRegisteredMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -34,8 +35,8 @@ class UserController extends Controller
     public function getTenantUsers($tenant_id)
     {
         // Lấy tất cả người dùng
-        $users = User::where('tenant_id', $tenant_id)->with('jobPosition')->paginate(10);
-        return view('users.index', compact('users')); // Trả về view với danh sách người dùng
+        $users = User::withTrashed()->where('tenant_id', $tenant_id)->with('jobPosition')->paginate(10);
+        return view('users.index', compact('users', 'tenant_id')); // Trả về view với danh sách người dùng
     }
 
     public function create()
@@ -143,6 +144,56 @@ class UserController extends Controller
         if ($createNewUser) {
             return redirect()->route('client.users.list', auth()->user()->tenant_id)
                 ->with('success', 'User created successfully.');
+        }
+
+        return 500;
+    }
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($tenant_id, $user_id)
+    {
+        // Xóa Project bằng ProjectService
+        $result = $this->userService->deleteUserById($user_id);
+
+        if ($result) {
+            return redirect()->route('client.users.list', $tenant_id)->with('success', 'User deleted successfully.');
+        }
+
+        return redirect()->route('client.users.list', $tenant_id)->with('error', 'Failed to delete user.');
+    }
+
+    /**
+     * Restore the specified Project from soft deletes.
+     */
+    public function restore($tenant_id, $user_id)
+    {
+        // Khôi phục Project bằng UserService
+        $result = $this->userService->restoreUserById($user_id);
+
+        if ($result) {
+            return redirect()->route('client.users.list', $tenant_id)->with('success', 'User restored successfully.');
+        }
+
+        return redirect()->route('client.users.list', $tenant_id)->with('error', 'Failed to restore user.');
+    }
+    public function editTenantUser($tenant_id, $user_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        $jobPositions = Constant::where('group', 'job_position')->get();
+        return view('users.edit', compact('user','jobPositions'));
+    }
+
+    public function updateTenantUser(UpdateUserRequest $request, $idTenant, $idUser)
+    {
+        $updateUserInfo = $request->validated();
+
+        $updateUser = $this->userService->updateUser($idUser, $updateUserInfo);
+
+        if ($updateUser) {
+            return redirect()->route('client.users.list', auth()->user()->tenant_id)
+                ->with('success', 'User update successfully.');
         }
 
         return 500;

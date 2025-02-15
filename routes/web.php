@@ -37,9 +37,13 @@ Route::group(['middleware' => ['auth', 'role:client']], function () {
     // Route::resource('users', UserController::class);
     Route::get('tenant/{tenant_id}/users', [UserController::class, 'getTenantUsers'])->name('client.users.list');
     Route::get('tenant/{tenant_id}/users/create', [UserController::class, 'createTenantUser'])->name('client.users.create');
+    Route::get('tenant/{tenant_id}/users/{user_id}/edit', [UserController::class, 'editTenantUser'])->name('client.users.edit');
+    Route::put('tenant/{tenant_id}/users/{user_id}/update', [UserController::class, 'updateTenantUser'])->name('client.users.update');
     Route::post('tenant/{tenant_id}/users/store', [UserController::class, 'storeTenantUser'])->name('client.users.store');
     Route::post('tenant/{tenant_id}/users/store/form', [UserController::class, 'storeByForm'])->name('client.users.store.form');
     Route::get('tenant/{tenant_id}/worklogs/management', [WorklogController::class, 'viewTenantWorklogs'])->name('client.worklogs.management');
+    Route::delete('tenant/{tenant_id}/users/{user_id}', [UserController::class, 'destroy'])->name('client.users.destroy');
+    Route::post('tenant/{tenant_id}/users/{user_id}/restore', [UserController::class, 'restore'])->name('client.users.restore');
 });
 
 Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
