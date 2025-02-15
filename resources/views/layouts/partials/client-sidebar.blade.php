@@ -48,3 +48,28 @@
         </li>
     </ul>
 </li>
+<li class="nav-item {{ request()->routeIs('client.worklogs.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('client.worklogs.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-briefcase"></i>
+        <p>
+            Worklog setting
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        {{-- <li class="nav-item">
+            <a href="{{ route('client.users.list', auth()->user()->tenant_id) }}"
+                class="nav-link  {{ request()->routeIs('client.users.*') && !request()->routeIs('client.users.create') ? 'active' : '' }}">
+                <i class="fas fa-list nav-icon"></i>
+                <p>Users</p>
+            </a>
+        </li> --}}
+        <li class="nav-item">
+            <a href="{{ route('client.worklogs.management', auth()->user()->tenant_id) }}"
+                class="nav-link {{ request()->routeIs('client.worklogs.*') ? 'active' : '' }}">
+                <i class="fas fa-list nav-icon"></i>
+                <p>Management</p>
+            </a>
+        </li>
+    </ul>
+</li>

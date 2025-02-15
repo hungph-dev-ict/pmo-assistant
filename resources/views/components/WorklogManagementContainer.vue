@@ -1,9 +1,9 @@
 <template>
     <div>
-        <worklog-calendar v-if="worklogs.length > 0" :worklogs="worklogs"></worklog-calendar>
-
         <worklog-search-box :worklogs="worklogs" @updateFilteredWorklogs="filteredWorklogs = $event"
             @blankQuery="handleBlankQuery" @updateVisibleColumns="updateVisibleColumns"></worklog-search-box>
+
+        <worklog-management-calendar v-if="worklogs.length > 0" :worklogs="worklogs"></worklog-management-calendar>
 
         <worklog-list :filteredWorklogs="filteredWorklogs" :blankQuery="blankQuery" :visibleColumns="visibleColumns"
             @update-worklog="handleWorklogUpdate"></worklog-list>
@@ -14,9 +14,9 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import axios from "axios";
-import WorklogSearchBox from "./WorklogSearchBox.vue";
-import WorklogList from "./WorklogList.vue";
-import WorklogCalendar from "./WorklogCalendar.vue";
+import WorklogSearchBox from "./WorklogManagementSearchBox.vue";
+import WorklogList from "./WorklogManagementList.vue";
+import WorklogManagementCalendar from "./WorklogManagementCalendar.vue";
 
 const props = defineProps({});
 

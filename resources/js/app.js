@@ -12,6 +12,7 @@ import "@fortawesome/fontawesome-free/js/all.min.js";
 import { createApp } from "vue";
 import TaskContainer from "../views/components/TaskContainer.vue";
 import WorklogContainer from "../views/components/WorklogContainer.vue";
+import WorklogManagementContainer from "../views/components/WorklogManagementContainer.vue";
 import BulkInsertUsers from "../views/components/BulkInsertUsers.vue";
 import UploadFileCreateUsers from "../views/components/UploadFileCreateUsers.vue";
 
@@ -37,13 +38,20 @@ if (worklogListElement) {
     const worklogContainerElement =
     worklogListElement.querySelector("worklog-container");
     if (worklogContainerElement) {
-        // const projectId = worklogContainerElement.getAttribute("project-id");
-        // const listAssignee = worklogContainerElement.getAttribute("list-assignee");
-        // const currentUserId = worklogContainerElement.getAttribute("current-userid");
-        // const userRole = worklogContainerElement.getAttribute("user-role");
-        // createApp(TaskContainer, { projectId, listAssignee, currentUserId, userRole }).mount(worklogListElement);
         createApp(WorklogContainer, {  }).mount(worklogListElement);
+    } else {
+        console.error(
+            "❌ Không tìm thấy <task-container> bên trong #task-list!"
+        );
+    }
+}
 
+const worklogManagementListElement = document.querySelector("#worklog-management-list");
+if (worklogManagementListElement) {
+    const worklogManagementContainerElement =
+    worklogManagementListElement.querySelector("worklog-management-container");
+    if (WorklogManagementContainer) {
+        createApp(WorklogManagementContainer, {  }).mount(worklogManagementContainerElement);
     } else {
         console.error(
             "❌ Không tìm thấy <task-container> bên trong #task-list!"

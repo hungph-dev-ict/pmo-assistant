@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth', 'role:client']], function () {
     Route::get('tenant/{tenant_id}/users/create', [UserController::class, 'createTenantUser'])->name('client.users.create');
     Route::post('tenant/{tenant_id}/users/store', [UserController::class, 'storeTenantUser'])->name('client.users.store');
     Route::post('tenant/{tenant_id}/users/store/form', [UserController::class, 'storeByForm'])->name('client.users.store.form');
+    Route::get('tenant/{tenant_id}/worklogs/management', [WorklogController::class, 'viewTenantWorklogs'])->name('client.worklogs.management');
 });
 
 Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
@@ -53,6 +54,7 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::delete('/api/pm/{project_id}/tasks/{task_id}/destroy', [PmController::class, 'softDeleteTask']);
     Route::post('/api/pm/{project_id}/tasks/{task_id}/worklog', [WorklogController::class, 'store']);
     Route::get('/api/my-worklog', [WorklogController::class, 'getMyWorklogs']);
+    Route::get('/api/tenant-worklog', [WorklogController::class, 'getTenantWorklogs']);
     Route::put('/api/worklog/{worklog_id}/update', [WorklogController::class, 'updateWorklog']);
     Route::delete('/api/worklog/{worklog_id}/destroy', [WorklogController::class, 'softDeleteWorklog']);
 

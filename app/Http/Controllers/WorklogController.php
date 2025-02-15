@@ -40,6 +40,19 @@ class WorklogController extends Controller
         return response()->json($myWorklogs, 201);
     }
 
+    public function getTenantWorklogs()
+    {
+        $tenantWorklogs = $this->worklogService->getTenantWorklogs();
+        Log::debug($tenantWorklogs);
+
+        return response()->json($tenantWorklogs, 201);
+    }
+
+    public function viewTenantWorklogs()
+    {
+        return view('worklog.tenant-worklog');
+    }
+
     public function updateWorklog(Request $request, $worklog_id)
     {
         try {
