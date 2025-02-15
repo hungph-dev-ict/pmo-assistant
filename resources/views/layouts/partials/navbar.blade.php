@@ -8,9 +8,9 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
         </li>
-        {{-- <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Contact</a>
-        </li> --}}
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ route('my-worklog') }}" class="nav-link">My Worklog</a>
+        </li>
     </ul>
 
     <!-- Right navbar links -->

@@ -11,7 +11,7 @@ import "@fortawesome/fontawesome-free/js/all.min.js";
 
 import { createApp } from "vue";
 import TaskContainer from "../views/components/TaskContainer.vue";
-import TaskAdd from "../views/components/TaskAdd.vue";
+import WorklogContainer from "../views/components/WorklogContainer.vue";
 import BulkInsertUsers from "../views/components/BulkInsertUsers.vue";
 import UploadFileCreateUsers from "../views/components/UploadFileCreateUsers.vue";
 
@@ -25,6 +25,25 @@ if (taskListElement) {
         const currentUserId = taskContainerElement.getAttribute("current-userid");
         const userRole = taskContainerElement.getAttribute("user-role");
         createApp(TaskContainer, { projectId, listAssignee, currentUserId, userRole }).mount(taskListElement);
+    } else {
+        console.error(
+            "❌ Không tìm thấy <task-container> bên trong #task-list!"
+        );
+    }
+}
+
+const worklogListElement = document.querySelector("#worklog-list");
+if (worklogListElement) {
+    const worklogContainerElement =
+    worklogListElement.querySelector("worklog-container");
+    if (worklogContainerElement) {
+        // const projectId = worklogContainerElement.getAttribute("project-id");
+        // const listAssignee = worklogContainerElement.getAttribute("list-assignee");
+        // const currentUserId = worklogContainerElement.getAttribute("current-userid");
+        // const userRole = worklogContainerElement.getAttribute("user-role");
+        // createApp(TaskContainer, { projectId, listAssignee, currentUserId, userRole }).mount(worklogListElement);
+        createApp(WorklogContainer, {  }).mount(worklogListElement);
+
     } else {
         console.error(
             "❌ Không tìm thấy <task-container> bên trong #task-list!"

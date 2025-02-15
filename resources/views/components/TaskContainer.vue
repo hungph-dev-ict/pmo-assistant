@@ -28,6 +28,7 @@
             :visibleColumns="visibleColumns"
             :listAssignee="parsedListAssignee"
             :hasPermissionStaff="hasPermissionStaff"
+            :currentUserId="numberCurrentUserId"
             @update-task="handleTaskUpdate"
         ></task-list>
     </div>

@@ -21,10 +21,10 @@ class Tenant extends Model
     public function headUser()
     {
         $query = $this->hasOne(User::class, 'tenant_id')
-            ->where('head_account_flg', '1');
+            ->where('head_account_flg', '1')->withTrashed();
 
         return $this->hasOne(User::class, 'tenant_id')
-            ->where('head_account_flg', true);
+            ->where('head_account_flg', true)->withTrashed();
     }
 
     public function users()

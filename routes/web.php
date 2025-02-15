@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PmController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\WorklogController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
@@ -43,11 +44,18 @@ Route::group(['middleware' => ['auth', 'role:client']], function () {
 Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::resource('projects', ProjectController::class);
     Route::post('projects/{id}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
+    Route::get('/my-worklog', [WorklogController::class, 'viewMyWorklog'])->name('my-worklog');
+
     Route::get('/api/pm/{project_id}/tasks', [PmController::class, 'listTasks']);
     Route::get('/api/pm/{project_id}/epics', [PmController::class, 'listEpics']);
     Route::post('/api/pm/{project_id}/tasks/store', [PmController::class, 'storeTask']);
     Route::put('/api/pm/{project_id}/tasks/{task_id}/update', [PmController::class, 'updateTask']);
     Route::delete('/api/pm/{project_id}/tasks/{task_id}/destroy', [PmController::class, 'softDeleteTask']);
+    Route::post('/api/pm/{project_id}/tasks/{task_id}/worklog', [WorklogController::class, 'store']);
+    Route::get('/api/my-worklog', [WorklogController::class, 'getMyWorklogs']);
+    Route::put('/api/worklog/{worklog_id}/update', [WorklogController::class, 'updateWorklog']);
+    Route::delete('/api/worklog/{worklog_id}/destroy', [WorklogController::class, 'softDeleteWorklog']);
+
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');
         Route::get('/member', [PmController::class, 'listMembers'])->name('pm.member');
@@ -59,6 +67,9 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
 Route::group(['middleware' => ['auth', 'role:pm|staff']], function () {    
     Route::get('/api/staff/{project_id}/tasks', [StaffController::class, 'listTasks']);
     Route::put('/api/staff/{project_id}/tasks/{task_id}/update', [StaffController::class, 'updateTask']);
+
+    Route::post('/api/staff/{project_id}/tasks/{task_id}/worklog', [WorklogController::class, 'store']);
+    
     Route::prefix('staff/{project_id}')->group(function () {
         Route::get('/task', [StaffController::class, 'listTasks'])->name('staff.task');
         Route::get('/task/{task_id}/edit', [StaffController::class, 'listTasks'])->name('task.edit');
