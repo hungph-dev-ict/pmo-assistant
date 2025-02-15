@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('inline_css')
+    @vite(['resources/js/plugins/toastr/toastr.min.css'])
+@endsection
+
 @section('page_title')
     User Add
 @endsection
@@ -24,130 +28,103 @@
                     </div>
                 </div>
                 <!-- /.card-header -->
-                <!-- form start -->
-                <div class="card-body">
-                    <form id="addByForm">
+                <form action="{{ route('client.users.store.form', ['tenant_id' => auth()->user()->tenant_id]) }}"
+                    method="POST">
+                    @csrf
+                    <!-- form start -->
+                    <div class="card-body">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Email address</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                            <label for="userEmail">Email Address <span style="color: red;">*</span></label>
+                            <input type="email" id="userEmail" name="user_email" placeholder="Enter Email"
+                                class="form-control @error('user_email') is-invalid @enderror"
+                                value="{{ old('user_email') }}">
+                            @error('user_email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('user_email') }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Account</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                            <label for="userAccount">Account <span style="color: red;">*</span></label>
+                            <input type="text" id="userAccount" name="user_account" placeholder="Enter Account"
+                                class="form-control @error('user_account') is-invalid @enderror"
+                                value="{{ old('user_account') }}">
+                            @error('user_account')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('user_account') }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Full Name</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                            <label for="userName">Full Name <span style="color: red;">*</span></label>
+                            <input type="text" id="userName" name="user_name" placeholder="Enter Name"
+                                class="form-control @error('user_name') is-invalid @enderror"
+                                value="{{ old('user_name') }}">
+                            @error('user_name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('user_name') }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="userJobPosition">Job Position <span style="color: red;">*</span></label>
+                            <select id="userJobPosition" name="user_job_position"
+                                class="form-control select @error('user_job_position') is-invalid @enderror">
+                                <option selected disabled>-- Select Job Position --</option>
+                                @foreach ($jobPositions as $jobPosition)
+                                    <option value="{{ $jobPosition->key }}"
+                                        {{ old('user_job_position') == $jobPosition->key ? 'selected' : '' }}>
+                                        {{ $jobPosition->value1 . ' - ' . $jobPosition->value2 }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('user_job_position')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('user_job_position') }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="tenantPassword">Mật khẩu <span style="color: red;">*</span></label>
-                            <input type="password" id="tenantPassword" name="ha_password" value="{{ old('ha_password') }}"
-                                class="form-control @error('ha_password') is-invalid @enderror">
-                            @error('ha_password')
+                            <label for="userPassword">Password <span style="color: red;">*</span></label>
+                            <input type="password" id="userPassword" name="user_password"
+                                value="{{ old('user_password') }}"
+                                class="form-control @error('user_password') is-invalid @enderror">
+                            @error('user_password')
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('ha_password') }}</strong>
+                                    <strong>{{ $errors->first('user_password') }}</strong>
                                 </span>
                             @enderror
                         </div>
                         <div class="form-check">
                             <input type="checkbox" id="showPassword" class="form-check-input">
-                            <label class="form-check-label" for="showPassword">Hiện mật khẩu</label>
+                            <label class="form-check-label" for="showPassword">Show Password</label>
                         </div>
-                    </form>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary" onclick="submitAddByForm()">Submit</button>
-                </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <input type="submit" value="Submit" class="btn btn-primary">
+                    </div>
+                </form>
             </div>
             <!-- /.card -->
         </div>
 
-        <div class="col-md-6">
-            <div class="card card-success">
-                <div class="card-header">
-                    <h3 class="card-title">By Excel, CSV File</h3>
-
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="exampleInputFile">File input</label>
-                        <div class="input-group">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="exampleInputFile">
-                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                            </div>
-                            <div class="input-group-append">
-                                <span class="input-group-text">Upload</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary" onclick="submitAddByForm()">Submit</button>
-                </div>
-            </div>
-            <!-- /.card -->
+        <div class="col-md-6" id="upfile-create-users-element">
+            <upfile-create-users
+                submit-url="{{ route('client.users.store', ['tenant_id' => auth()->user()->tenant_id]) }}"></upfile-create-users>
         </div>
 
-        <div class="col-md-12">
-            <div class="card card-secondary">
-                <div class="card-header">
-                    <h3 class="card-title">Bulk Insert</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <form id="bulkInsertForm" action="{{ route('client.users.store', auth()->user()->tenant_id) }}" method="POST">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <textarea name="bi_email" class="form-control" rows="10" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Account</label>
-                                    <textarea name="bi_account" class="form-control" rows="10" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Full Name</label>
-                                    <textarea name="bi_full_name" class="form-control" rows="10" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <textarea name="bi_password" class="form-control" rows="10" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary" onclick="submitBulkInsertForm()">Submit</button>
-                </div>
-            </div>
-            <!-- /.card -->
+        <div class="col-md-12" id="bulk-insert-element">
+            <bulk-insert-users
+                submit-url="{{ route('client.users.store', ['tenant_id' => auth()->user()->tenant_id]) }}"></bulk-insert-users>
         </div>
     </div>
     <!-- /.content -->
+@endsection
+
+@section('inline_js')
+    @vite(['resources/js/plugins/toastr/toastr.min.js'])
 @endsection
 
 @section('custom_inline_js')
@@ -173,7 +150,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const passwordInput = document.getElementById('tenantPassword');
+            const passwordInput = document.getElementById('userPassword');
             const showPasswordCheckbox = document.getElementById('showPassword');
             passwordInput.value = generateRandomString(12);
 

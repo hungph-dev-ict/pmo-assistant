@@ -51,6 +51,22 @@ class ConstantsTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'group' => 'job_position',
+                'key' => '6',
+                'value1' => 'COMTOR',
+                'value2' => 'Comtor',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'job_position',
+                'key' => '7',
+                'value1' => 'OTHER',
+                'value2' => 'Other',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'group' => 'user_status',
                 'key' => '0',
                 'value1' => 'Inactive',

@@ -1,24 +1,27 @@
 @extends('layouts.app')
 
 @section('page_title')
-    Task List
+    {{ $project->name }} - Task List
 @endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active"><a href="{{ route('projects.index') }}">Tasks</a></li>
+    <li class="breadcrumb-item active">{{ $project->name }} - Task List</li>
 @endsection
 
 @section('inline_css')
     <link rel="stylesheet" href="{{ asset('build/css/plugins/tempusdominus-bootstrap-4-css.css') }}">
     <link rel="stylesheet" href="{{ asset('build/css/plugins/select2-min-css.css') }}">
     <link rel="stylesheet" href="{{ asset('build/css/plugins/select2-bootstrap4-css.css') }}">
+    @vite(['resources/js/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css'])
+    @vite(['resources/js/plugins/toastr/toastr.min.css'])
 @endsection
 
 @section('content')
-<div id="task-app">
-    <task-container project-id="{{ $project_id }}"></task-container>
-</div>
+    <div id="task-list">
+        <task-container project-id="{{ $project_id }}" list-assignee="{{ $listAssignee }}"
+            current-userid="{{ auth()->user()->id }}" user-role="{{ auth()->user()->getRoleNames() }}"></task-container>
+    </div>
 @endsection
 
 @section('inline_js')
@@ -29,6 +32,9 @@
     {{-- <script src="{{ asset('build/js/plugins/moment-js.js') }}"></script> --}}
     <!-- Tempus Dominus JS -->
     <script src="{{ asset('build/js/plugins/tempusdominus-bootstrap-4-js.js') }}"></script>
+    <!-- SweetAlert2 -->
+    @vite(['resources/js/plugins/sweetalert2/sweetalert2.min.js'])
+    @vite(['resources/js/plugins/toastr/toastr.min.js'])
 @endsection
 
 @section('custom_inline_js')
@@ -36,7 +42,7 @@
         $(function() {
             //Initialize Select2 Elements
             $('.select2').select2({
-                placeholder: "Choose an assignee", // Placeholder hiển thị khi không có lựa chọn
+                placeholder: "Choose one", // Placeholder hiển thị khi không có lựa chọn
                 allowClear: true // Bật tính năng xóa lựa chọn
             })
             $('#planStartDatePicker').datetimepicker({
@@ -49,26 +55,13 @@
                 useCurrent: false,
             });
             $('#actualStartDatePicker').datetimepicker({
-                format: 'YYYY-MM-DD'
+                format: 'YYYY-MM-DD',
+                useCurrent: false,
             });
             $('#actualEndDatePicker').datetimepicker({
-                format: 'YYYY-MM-DD'
+                format: 'YYYY-MM-DD',
+                useCurrent: false,
             });
-            // Ràng buộc khi thay đổi Start Date
-            $('#planStartDatePicker').on('change.datetimepicker', function(e) {
-                // Cập nhật minDate cho End Date khi Start Date thay đổi
-                $('#planStartDatePicker').datetimepicker('minDate', e.date);
-            });
-            // Ràng buộc khi thay đổi End Date
-            $('#actualStartDatePicker').on('change.datetimepicker', function(e) {
-                // Cập nhật maxDate cho Start Date khi End Date thay đổi
-                $('#actualStartDatePicker').datetimepicker('maxDate', e.date);
-            });
-            $('#actualEndDatePicker').on('change.datetimepicker', function(e) {
-                // Cập nhật minDate cho End Date khi Start Date thay đổi
-                $('#actualEndDatePicker').datetimepicker('minDate', e.date);
-            });
-
-        })
+        });
     </script>
 @endsection

@@ -68,6 +68,7 @@
 
         <div class="info">
             <h3>Your Account Information:</h3>
+            <p><strong>Login URL:</strong> <a href="{{ config('app.url') }}/dashboard">{{ config('app.url') }}/dashboard</a></p>
             <p><strong>Email:</strong> {{ $tenantEmail }}</p>
             <p><strong>Password:</strong> {{ $tenantPassword }}</p>
         </div>
@@ -79,7 +80,7 @@
         <p>Thank you for choosing us!</p>
 
         <p class="footer">
-            <a href="#" class="button">Visit Our Website</a>
+            <a href="{{ config('app.url') }}/dashboard" class="button">Visit Our Website</a>
         </p>
         
         <p class="footer">Best Regards, <br>Your Company Name</p>

@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\Constant;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -67,6 +68,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Project::class, 'project_user');
     }
 
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
+
     public function jobPosition()
     {
         return $this->hasOne(Constant::class, 'key', 'job_position')
@@ -89,5 +95,37 @@ class User extends Authenticatable
             'head_account_flg' => '0',
             'status' => '1'
         ]);
+    }
+    public static function createUserByForm($userData)
+    {        
+        $newUser = self::create([
+            'email' => $userData['user_email'],
+            'account' => $userData['user_account'],
+            'name' => $userData['user_name'],
+            'password' => Hash::make($userData['user_password']),
+            'job_position' => $userData['user_job_position'] ?? '7',
+            'tenant_id' => auth()->user()->tenant_id, // Tự động lấy tenant_id từ user đăng nhập
+            'status' => '1',            
+            'head_account_flg' => '0',
+        ]);
+        
+        return $newUser;
+    }
+    public static function updateUser($idUser, $userData)
+    {   
+        $user = self::find($idUser);
+        
+        if (!$user) {
+            throw new \Exception("User không tồn tại.");
+        }
+
+        $user->update([            
+            'email' => $userData['user_email'],
+            'account' => $userData['user_account'],
+            'name' => $userData['user_name'],
+            'job_position' => $userData['user_job_position'] ?? '7',
+        ]);        
+        
+        return $user;
     }
 }

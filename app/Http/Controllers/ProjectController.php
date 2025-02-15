@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Services\ProjectService;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
-
+use Illuminate\Support\Facades\Auth;
 class ProjectController extends Controller
 {
     protected $projectService;
@@ -25,7 +25,32 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::withTrashed()->paginate(10);
+
+        $projects = collect(); // Mặc định là collection rỗng
+        $userId = Auth::id();
+
+        if ($userId) {
+            // Kiểm tra role của user
+            if (Auth::user()->hasRole('pm')) {
+                // Nếu người dùng là PM, lấy các dự án mà họ là project manager
+                $projects = Project::withTrashed()
+                    ->where('project_manager', $userId)
+                    ->paginate(10);
+            } elseif (Auth::user()->hasRole('client')) {
+                $projects = Project::withTrashed()
+                    ->whereIn('id', function ($query) use ($userId) {
+                        $query->select('projects.id')
+                            ->from('projects')
+                            ->join('users as pm', 'pm.id', '=', 'projects.project_manager') // Kết nối với bảng users để lấy thông tin project manager (PM)
+                            ->join('users as head_user', 'head_user.tenant_id', '=', 'pm.tenant_id') // Kết nối bảng users để xác định head user
+                            ->where('head_user.id', $userId) // Lọc theo userId là head user
+                            ->where('head_user.head_account_flg', true); // Chỉ lấy head user
+                    })
+                    ->paginate(10);
+            } elseif (Auth::user()->hasRole('staff')) {
+                $projects = Auth::user()->projects()->withTrashed()->paginate(10);
+            }
+        }
         return view('projects.index', compact('projects'));
     }
 
@@ -48,7 +73,7 @@ class ProjectController extends Controller
 
         if ($createNewProject) {
             return redirect()->route('projects.index')
-                ->with('success', 'Project created successfully.');
+                ->with('success', __('messages.project_created_success'));
         }
 
         return 500;
@@ -92,12 +117,35 @@ class ProjectController extends Controller
         return 500;
     }
 
-        /**
+    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project)
+
+    public function destroy(string $id)
     {
-        //
+        // Xóa Project bằng ProjectService
+        $result = $this->projectService->deleteProjectById($id);
+
+        if ($result) {
+            return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
+        }
+
+        return redirect()->route('projects.index')->with('error', 'Failed to delete project.');
+    }
+
+    /**
+     * Restore the specified Project from soft deletes.
+     */
+    public function restore(string $id)
+    {
+        // Khôi phục Project bằng ProjectService
+        $result = $this->projectService->restoreProjectById($id);
+
+        if ($result) {
+            return redirect()->route('projects.index')->with('success', 'Project restored successfully.');
+        }
+
+        return redirect()->route('projects.index')->with('error', 'Failed to restore project.');
     }
 
 }

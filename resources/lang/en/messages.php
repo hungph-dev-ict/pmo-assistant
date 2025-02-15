@@ -11,4 +11,7 @@ return [
     'tenant_setting' => 'Tenant setting',
     'tenants' => 'Tenants',
     'tenant_add' => 'Tenant Add',
+    'duplicate_emails' => '⚠️ The email list contains duplicate entries.',
+    'invalid_email' => '⚠️ Email at line :index is invalid: ":email"',
+    'project_created_success' => 'Project created successfully.'
 ];

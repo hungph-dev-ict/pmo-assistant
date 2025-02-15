@@ -88,6 +88,10 @@ export default defineConfig({
                     "resources/js/plugins/datatables-responsive/css/responsive.bootstrap4.min.css",
                 "datatables-buttons-css":
                     "resources/js/plugins/datatables-buttons/css/buttons.bootstrap4.min.css",
+                "swal2-css":
+                    "resources/js/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css",
+                "swal2-js":
+                    "resources/js/plugins/sweetalert2/sweetalert2.min.js",
             },
             output: {
                 format: "cjs", // Chuyển định dạng xuất sang CommonJS

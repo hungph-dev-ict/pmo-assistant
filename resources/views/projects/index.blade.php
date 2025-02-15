@@ -17,7 +17,7 @@
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Projects</h3>
+            <h3 class="card-title">{{ __('labels.projects') }}</h3>
 
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -75,22 +75,32 @@
                             <td class="project-state">
                                 {{ $project->end_date }}
                             </td>
-                            <td class="project-actions text-right">
-                                <a class="btn btn-primary btn-sm" href="{{ route('projects.show', $project->id) }}">
-                                    <i class="fas fa-folder">
-                                    </i>
-                                    View
-                                </a>
-                                <a class="btn btn-info btn-sm" href="{{ route('projects.edit', $project->id) }}">
-                                    <i class="fas fa-pencil-alt">
-                                    </i>
-                                    Edit
-                                </a>
-                                <a class="btn btn-danger btn-sm" href="#">
-                                    <i class="fas fa-trash">
-                                    </i>
-                                    Delete
-                                </a>
+                            <td class="project-actions text-center">
+                                @if ($project->trashed())
+                                    <!-- Nếu tenant đã xóa mềm -->
+                                    <form method="POST" action="{{ route('projects.restore', $project->id) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                    </form>
+                                @else
+                                    <a class="btn btn-primary btn-sm" href="{{ route('projects.show', $project->id) }}">
+                                        <i class="fas fa-folder">
+                                        </i>
+                                        View
+                                    </a>
+                                    <a class="btn btn-info btn-sm" href="{{ route('projects.edit', $project->id) }}">
+                                        <i class="fas fa-pencil-alt">
+                                        </i>
+                                        Edit
+                                    </a>
+                                    <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
+                                        data-target="#confirmDeleteModal" data-project-id="{{ $project->id }}"
+                                        data-project-name="{{ $project->name }}">
+                                        <i class="fas fa-trash">
+                                        </i>
+                                        Delete
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -115,6 +125,31 @@
         </div>
     </div>
     <!-- /.card -->
+    <!-- Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-danger">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete Project</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete project <strong id="projectName"></strong>? This action cannot be
+                        undone.</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+                    <form method="POST" id="deleteProjectForm" action="{{ route('projects.destroy', $project->id) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-light">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('inline_js')
@@ -123,6 +158,17 @@
 
 @section('custom_inline_js')
     <script>
+        $('#confirmDeleteModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Nút được click để mở modal
+            var projectId = button.data('project-id'); // Lấy ID của project
+            var projectName = button.data('project-name'); // Lấy tên của project
+
+            var modal = $(this);
+            modal.find('#projectName').text(projectName); // Hiển thị tên project
+            var deleteUrl = '/projects/' + projectId;
+            modal.find('#deleteProjectForm').attr('action', deleteUrl); // Cập nhật URL trong action
+        });
+
         @if (session('success'))
             $(function() {
                 toastr.success("{{ session('success') }}");

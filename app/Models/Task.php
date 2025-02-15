@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Task extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $attributes = [
+        'progress' => 0,
+    ];
 
     protected $fillable = [
         'name',
@@ -25,7 +28,8 @@ class Task extends Model
         'progress',
         'priority',
         'status',
-        'created_by'
+        'created_by',
+        'type',
     ];
 
 
@@ -70,4 +74,27 @@ class Task extends Model
         return $this->hasOne(Constant::class, 'key', 'priority')
             ->where('group', 'task_priority');
     }
+    public static function createTask($taskData)
+    {
+        // dd($taskData);
+
+        $newTask = self::create([
+            'description' => $taskData['description'],
+            'name' =>  $taskData['name'],
+            'estimate_effort' => $taskData['estimate_effort'],
+            'actual_effort' => $taskData['actual_effort'],
+            'assignee' => $taskData['assignee'],
+            'progress' => $taskData['progress'] ?? 0,
+            'plan_start_date' => $taskData['plan_start_date'],
+            'plan_end_date' => $taskData['plan_end_date'],
+            'actual_start_date' => $taskData['actual_start_date'],
+            'actual_end_date' => $taskData['actual_end_date'],
+            'priority' => '2',
+            'status' => '0',
+            'type' => $taskData['task_type'],
+        ]);
+
+
+    }
+
 }

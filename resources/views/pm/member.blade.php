@@ -1,36 +1,26 @@
 @extends('layouts.app')
 
-@section('title', 'Custom Page')
-
 @section('inline_css')
+    @vite(['resources/js/plugins/toastr/toastr.min.css'])
+@endsection
 
+@section('page_title')
+    {{ $project->name }} - Member
+@endsection
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active">{{ $project->name }} - Member</li>
 @endsection
 
 @section('content')
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Projects</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Projects</li>
-                    </ol>
-                </div>
-            </div>
-        </div><!-- /.container-fluid -->
-    </section>
-
-    <!-- Main content -->
-    <section class="content">
-        <!-- Default box -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Dual Listbox Example</h3>
-            </div>
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Project Member</h3>
+        </div>
+        <form id="projectMembersForm" action="{{ route('pm.member.update', ['project_id' => $project->id]) }}" method="POST">
+            @csrf
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-5">
@@ -47,38 +37,45 @@
                         </div>
                         <!-- List -->
                         <select id="available-users" class="form-control" size="10" multiple>
-                            <option value="1">User 1</option>
-                            <option value="2">User 2</option>
-                            <option value="3">User 3</option>
-                            <option value="4">User 4</option>
-                            <option value="5">User 5</option>
-                            <option value="6">User 6</option>
-                            <option value="7">User 7</option>
+                            @foreach ($membersNotInProject as $memberNotInProject)
+                                <option value="{{ $memberNotInProject->id }}">
+                                    {{ $memberNotInProject->name . ' - ' . $memberNotInProject->name . ' - ' . $memberNotInProject->jobPosition->value1 }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-2 text-center mt-5">
-                        <button id="add-user" class="btn btn-primary btn-block mb-2">&gt;</button>
-                        <button id="remove-user" class="btn btn-secondary btn-block mb-2">&lt;</button>
-                        <button id="add-all-users" class="btn btn-success btn-block mb-2">&gt;&gt;</button>
-                        <button id="remove-all-users" class="btn btn-danger btn-block mb-2">&lt;&lt;</button>
+                        <button type="button" id="add-user" class="btn btn-primary btn-block mb-2">&gt;</button>
+                        <button type="button" id="remove-user" class="btn btn-secondary btn-block mb-2">&lt;</button>
+                        <button type="button" id="add-all-users" class="btn btn-success btn-block mb-2">&gt;&gt;</button>
+                        <button type="button" id="remove-all-users" class="btn btn-danger btn-block mb-2">&lt;&lt;</button>
                     </div>
                     <div class="col-md-5">
                         <h5>Selected Users</h5>
                         <!-- List -->
                         <select id="selected-users" class="form-control" size="10" multiple>
-                            <!-- Initially empty -->
+                            @foreach ($membersInProject as $memberInProject)
+                                <option value="{{ $memberInProject->id }}">
+                                    {{ $memberInProject->account . ' - ' . $memberInProject->name . ' - ' . $memberInProject->jobPosition->value1 }}
+                                </option>
+                            @endforeach
                         </select>
+                        <input type="hidden" name="selected_user_list" id="selectedUserList">
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <button class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
-        </div>
-    </section>
+        </form>
+    </div>
 @endsection
 
 @section('inline_js')
+    @vite(['resources/js/plugins/toastr/toastr.min.js'])
+@endsection
+
+@section('custom_inline_js')
     <!-- Script for Dual Listbox functionality -->
     <script>
         $(function() {
@@ -129,6 +126,24 @@
                 // Focus back to the search box
                 searchBox.focus();
             });
+            // Thêm tất cả option từ elected-users và input 
+            document.getElementById("projectMembersForm").addEventListener("submit", function() {
+                const selectedUsers = document.getElementById("selected-users");
+                const allOptionValues = Array.from(selectedUsers.options).map(option => option.value);
+                document.getElementById("selectedUserList").value = JSON.stringify(allOptionValues);
+            });
+
+            @if (session('success'))
+                toastr.success("{{ session('success') }}");
+            @endif
+
+            @if (session('warning'))
+                toastr.warning("{{ session('warning') }}");
+            @endif
+
+            @if (session('error'))
+                toastr.error("{{ session('error') }}");
+            @endif
         });
     </script>
 @endsection
