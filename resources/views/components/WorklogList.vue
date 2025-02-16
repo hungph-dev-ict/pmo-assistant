@@ -8,29 +8,29 @@
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th v-if="isColumnVisible('project-name')" data-column="epic_task">
+                        <th style="width: 2%">#</th>
+                        <th v-if="isColumnVisible('project-name')" style="width: 12%">
                             Project
                         </th>
-                        <th v-if="isColumnVisible('epic_task')" data-column="epic_task">
+                        <th v-if="isColumnVisible('epic_task')" style="width: 35%">
                             Epic/Task
                         </th>
-                        <th v-if="isColumnVisible('plan-effort')" data-column="priority">
+                        <th v-if="isColumnVisible('plan-effort')" style="width: 5%">
                             Plan Effort
                         </th>
-                        <th v-if="isColumnVisible('actual-effort')" data-column="assignee">
+                        <th v-if="isColumnVisible('actual-effort')" style="width: 5%">
                             Actual Effort
                         </th>
-                        <th v-if="isColumnVisible('logged-date')" data-column="plan_start_date">
+                        <th v-if="isColumnVisible('logged-date')" style="width: 8%">
                             Logged Date
                         </th>
-                        <th v-if="isColumnVisible('logged-time')" data-column="status">
+                        <th v-if="isColumnVisible('logged-time')" style="width: 5%">
                             Logged Time
                         </th>
-                        <th v-if="isColumnVisible('description')" data-column="status">
+                        <th v-if="isColumnVisible('description')" style="width: 13%">
                             Description
                         </th>
-                        <th v-if="isColumnVisible('action')" class="text-center">
+                        <th class="text-center" v-if="isColumnVisible('action')" style="width: 15%">
                             Action
                         </th>
                     </tr>

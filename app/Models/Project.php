@@ -60,7 +60,6 @@ class Project extends Model
             'start_date' => $projectData['project_start_date'],
             'end_date' => $projectData['project_end_date'],
             'estimated_budget' => $projectData['project_estimated_budget'],
-            'estimated_project_duration' => $projectData['project_estimated_project_duration'],
         ]);
 
         return $newProject;

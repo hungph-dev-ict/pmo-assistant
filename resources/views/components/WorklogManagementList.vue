@@ -8,38 +8,62 @@
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th v-if="isColumnVisible('project-name')" data-column="project-name">
+                        <th style="width: 2%">#</th>
+                        <th
+                            v-if="isColumnVisible('project-name')"
+                            style="width: 12%"
+                        >
                             Project
                         </th>
-                        <th v-if="isColumnVisible('epic_task')" data-column="epic_task">
+                        <th
+                            v-if="isColumnVisible('epic_task')"
+                            style="width: 40%"
+                        >
                             Epic/Task
                         </th>
-                        <th v-if="isColumnVisible('log-user')" data-column="log-user">
-                            Logged User
+                        <th
+                            v-if="isColumnVisible('epic_task')"
+                            style="width: 10%"
+                        >
+                            Assignee
                         </th>
-                        <th v-if="isColumnVisible('plan-effort')" data-column="priority">
+                        <th
+                            v-if="isColumnVisible('plan-effort')"
+                            style="width: 5%"
+                        >
                             Plan Effort
                         </th>
-                        <th v-if="isColumnVisible('actual-effort')" data-column="assignee">
+                        <th
+                            v-if="isColumnVisible('actual-effort')"
+                            style="width: 5%"
+                        >
                             Actual Effort
                         </th>
-                        <th v-if="isColumnVisible('logged-date')" data-column="plan_start_date">
+                        <th
+                            v-if="isColumnVisible('logged-date')"
+                            style="width: 8%"
+                        >
                             Logged Date
                         </th>
-                        <th v-if="isColumnVisible('logged-time')" data-column="status">
+                        <th
+                            v-if="isColumnVisible('logged-time')"
+                            style="width: 5%"
+                        >
                             Logged Time
                         </th>
-                        <th v-if="isColumnVisible('description')" data-column="status">
+                        <th
+                            v-if="isColumnVisible('description')"
+                            style="width: 13%"
+                        >
                             Description
                         </th>
-                        <!-- <th v-if="isColumnVisible('action')" class="text-center">
-                            Action
-                        </th> -->
                     </tr>
                 </thead>
                 <tbody>
-                    <template v-for="worklog in visibleWorklogs" :key="worklog.id">
+                    <template
+                        v-for="worklog in visibleWorklogs"
+                        :key="worklog.id"
+                    >
                         <tr class="bg-light">
                             <td>{{ worklog.id }}</td>
                             <td v-if="isColumnVisible('project-name')">
@@ -58,12 +82,25 @@
                                 {{ worklog.task.actual_effort }}
                             </td>
                             <td v-if="isColumnVisible('logged-date')">
-                                <span v-if="!worklog.isEditing">{{ worklog.log_date }}</span>
-                                <div v-else class="input-group date log-date-datepicker" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="worklog.editedLogDate" data-target=".log-date-datepicker" />
-                                    <div class="input-group-append" data-target=".log-date-datepicker"
-                                        data-toggle="datetimepicker">
+                                <span v-if="!worklog.isEditing">{{
+                                    worklog.log_date
+                                }}</span>
+                                <div
+                                    v-else
+                                    class="input-group date log-date-datepicker"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="worklog.editedLogDate"
+                                        data-target=".log-date-datepicker"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target=".log-date-datepicker"
+                                        data-toggle="datetimepicker"
+                                    >
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -71,34 +108,66 @@
                                 </div>
                             </td>
                             <td v-if="isColumnVisible('logged-time')">
-                                <span v-if="!worklog.isEditing">{{ worklog.log_time }}</span>
-                                <input v-else type="number" v-model="worklog.editedLogTime" class="form-control" />
+                                <span v-if="!worklog.isEditing">{{
+                                    worklog.log_time
+                                }}</span>
+                                <input
+                                    v-else
+                                    type="number"
+                                    v-model="worklog.editedLogTime"
+                                    class="form-control"
+                                />
                             </td>
                             <td v-if="isColumnVisible('description')">
-                                <span v-if="!worklog.isEditing">{{ worklog.description }}</span>
-                                <textarea v-else type="text" v-model="worklog.editedDescription"
-                                    class="form-control form-control" rows="3"></textarea>
+                                <span v-if="!worklog.isEditing">{{
+                                    worklog.description
+                                }}</span>
+                                <textarea
+                                    v-else
+                                    type="text"
+                                    v-model="worklog.editedDescription"
+                                    class="form-control form-control"
+                                    rows="3"
+                                ></textarea>
                             </td>
-                            <td v-if="isColumnVisible('action')" class="text-center">
+                            <td
+                                v-if="isColumnVisible('action')"
+                                class="text-center"
+                            >
                                 <template v-if="!worklog.isEditing">
-                                    <a class="btn btn-info btn-sm mr-2" href="#" @click.prevent="editWorklog(worklog)">
+                                    <a
+                                        class="btn btn-info btn-sm mr-2"
+                                        href="#"
+                                        @click.prevent="editWorklog(worklog)"
+                                    >
                                         <i class="fas fa-pencil-alt"></i> Edit
                                     </a>
-                                    <a class="btn btn-danger btn-sm mr-2" href="#" @click="confirmDelete(worklog)">
+                                    <a
+                                        class="btn btn-danger btn-sm mr-2"
+                                        href="#"
+                                        @click="confirmDelete(worklog)"
+                                    >
                                         <i class="fas fa-trash"></i> Delete
                                     </a>
                                 </template>
 
                                 <template v-else>
-                                    <a class="btn btn-success btn-sm mr-2" href="#"
-                                        @click.prevent="updateWorklog(worklog)">
+                                    <a
+                                        class="btn btn-success btn-sm mr-2"
+                                        href="#"
+                                        @click.prevent="updateWorklog(worklog)"
+                                    >
                                         <i class="fas fa-save"></i> Update
                                     </a>
-                                    <a class="btn btn-secondary btn-sm" href="#" @click.prevent="cancelEdit(worklog)">
+                                    <a
+                                        class="btn btn-secondary btn-sm"
+                                        href="#"
+                                        @click.prevent="cancelEdit(worklog)"
+                                    >
                                         <i class="fas fa-times"></i> Cancel
                                     </a>
                                 </template>
-                            </td> -->
+                            </td>
                         </tr>
                     </template>
                 </tbody>
@@ -108,12 +177,7 @@
 </template>
 
 <script setup>
-import {
-    computed,
-    ref,
-    nextTick,
-    onMounted,
-} from "vue";
+import { computed, ref, nextTick, onMounted } from "vue";
 import Swal from "sweetalert2";
 
 const props = defineProps({
@@ -122,7 +186,7 @@ const props = defineProps({
     blankQuery: Boolean,
     visibleColumns: Array,
     listAssignee: Array,
-    currentUserId: Number
+    currentUserId: Number,
 });
 
 // Tạo danh sách task dưới dạng ref để có thể cập nhật giá trị
@@ -147,7 +211,7 @@ onMounted(() => {
         isEditing: false,
         editedLogDate: worklog.log_date,
         editedLogTime: worklog.log_time,
-        editedDescription: worklog.description
+        editedDescription: worklog.description,
     }));
     globalIsEditting.value = false;
 });
@@ -166,7 +230,9 @@ const isColumnVisible = (column) => {
 // Hàm bật chế độ edit
 const editWorklog = (worklog) => {
     if (globalIsEditting.value) {
-        toastr.error("Other worklog edit is in progress. Please cancel it before edit other.");
+        toastr.error(
+            "Other worklog edit is in progress. Please cancel it before edit other."
+        );
         return;
     }
     globalIsEditting.value = true;
@@ -182,15 +248,17 @@ const editWorklog = (worklog) => {
 const initPlugins = (worklog) => {
     nextTick(() => {
         // Khởi động lại datetimepicker cho tất cả các trường ngày tháng
-        $(
-            ".log-date-datepicker"
-        ).datetimepicker({
+        $(".log-date-datepicker").datetimepicker({
             format: "YYYY-MM-DD",
             icons: { time: "fa fa-clock", date: "fa fa-calendar" },
         });
 
         $(".log-date-datepicker").on("change.datetimepicker", function (e) {
-            let newPlanStartDate = e.date ? e.date.format("YYYY-MM-DD") : (e.target.value ? e.target.value : "");
+            let newPlanStartDate = e.date
+                ? e.date.format("YYYY-MM-DD")
+                : e.target.value
+                ? e.target.value
+                : "";
             worklog.editedLogDate = newPlanStartDate;
         });
     });
@@ -254,7 +322,7 @@ const destroySelect2 = () => {
 
 const confirmDelete = async (worklog) => {
     let warningMessage = "Bạn có chắc chắn muốn xoá worklog này?";
-    let textMessage = "Thao tác này không thể hoàn tác."
+    let textMessage = "Thao tác này không thể hoàn tác.";
 
     const result = await Swal.fire({
         title: warningMessage,

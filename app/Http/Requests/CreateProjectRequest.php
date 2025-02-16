@@ -31,7 +31,6 @@ class CreateProjectRequest extends FormRequest
             'project_start_date' => 'required|date', 
             'project_end_date' => 'required|date', 
             'project_estimated_budget' => 'required|numeric|min:0',
-            'project_estimated_project_duration' => 'required|integer|min:0', 
         ];
     }
 
@@ -51,7 +50,6 @@ class CreateProjectRequest extends FormRequest
             'project_start_date' => 'Start Date', 
             'project_end_date' => 'End Date', 
             'project_estimated_budget' => 'Estimated budget',
-            'project_estimated_project_duration' => 'Estimated project duration', 
         ];
     }
 

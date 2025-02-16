@@ -162,7 +162,7 @@
                             <div class="input-group date" id="projectEndDatePicker" data-target-input="nearest">
                                 <input type="text" id="projectEndDate" name="project_end_date"
                                     class="form-control datetimepicker-input @error('project_end_date') is-invalid @enderror"
-                                    data-target="#projectEndDatePicker" value="{{ old('project_end_dates') }}" />
+                                    data-target="#projectEndDatePicker" value="{{ old('project_end_date') }}" />
                                 <div class="input-group-append" data-target="#projectEndDatePicker"
                                     data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -188,9 +188,9 @@
                         <div class="form-group">
                             <label for="inputSpentBudget">Total amount spent (MM)</label>
                             <input type="number" id="inputSpentBudget" name="total_amount_spent" class="form-control"
-                                value="{{ old('total_amount_spent') }}">
+                                value="{{ old('total_amount_spent') }}" disabled>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="projectEstimatedProjectDuration">Estimated project duration (months)</label>
                             <input type="text" id="projectEstimatedProjectDuration"
                                 name="project_estimated_project_duration"
@@ -201,7 +201,7 @@
                                     <strong>{{ $errors->first('project_estimated_project_duration') }}</strong>
                                 </span>
                             @enderror
-                        </div>
+                        </div> --}}
                     </div>
                     <!-- /.card-body -->
                 </div>

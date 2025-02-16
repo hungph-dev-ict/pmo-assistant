@@ -8,8 +8,8 @@
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th v-if="isColumnVisible('epic_task')" style="width: 30%">
+                        <th style="width: 2%">#</th>
+                        <th v-if="isColumnVisible('epic_task')" style="width: 28%">
                             Epic/Task
                         </th>
                         <th v-if="isColumnVisible('priority')" style="width: 3%">
