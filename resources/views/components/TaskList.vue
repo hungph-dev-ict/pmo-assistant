@@ -30,6 +30,12 @@
                         <th v-if="isColumnVisible('actual_end_date')" data-column="actual_end_date">
                             Actual End Date
                         </th>
+                        <th v-if="isColumnVisible('plan-effort')" data-column="actual_start_date">
+                            Plan Effort
+                        </th>
+                        <th v-if="isColumnVisible('actual-effort')" data-column="actual_end_date">
+                            Actual Effort
+                        </th>
                         <th v-if="isColumnVisible('status')" data-column="status">
                             Status
                         </th>
@@ -55,15 +61,15 @@
                                     task.name
                                 }}</span>
 
-                                <input v-else-if="!hasPermissionStaff" type="text" v-model="task.editedName"
-                                    class="form-control form-control" />
+                                <input v-else type="text" v-model="task.editedName"
+                                    class="form-control" />
                             </td>
                             <td v-if="isColumnVisible('priority')">
                                 <span v-if="!task.isEditing">{{
                                     task.priority
                                 }}</span>
-                                <select v-else-if="!hasPermissionStaff"
-                                    class="form-control form-control priority-select" v-model="task.editedPriority">
+                                <select v-else
+                                    class="form-control priority-select" v-model="task.editedPriority">
                                     <option :key="0" :value="'On Hold'">
                                         On Hold
                                     </option>
@@ -79,18 +85,19 @@
                                 <span v-if="!task.isEditing">{{
                                     task.assignee?.account || "N/A"
                                 }}</span>
-                                <select v-else-if="!hasPermissionStaff"
-                                    class="form-control form-control assignee-select" v-model="task.editedAssignee">
+                                <select v-else
+                                    class="form-control assignee-select" v-model="task.editedAssignee">
                                     <option v-for="user in listAssignee" :key="user.id" :value="user.id">
                                         {{ user.account }}
                                     </option>
                                 </select>
                             </td>
+
                             <td v-if="isColumnVisible('plan_start_date')">
                                 <span v-if="!task.isEditing">{{
                                     task.plan_start_date
                                 }}</span>
-                                <div v-else-if="!hasPermissionStaff" class="input-group date plan-start-datepicker"
+                                <div v-else class="input-group date plan-start-datepicker"
                                     data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
                                         v-model="task.editedPlanStartDate" data-target=".plan-start-datepicker" />
@@ -107,7 +114,7 @@
                                 <span v-if="!task.isEditing">{{
                                     task.plan_end_date
                                 }}</span>
-                                <div v-else-if="!hasPermissionStaff" class="input-group date plan-end-datepicker"
+                                <div v-else class="input-group date plan-end-datepicker"
                                     data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
                                         v-model="task.editedPlanEndDate" data-target=".plan-end-datepicker" />
@@ -153,11 +160,21 @@
                                 </div>
                             </td>
 
+                            <td v-if="isColumnVisible('plan-effort')">
+                                <span v-if="!task.isEditing">{{ task.estimate_effort }}</span>
+                                <input v-else type="number" v-model="task.editedPlanEffort"
+                                    class="form-control" />
+                            </td>
+
+                            <td v-if="isColumnVisible('actual-effort')">
+                                {{ task.actual_effort }}
+                            </td>
+
                             <td v-if="isColumnVisible('status')">
                                 <span v-if="!task.isEditing">{{
                                     task.status
                                 }}</span>
-                                <select v-else class="form-control form-control status-select"
+                                <select v-else class="form-control status-select"
                                     v-model="task.editedStatus">
                                     <option v-for="status in statusList" :key="status" :value="status">
                                         {{ status }}
@@ -332,6 +349,7 @@ const editTask = (task) => {
     task.editedPlanEndDate = task.plan_end_date;
     task.editedActualStartDate = task.actual_start_date;
     task.editedActualEndDate = task.actual_end_date;
+    task.editedPlanEffort = task.estimate_effort;
 
     nextTick(initPlugins(task));
 };
@@ -403,7 +421,8 @@ const updateTask = async (task) => {
         plan_start_date: task.editedPlanStartDate,
         plan_end_date: task.editedPlanEndDate,
         actual_start_date: task.editedActualStartDate,
-        actual_end_date: task.editedActualEndDate,
+        actual_end_date: task.editedlanActualEndDate,
+        estimate_effort: task.editedPlanEffort,
         isEditing: false,
     };
 
@@ -438,6 +457,7 @@ const updateTask = async (task) => {
             plan_end_date: updatedTask.plan_end_date,
             actual_start_date: updatedTask.actual_start_date,
             actual_end_date: updatedTask.actual_end_date,
+            estimate_effort: updatedTask.estimate_effort
         });
 
         toastr.success("Updated successfully!");
@@ -575,5 +595,7 @@ const submitLogWork = async (taskId) => {
     logTime.value = "";
     logDate.value = "";
     logDescription.value = "";
+
+    emit("update-task");
 };
 </script>

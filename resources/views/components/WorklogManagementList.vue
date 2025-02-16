@@ -33,9 +33,9 @@
                         <th v-if="isColumnVisible('description')" data-column="status">
                             Description
                         </th>
-                        <th v-if="isColumnVisible('action')" class="text-center">
+                        <!-- <th v-if="isColumnVisible('action')" class="text-center">
                             Action
-                        </th>
+                        </th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -79,7 +79,7 @@
                                 <textarea v-else type="text" v-model="worklog.editedDescription"
                                     class="form-control form-control" rows="3"></textarea>
                             </td>
-                            <td v-if="isColumnVisible('action')" class="project-actions text-center">
+                            <!-- <td v-if="isColumnVisible('action')" class="project-actions text-center">
                                 <template v-if="!worklog.isEditing">
                                     <a class="btn btn-info btn-sm mr-2" href="#" @click.prevent="editWorklog(worklog)">
                                         <i class="fas fa-pencil-alt"></i> Edit
@@ -98,7 +98,7 @@
                                         <i class="fas fa-times"></i> Cancel
                                     </a>
                                 </template>
-                            </td>
+                            </td> -->
                         </tr>
                     </template>
                 </tbody>

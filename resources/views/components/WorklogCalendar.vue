@@ -44,7 +44,7 @@
                                 </div>
                             </div>
 
-                            <button @click="applyFilter" class="btn btn-primary ml-2">
+                            <button @click="applyFilter" class="btn btn-success ml-2">
                                 🔍
                             </button>
                         </div>

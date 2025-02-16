@@ -219,6 +219,12 @@
                             <option value="actual_end_date">
                                 Actual End Date
                             </option>
+                            <option value="plan-effort">
+                                Plan Effort
+                            </option>
+                            <option value="actual-effort">
+                                Actual Effort
+                            </option>
                             <option value="status">Status</option>
                             <option value="action">Action</option>
                         </select>
@@ -450,6 +456,8 @@ onMounted(() => {
                 "assignee",
                 "plan_start_date",
                 "plan_end_date",
+                "plan-effort",
+                "actual-effort",
                 "status",
                 "action"
             ];

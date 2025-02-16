@@ -113,6 +113,8 @@ const visibleColumns = ref([
     "assignee",
     "plan_start_date",
     "plan_end_date",
+    "plan-effort",
+    "actual-effort",
     "action",
 ]);
 
