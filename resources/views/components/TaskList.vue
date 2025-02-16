@@ -9,37 +9,68 @@
                 <thead>
                     <tr>
                         <th style="width: 2%">#</th>
-                        <th v-if="isColumnVisible('epic_task')" style="width: 28%">
+                        <th
+                            v-if="isColumnVisible('epic_task')"
+                            style="width: 28%"
+                        >
                             Epic/Task
                         </th>
-                        <th v-if="isColumnVisible('priority')" style="width: 3%">
+                        <th
+                            v-if="isColumnVisible('priority')"
+                            style="width: 3%"
+                        >
                             Priority
                         </th>
-                        <th v-if="isColumnVisible('assignee')" style="width: 3%">
+                        <th
+                            v-if="isColumnVisible('assignee')"
+                            style="width: 3%"
+                        >
                             Assignee
                         </th>
-                        <th v-if="isColumnVisible('plan_start_date')" style="width: 8%">
+                        <th
+                            v-if="isColumnVisible('plan_start_date')"
+                            style="width: 8%"
+                        >
                             Plan Start Date
                         </th>
-                        <th v-if="isColumnVisible('plan_end_date')" style="width: 8%">
+                        <th
+                            v-if="isColumnVisible('plan_end_date')"
+                            style="width: 8%"
+                        >
                             Plan End Date
                         </th>
-                        <th v-if="isColumnVisible('actual_start_date')" style="width: 8%">
+                        <th
+                            v-if="isColumnVisible('actual_start_date')"
+                            style="width: 8%"
+                        >
                             Actual Start Date
                         </th>
-                        <th v-if="isColumnVisible('actual_end_date')" style="width: 8%">
+                        <th
+                            v-if="isColumnVisible('actual_end_date')"
+                            style="width: 8%"
+                        >
                             Actual End Date
                         </th>
-                        <th v-if="isColumnVisible('plan-effort')" style="width: 3%">
+                        <th
+                            v-if="isColumnVisible('plan-effort')"
+                            style="width: 3%"
+                        >
                             Plan Effort
                         </th>
-                        <th v-if="isColumnVisible('actual-effort')" style="width: 3%">
+                        <th
+                            v-if="isColumnVisible('actual-effort')"
+                            style="width: 3%"
+                        >
                             Actual Effort
                         </th>
                         <th v-if="isColumnVisible('status')" style="width: 6%">
                             Status
                         </th>
-                        <th class="text-center" v-if="isColumnVisible('action')" style="width: 20%">
+                        <th
+                            class="text-center"
+                            v-if="isColumnVisible('action')"
+                            style="width: 20%"
+                        >
                             Action
                         </th>
                     </tr>
@@ -49,27 +80,44 @@
                         <tr class="bg-light">
                             <td>{{ task.id }}</td>
                             <td v-if="isColumnVisible('epic_task')">
-                                <span v-if="
-                                    task.type === 'task' &&
-                                    isBlankQuery &&
-                                    !task.isEditing
-                                ">
+                                <span
+                                    v-if="
+                                        task.type === 'task' &&
+                                        isBlankQuery &&
+                                        !task.isEditing
+                                    "
+                                >
                                     └
                                 </span>
 
-                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
-                                    task.name
-                                }}</span>
+                                <span
+                                    v-if="
+                                        !task.isEditing ||
+                                        (task.isEditing && hasPermissionStaff)
+                                    "
+                                    >{{ task.name }}</span
+                                >
 
-                                <input v-else type="text" v-model="task.editedName"
-                                    class="form-control" />
+                                <input
+                                    v-else
+                                    type="text"
+                                    v-model="task.editedName"
+                                    class="form-control"
+                                />
                             </td>
                             <td v-if="isColumnVisible('priority')">
-                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
-                                    task.priority
-                                }}</span>
-                                <select v-else
-                                    class="form-control priority-select" v-model="task.editedPriority">
+                                <span
+                                    v-if="
+                                        !task.isEditing ||
+                                        (task.isEditing && hasPermissionStaff)
+                                    "
+                                    >{{ task.priority }}</span
+                                >
+                                <select
+                                    v-else
+                                    class="form-control priority-select"
+                                    v-model="task.editedPriority"
+                                >
                                     <option :key="0" :value="'On Hold'">
                                         On Hold
                                     </option>
@@ -82,27 +130,52 @@
                                 </select>
                             </td>
                             <td v-if="isColumnVisible('assignee')">
-                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
-                                    task.assignee?.account || "N/A"
-                                }}</span>
-                                <select v-else
-                                    class="form-control assignee-select" v-model="task.editedAssignee">
-                                    <option v-for="user in listAssignee" :key="user.id" :value="user.id">
+                                <span
+                                    v-if="
+                                        !task.isEditing ||
+                                        (task.isEditing && hasPermissionStaff)
+                                    "
+                                    >{{ task.assignee?.account || "N/A" }}</span
+                                >
+                                <select
+                                    v-else
+                                    class="form-control assignee-select"
+                                    v-model="task.editedAssignee"
+                                >
+                                    <option
+                                        v-for="user in listAssignee"
+                                        :key="user.id"
+                                        :value="user.id"
+                                    >
                                         {{ user.account }}
                                     </option>
                                 </select>
                             </td>
 
                             <td v-if="isColumnVisible('plan_start_date')">
-                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
-                                    task.plan_start_date
-                                }}</span>
-                                <div v-else class="input-group date plan-start-datepicker"
-                                    data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="task.editedPlanStartDate" data-target=".plan-start-datepicker" />
-                                    <div class="input-group-append" data-target=".plan-start-datepicker"
-                                        data-toggle="datetimepicker">
+                                <span
+                                    v-if="
+                                        !task.isEditing ||
+                                        (task.isEditing && hasPermissionStaff)
+                                    "
+                                    >{{ task.plan_start_date }}</span
+                                >
+                                <div
+                                    v-else
+                                    class="input-group date plan-start-datepicker"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="task.editedPlanStartDate"
+                                        data-target=".plan-start-datepicker"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target=".plan-start-datepicker"
+                                        data-toggle="datetimepicker"
+                                    >
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -111,15 +184,42 @@
                             </td>
 
                             <td v-if="isColumnVisible('plan_end_date')">
-                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
-                                    task.plan_end_date
-                                }}</span>
-                                <div v-else class="input-group date plan-end-datepicker"
-                                    data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="task.editedPlanEndDate" data-target=".plan-end-datepicker" />
-                                    <div class="input-group-append" data-target=".plan-end-datepicker"
-                                        data-toggle="datetimepicker">
+                                <span
+                                    v-if="
+                                        !task.isEditing ||
+                                        (task.isEditing && hasPermissionStaff)
+                                    "
+                                >
+                                    <span
+                                        :style="{
+                                            color: isOverdue(task.plan_end_date)
+                                                ? 'red'
+                                                : 'inherit',
+                                        }"
+                                    >
+                                        {{ task.plan_end_date }}
+                                        <span
+                                            v-if="isOverdue(task.plan_end_date)"
+                                            >🔥</span
+                                        >
+                                    </span>
+                                </span>
+                                <div
+                                    v-else
+                                    class="input-group date plan-end-datepicker"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="task.editedPlanEndDate"
+                                        data-target=".plan-end-datepicker"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target=".plan-end-datepicker"
+                                        data-toggle="datetimepicker"
+                                    >
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -128,15 +228,29 @@
                             </td>
 
                             <td v-if="isColumnVisible('actual_start_date')">
-                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
-                                    task.actual_start_date
-                                }}</span>
-                                <div v-else class="input-group date actual-start-datepicker"
-                                    data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="task.editedActualStartDate" data-target=".actual-start-datepicker" />
-                                    <div class="input-group-append" data-target=".actual-start-datepicker"
-                                        data-toggle="datetimepicker">
+                                <span
+                                    v-if="
+                                        !task.isEditing ||
+                                        (task.isEditing && hasPermissionStaff)
+                                    "
+                                    >{{ task.actual_start_date }}</span
+                                >
+                                <div
+                                    v-else
+                                    class="input-group date actual-start-datepicker"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="task.editedActualStartDate"
+                                        data-target=".actual-start-datepicker"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target=".actual-start-datepicker"
+                                        data-toggle="datetimepicker"
+                                    >
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -145,14 +259,29 @@
                             </td>
 
                             <td v-if="isColumnVisible('actual_end_date')">
-                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
-                                    task.actual_end_date
-                                }}</span>
-                                <div v-else class="input-group date actual-end-datepicker" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="task.editedActualEndDate" data-target=".actual-end-datepicker" />
-                                    <div class="input-group-append" data-target=".actual-end-datepicker"
-                                        data-toggle="datetimepicker">
+                                <span
+                                    v-if="
+                                        !task.isEditing ||
+                                        (task.isEditing && hasPermissionStaff)
+                                    "
+                                    >{{ task.actual_end_date }}</span
+                                >
+                                <div
+                                    v-else
+                                    class="input-group date actual-end-datepicker"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="task.editedActualEndDate"
+                                        data-target=".actual-end-datepicker"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target=".actual-end-datepicker"
+                                        data-toggle="datetimepicker"
+                                    >
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -161,9 +290,15 @@
                             </td>
 
                             <td v-if="isColumnVisible('plan-effort')">
-                                <span v-if="!task.isEditing">{{ task.estimate_effort }}</span>
-                                <input v-else type="number" v-model="task.editedPlanEffort"
-                                    class="form-control no-spinner" />
+                                <span v-if="!task.isEditing">{{
+                                    task.estimate_effort
+                                }}</span>
+                                <input
+                                    v-else
+                                    type="number"
+                                    v-model="task.editedPlanEffort"
+                                    class="form-control no-spinner"
+                                />
                             </td>
 
                             <td v-if="isColumnVisible('actual-effort')">
@@ -174,32 +309,62 @@
                                 <span v-if="!task.isEditing">{{
                                     task.status
                                 }}</span>
-                                <select v-else class="form-control status-select"
-                                    v-model="task.editedStatus">
-                                    <option v-for="status in statusList" :key="status" :value="status">
+                                <select
+                                    v-else
+                                    class="form-control status-select"
+                                    v-model="task.editedStatus"
+                                >
+                                    <option
+                                        v-for="status in statusList"
+                                        :key="status"
+                                        :value="status"
+                                    >
                                         {{ status }}
                                     </option>
                                 </select>
                             </td>
-                            <td v-if="isColumnVisible('action')" class="text-center">
+                            <td
+                                v-if="isColumnVisible('action')"
+                                class="text-center"
+                            >
                                 <template v-if="!task.isEditing">
-                                    <a class="btn btn-info btn-sm mr-2" href="#" @click.prevent="editTask(task)">
+                                    <a
+                                        class="btn btn-info btn-sm mr-2"
+                                        href="#"
+                                        @click.prevent="editTask(task)"
+                                    >
                                         <i class="fas fa-pencil-alt"></i> Edit
                                     </a>
-                                    <a v-if="!hasPermissionStaff" class="btn btn-danger btn-sm mr-2" href="#"
-                                        @click="confirmDelete(task)">
+                                    <a
+                                        v-if="!hasPermissionStaff"
+                                        class="btn btn-danger btn-sm mr-2"
+                                        href="#"
+                                        @click="confirmDelete(task)"
+                                    >
                                         <i class="fas fa-trash"></i> Delete
                                     </a>
-                                    <a class="btn btn-primary btn-sm" href="#" @click.prevent="openLogWorkModal(task)">
+                                    <a
+                                        class="btn btn-primary btn-sm"
+                                        href="#"
+                                        @click.prevent="openLogWorkModal(task)"
+                                    >
                                         <i class="fas fa-clock"></i> Log Work
                                     </a>
                                 </template>
 
                                 <template v-else>
-                                    <a class="btn btn-success btn-sm mr-2" href="#" @click.prevent="updateTask(task)">
+                                    <a
+                                        class="btn btn-success btn-sm mr-2"
+                                        href="#"
+                                        @click.prevent="updateTask(task)"
+                                    >
                                         <i class="fas fa-save"></i> Update
                                     </a>
-                                    <a class="btn btn-secondary btn-sm" href="#" @click.prevent="cancelEdit(task)">
+                                    <a
+                                        class="btn btn-secondary btn-sm"
+                                        href="#"
+                                        @click.prevent="cancelEdit(task)"
+                                    >
                                         <i class="fas fa-times"></i> Cancel
                                     </a>
                                 </template>
@@ -211,12 +376,20 @@
         </div>
     </div>
     <template v-if="showLogWorkModal">
-        <div class="modal fade show d-block" tabindex="-1" :aria-hidden="!showLogWorkModal">
+        <div
+            class="modal fade show d-block"
+            tabindex="-1"
+            :aria-hidden="!showLogWorkModal"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Log Work</h5>
-                        <button type="button" class="close" @click="showLogWorkModal = false">
+                        <button
+                            type="button"
+                            class="close"
+                            @click="showLogWorkModal = false"
+                        >
                             &times;
                         </button>
                     </div>
@@ -224,36 +397,70 @@
                         <!-- Title -->
                         <div class="form-group">
                             <label>Title</label>
-                            <input type="text" class="form-control" :value="selectedTask.name" disabled />
+                            <input
+                                type="text"
+                                class="form-control"
+                                :value="selectedTask.name"
+                                disabled
+                            />
                         </div>
 
                         <!-- Assignee -->
                         <div class="form-group">
                             <label>Assignee</label>
-                            <input type="text" class="form-control" :value="selectedTask.assignee?.account || 'N/A'" disabled />
+                            <input
+                                type="text"
+                                class="form-control"
+                                :value="selectedTask.assignee?.account || 'N/A'"
+                                disabled
+                            />
                         </div>
 
                         <!-- Estimate Effort -->
                         <div class="form-group">
                             <label>Estimate Effort</label>
-                            <input type="number" class="form-control" :value="selectedTask.estimate_effort" disabled />
+                            <input
+                                type="number"
+                                class="form-control"
+                                :value="selectedTask.estimate_effort"
+                                disabled
+                            />
                         </div>
 
                         <!-- Actual Effort -->
                         <div class="form-group">
                             <label>Actual Effort</label>
-                            <input type="number" class="form-control" :value="selectedTask.actual_effort" disabled />
+                            <input
+                                type="number"
+                                class="form-control"
+                                :value="selectedTask.actual_effort"
+                                disabled
+                            />
                         </div>
 
                         <!-- Log Date (Datepicker) -->
                         <div class="form-group">
                             <label for="logDate">Log Date</label>
-                            <div class="input-group date" id="logDatePicker" data-target-input="nearest">
-                                <input type="text" id="logTime" v-model="logDate"
-                                    class="form-control datetimepicker-input" data-target="#logDatePicker" />
-                                <div class="input-group-append" data-target="#logDatePicker"
-                                    data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            <div
+                                class="input-group date"
+                                id="logDatePicker"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="logTime"
+                                    v-model="logDate"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#logDatePicker"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#logDatePicker"
+                                    data-toggle="datetimepicker"
+                                >
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -261,34 +468,48 @@
                         <!-- Log Time -->
                         <div class="form-group">
                             <label>Log Time (Hours)</label>
-                            <input type="number" class="form-control" v-model="logTime" step="0.1" min="0" />
+                            <input
+                                type="number"
+                                class="form-control"
+                                v-model="logTime"
+                                step="0.1"
+                                min="0"
+                            />
                         </div>
 
                         <!-- Description -->
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea class="form-control" v-model="logDescription" rows="3"></textarea>
+                            <textarea
+                                class="form-control"
+                                v-model="logDescription"
+                                rows="3"
+                            ></textarea>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" @click="showLogWorkModal = false">Close</button>
-                        <button class="btn btn-primary" @click="submitLogWork(selectedTask.id)">Save</button>
+                        <button
+                            class="btn btn-secondary"
+                            @click="showLogWorkModal = false"
+                        >
+                            Close
+                        </button>
+                        <button
+                            class="btn btn-primary"
+                            @click="submitLogWork(selectedTask.id)"
+                        >
+                            Save
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </template>
-
 </template>
 
 <script setup>
-import {
-    computed,
-    ref,
-    nextTick,
-    onMounted,
-} from "vue";
+import { computed, ref, nextTick, onMounted } from "vue";
 import Swal from "sweetalert2";
 
 const props = defineProps({
@@ -298,7 +519,7 @@ const props = defineProps({
     visibleColumns: Array,
     listAssignee: Array,
     hasPermissionStaff: Boolean,
-    currentUserId: Number
+    currentUserId: Number,
 });
 
 // Tạo danh sách task dưới dạng ref để có thể cập nhật giá trị
@@ -381,22 +602,38 @@ const initPlugins = (task) => {
         });
 
         $(".plan-start-datepicker").on("change.datetimepicker", function (e) {
-            let newPlanStartDate = e.date ? e.date.format("YYYY-MM-DD") : (e.target.value ? e.target.value : "");
+            let newPlanStartDate = e.date
+                ? e.date.format("YYYY-MM-DD")
+                : e.target.value
+                ? e.target.value
+                : "";
             task.editedPlanStartDate = newPlanStartDate;
         });
 
         $(".plan-end-datepicker").on("change.datetimepicker", function (e) {
-            let newPlanEndDate = e.date ? e.date.format("YYYY-MM-DD") : (e.target.value ? e.target.value : "");
+            let newPlanEndDate = e.date
+                ? e.date.format("YYYY-MM-DD")
+                : e.target.value
+                ? e.target.value
+                : "";
             task.editedPlanEndDate = newPlanEndDate;
         });
 
         $(".actual-start-datepicker").on("change.datetimepicker", function (e) {
-            let newActualStartDate = e.date ? e.date.format("YYYY-MM-DD") : (e.target.value ? e.target.value : "");
+            let newActualStartDate = e.date
+                ? e.date.format("YYYY-MM-DD")
+                : e.target.value
+                ? e.target.value
+                : "";
             task.editedActualStartDate = newActualStartDate;
         });
 
         $(".actual-end-datepicker").on("change.datetimepicker", function (e) {
-            let newActualEndDate = e.date ? e.date.format("YYYY-MM-DD") : (e.target.value ? e.target.value : "");
+            let newActualEndDate = e.date
+                ? e.date.format("YYYY-MM-DD")
+                : e.target.value
+                ? e.target.value
+                : "";
             task.editedActualEndDate = newActualEndDate;
         });
     });
@@ -455,7 +692,7 @@ const updateTask = async (task) => {
             plan_end_date: updatedTask.plan_end_date,
             actual_start_date: updatedTask.actual_start_date,
             actual_end_date: updatedTask.actual_end_date,
-            estimate_effort: updatedTask.estimate_effort
+            estimate_effort: updatedTask.estimate_effort,
         });
 
         toastr.success("Updated successfully!");
@@ -471,6 +708,11 @@ const updateTask = async (task) => {
     task.isEditing = false;
     // Emit để component cha xử lý
     emit("update-task");
+};
+
+const isOverdue = (planEndDate) => {
+    if (!planEndDate) return false;
+    return new Date() >= new Date(planEndDate);
 };
 
 const cancelEdit = (task) => {
@@ -543,7 +785,11 @@ const openLogWorkModal = (task) => {
         });
 
         $("#logDatePicker").on("change.datetimepicker", (e) => {
-            logDate.value = e.date ? e.date.format("YYYY-MM-DD") : (e.target.value ? e.target.value : "");;
+            logDate.value = e.date
+                ? e.date.format("YYYY-MM-DD")
+                : e.target.value
+                ? e.target.value
+                : "";
         });
     });
 };
@@ -564,10 +810,13 @@ const submitLogWork = async (taskId) => {
             task_id: taskId,
             log_date: logDate.value,
             log_time: logTime.value,
-            description: logDescription.value
+            description: logDescription.value,
         };
 
-        await axios.post(`/api/${props.projectId}/tasks/${taskId}/worklog`, payload);
+        await axios.post(
+            `/api/${props.projectId}/tasks/${taskId}/worklog`,
+            payload
+        );
         toastr.success("Work logged successfully!");
 
         // Chỉ reset nếu request thành công
@@ -600,11 +849,11 @@ const submitLogWork = async (taskId) => {
 
 <style>
 .no-spinner {
-  appearance: textfield;
+    appearance: textfield;
 }
 .no-spinner::-webkit-inner-spin-button,
 .no-spinner::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 </style>
