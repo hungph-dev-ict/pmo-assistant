@@ -114,7 +114,12 @@ class UserController extends Controller
             $user = User::where('email', $email)->first();
             if ($user) {
                 $jobPositionId = $jobPositionMapping[$jobPositions[$index]] ?? 7;
-                $role = ($jobPositionId <= 2) ? 'pm' : 'staff'; // PM hoặc Staff
+                $role = match ($jobPositionId) {
+                    1 => 'client',
+                    2 => 'pm',
+                    default => 'staff',
+                };
+
                 $user->assignRole($role);
 
                 // Gửi email thông báo đăng ký user
@@ -182,7 +187,7 @@ class UserController extends Controller
         $user = User::findOrFail($user_id);
 
         $jobPositions = Constant::where('group', 'job_position')->get();
-        return view('users.edit', compact('user','jobPositions'));
+        return view('users.edit', compact('user', 'jobPositions'));
     }
 
     public function updateTenantUser(UpdateUserRequest $request, $idTenant, $idUser)
