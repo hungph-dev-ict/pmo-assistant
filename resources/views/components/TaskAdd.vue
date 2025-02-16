@@ -83,10 +83,10 @@
                                         <input type="number" v-model="estimateEffort" class="form-control">
                                     </div>
 
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label>Actual Effort (Hours)</label>
                                         <input type="number" v-model="actualEffort" class="form-control">
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -180,7 +180,7 @@ const parsedListAssignee = computed(() => {
 const taskTitle = ref("");
 const epicTitle = ref("");
 const estimateEffort = ref(null);
-const actualEffort = ref(null);
+// const actualEffort = ref(null);
 const planStartDate = ref("");
 const planEndDate = ref("");
 const actualStartDate = ref("");
@@ -242,7 +242,7 @@ const handleSubmit = async () => {
             assignee: selectedAssignee.value, // Người được giao
             priority: selectedPriority.value, // Mức độ ưu tiên
             estimate_effort: estimateEffort.value, // Kế hoạch effort
-            actual_effort: actualEffort.value, // Thực tế effort
+            // actual_effort: actualEffort.value, // Thực tế effort
             plan_start_date: planStartDate.value, // Ngày bắt đầu dự kiến
             plan_end_date: planEndDate.value, // Ngày kết thúc dự kiến
             actual_start_date: actualStartDate.value, // Ngày bắt đầu thực tế
