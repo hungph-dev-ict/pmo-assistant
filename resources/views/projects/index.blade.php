@@ -75,7 +75,7 @@
                             <td class="project-state">
                                 {{ $project->end_date }}
                             </td>
-                            <td class="project-actions text-center">
+                            <td class="text-center">
                                 @if ($project->trashed())
                                     <!-- Nếu tenant đã xóa mềm -->
                                     <form method="POST" action="{{ route('projects.restore', $project->id) }}">

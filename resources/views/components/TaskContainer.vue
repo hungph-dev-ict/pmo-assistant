@@ -7,6 +7,7 @@
             :currentUserId="numberCurrentUserId"
             @update-task="handleTaskUpdate"
         ></upload-file-create-tasks>
+
         <task-add
             v-if="!hasPermissionStaff"
             :projectId="projectId"

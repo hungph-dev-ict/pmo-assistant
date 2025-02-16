@@ -119,7 +119,7 @@
 </style>
 
 <script setup>
-import { defineProps, computed, ref, onMounted, nextTick } from "vue";
+import {  computed, ref, onMounted, nextTick } from "vue";
 import Swal from "sweetalert2";
 
 const props = defineProps({

@@ -485,6 +485,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits([
+    "updateSelectedAssignee",
     "updateFilteredTasks",
     "blankQuery",
     "updateVisibleColumns",

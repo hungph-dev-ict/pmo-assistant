@@ -162,7 +162,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, defineEmits } from "vue";
+import { ref, computed, onMounted, nextTick } from "vue";
 import axios from "axios";
 
 const props = defineProps({

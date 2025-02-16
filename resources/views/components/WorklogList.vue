@@ -73,7 +73,7 @@
                                 <textarea v-else type="text" v-model="worklog.editedDescription"
                                     class="form-control form-control" rows="3"></textarea>
                             </td>
-                            <td v-if="isColumnVisible('action')" class="project-actions text-center">
+                            <td v-if="isColumnVisible('action')" class="text-center">
                                 <template v-if="!worklog.isEditing">
                                     <a class="btn btn-info btn-sm mr-2" href="#" @click.prevent="editWorklog(worklog)">
                                         <i class="fas fa-pencil-alt"></i> Edit
@@ -103,12 +103,10 @@
 
 <script setup>
 import {
-    defineProps,
     computed,
     ref,
     nextTick,
     onMounted,
-    defineEmits,
 } from "vue";
 import Swal from "sweetalert2";
 

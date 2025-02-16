@@ -115,7 +115,7 @@
                             <td>
                                 {{ $user->updated_at }}
                             </td>
-                            <td class="project-actions text-center">
+                            <td class="text-center">
                                 @if ($user->trashed())
                                     <!-- Nếu tenant đã xóa mềm -->
                                     <form method="POST"
