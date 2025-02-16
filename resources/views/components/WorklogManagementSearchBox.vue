@@ -84,7 +84,7 @@
                             </option>
                             <option value="logged-time">Logged Time</option>
                             <option value="description">Description</option>
-                            <option value="action">Action</option>
+                            <!-- <option value="action">Action</option> -->
                         </select>
                     </div>
                 </div>
@@ -154,7 +154,7 @@ onMounted(() => {
                 "logged-date",
                 "logged-time",
                 "description",
-                "action"
+                // "action"
             ];
             $("#selectDisplayColumns").val(defaultColumns).trigger("change");
 

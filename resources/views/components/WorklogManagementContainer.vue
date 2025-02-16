@@ -1,9 +1,9 @@
 <template>
     <div>
+        <worklog-management-calendar v-if="worklogs.length > 0" :worklogs="worklogs"></worklog-management-calendar>
+
         <worklog-search-box :worklogs="worklogs" @updateFilteredWorklogs="filteredWorklogs = $event"
             @blankQuery="handleBlankQuery" @updateVisibleColumns="updateVisibleColumns"></worklog-search-box>
-
-        <worklog-management-calendar v-if="worklogs.length > 0" :worklogs="worklogs"></worklog-management-calendar>
 
         <worklog-list :filteredWorklogs="filteredWorklogs" :blankQuery="blankQuery" :visibleColumns="visibleColumns"
             @update-worklog="handleWorklogUpdate"></worklog-list>

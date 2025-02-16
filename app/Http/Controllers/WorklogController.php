@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Worklog;
+use App\Models\Task;
 use App\Services\WorklogService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class WorklogController extends Controller
 {
@@ -23,7 +24,6 @@ class WorklogController extends Controller
             $worklog = $this->worklogService->createWorklog($request->all());
             return response()->json(['message' => 'Worklog saved successfully!', 'worklog' => $worklog], 201);
         } catch (\Exception $e) {
-            Log::error('Error saving worklog: ' . $e->getMessage());
             return response()->json(['message' => 'Failed to save worklog'], 500);
         }
     }
@@ -43,7 +43,6 @@ class WorklogController extends Controller
     public function getTenantWorklogs()
     {
         $tenantWorklogs = $this->worklogService->getTenantWorklogs();
-        Log::debug($tenantWorklogs);
 
         return response()->json($tenantWorklogs, 201);
     }
@@ -66,6 +65,11 @@ class WorklogController extends Controller
                 'description' => 'nullable|string',
             ]);
 
+            $task = Task::findOrFail($worklog['task_id']);
+            $task->update([
+                'actual_effort' => $task->actual_effort - $worklog['log_time'] + $validatedData['log_time']
+            ]);
+
             // Cập nhật thông tin task
             $worklog->update($validatedData);
 
@@ -86,12 +90,19 @@ class WorklogController extends Controller
         }
     }
 
-    public function softDeleteWorklog($worklog_id) {
+    public function softDeleteWorklog($worklog_id)
+    {
         $worklog = Worklog::find($worklog_id);
 
         if (!$worklog) {
             return response()->json(['error' => 'Worklog not found'], 404);
         }
+
+        $task = Task::findOrFail($worklog['task_id']);
+
+        $task->update([
+            'actual_effort' => $task->actual_effort - $worklog['log_time']
+        ]);
 
         $worklog->delete();
 

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\Task;
 use App\Models\Worklog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -17,6 +18,12 @@ class WorklogService {
             'log_date'    => 'required|date',
             'log_time'    => 'required|numeric|min:0.1',
             'description' => 'nullable|string',
+        ]);
+
+        $task = Task::findOrFail($data['task_id']);
+        
+        $task ->update([
+            'actual_effort' => $task->actual_effort + $data['log_time']
         ]);
 
         if ($validator->fails()) {
