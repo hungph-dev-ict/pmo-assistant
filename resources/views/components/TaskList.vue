@@ -192,14 +192,14 @@
                                 >
                                     <span
                                         :style="{
-                                            color: isOverdue(task.plan_end_date)
+                                            color: isOverdue(task.plan_end_date, task.status)
                                                 ? 'red'
                                                 : 'inherit',
                                         }"
                                     >
                                         {{ task.plan_end_date }}
                                         <span
-                                            v-if="isOverdue(task.plan_end_date)"
+                                            v-if="isOverdue(task.plan_end_date, task.status)"
                                             >🔥</span
                                         >
                                     </span>
@@ -710,9 +710,14 @@ const updateTask = async (task) => {
     emit("update-task");
 };
 
-const isOverdue = (planEndDate) => {
-    if (!planEndDate) return false;
-    return new Date() >= new Date(planEndDate);
+const isOverdue = (planEndDate, status) => {
+    console.log(status);
+    if (!planEndDate || !status) return false;
+
+    const overdueStatuses = ["Not Started", "In Progress", "Feedback"];
+    const today = new Date().toISOString().split("T")[0];
+
+    return overdueStatuses.includes(status) && today >= planEndDate;
 };
 
 const cancelEdit = (task) => {
