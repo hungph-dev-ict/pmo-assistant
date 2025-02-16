@@ -7,7 +7,6 @@ use App\Models\Task;
 use App\Services\WorklogService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 class WorklogController extends Controller
 {
