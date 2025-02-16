@@ -89,7 +89,7 @@
                             <td class="text-center">
                                 {{ $tenant->plan->name ?? 'N/A' }}
                             </td>
-                            <td class="project-actions">
+                            <td>
                                 <div class="d-flex justify-content-center">
 
                                     <!-- Kiểm tra nếu tenant đã bị xóa mềm để hiển thị Restore hoặc Delete -->

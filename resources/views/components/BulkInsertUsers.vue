@@ -57,7 +57,6 @@ const currentLang = ref(window.appLang || "en");
 
 // Khởi tạo translations là một ref
 const translations = ref(window.translations?.[currentLang.value] || {});
-console.log(translations.value);
 
 // Cập nhật translations khi `currentLang` thay đổi
 watch(currentLang, (newLang) => {

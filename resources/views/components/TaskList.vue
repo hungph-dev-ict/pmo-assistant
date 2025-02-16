@@ -9,37 +9,37 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th v-if="isColumnVisible('epic_task')" data-column="epic_task">
+                        <th v-if="isColumnVisible('epic_task')" style="width: 30%">
                             Epic/Task
                         </th>
-                        <th v-if="isColumnVisible('priority')" data-column="priority">
+                        <th v-if="isColumnVisible('priority')" style="width: 3%">
                             Priority
                         </th>
-                        <th v-if="isColumnVisible('assignee')" data-column="assignee">
+                        <th v-if="isColumnVisible('assignee')" style="width: 3%">
                             Assignee
                         </th>
-                        <th v-if="isColumnVisible('plan_start_date')" data-column="plan_start_date">
+                        <th v-if="isColumnVisible('plan_start_date')" style="width: 8%">
                             Plan Start Date
                         </th>
-                        <th v-if="isColumnVisible('plan_end_date')" data-column="plan_end_date">
+                        <th v-if="isColumnVisible('plan_end_date')" style="width: 8%">
                             Plan End Date
                         </th>
-                        <th v-if="isColumnVisible('actual_start_date')" data-column="actual_start_date">
+                        <th v-if="isColumnVisible('actual_start_date')" style="width: 8%">
                             Actual Start Date
                         </th>
-                        <th v-if="isColumnVisible('actual_end_date')" data-column="actual_end_date">
+                        <th v-if="isColumnVisible('actual_end_date')" style="width: 8%">
                             Actual End Date
                         </th>
-                        <th v-if="isColumnVisible('plan-effort')" data-column="actual_start_date">
+                        <th v-if="isColumnVisible('plan-effort')" style="width: 3%">
                             Plan Effort
                         </th>
-                        <th v-if="isColumnVisible('actual-effort')" data-column="actual_end_date">
+                        <th v-if="isColumnVisible('actual-effort')" style="width: 3%">
                             Actual Effort
                         </th>
-                        <th v-if="isColumnVisible('status')" data-column="status">
+                        <th v-if="isColumnVisible('status')" style="width: 6%">
                             Status
                         </th>
-                        <th v-if="isColumnVisible('action')" class="text-center">
+                        <th class="text-center" v-if="isColumnVisible('action')" style="width: 20%">
                             Action
                         </th>
                     </tr>
@@ -57,7 +57,7 @@
                                     └
                                 </span>
 
-                                <span v-if="!task.isEditing">{{
+                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
                                     task.name
                                 }}</span>
 
@@ -65,7 +65,7 @@
                                     class="form-control" />
                             </td>
                             <td v-if="isColumnVisible('priority')">
-                                <span v-if="!task.isEditing">{{
+                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
                                     task.priority
                                 }}</span>
                                 <select v-else
@@ -82,7 +82,7 @@
                                 </select>
                             </td>
                             <td v-if="isColumnVisible('assignee')">
-                                <span v-if="!task.isEditing">{{
+                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
                                     task.assignee?.account || "N/A"
                                 }}</span>
                                 <select v-else
@@ -94,7 +94,7 @@
                             </td>
 
                             <td v-if="isColumnVisible('plan_start_date')">
-                                <span v-if="!task.isEditing">{{
+                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
                                     task.plan_start_date
                                 }}</span>
                                 <div v-else class="input-group date plan-start-datepicker"
@@ -111,7 +111,7 @@
                             </td>
 
                             <td v-if="isColumnVisible('plan_end_date')">
-                                <span v-if="!task.isEditing">{{
+                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
                                     task.plan_end_date
                                 }}</span>
                                 <div v-else class="input-group date plan-end-datepicker"
@@ -128,7 +128,7 @@
                             </td>
 
                             <td v-if="isColumnVisible('actual_start_date')">
-                                <span v-if="!task.isEditing">{{
+                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
                                     task.actual_start_date
                                 }}</span>
                                 <div v-else class="input-group date actual-start-datepicker"
@@ -145,7 +145,7 @@
                             </td>
 
                             <td v-if="isColumnVisible('actual_end_date')">
-                                <span v-if="!task.isEditing">{{
+                                <span v-if="!task.isEditing || ( task.isEditing && hasPermissionStaff)">{{
                                     task.actual_end_date
                                 }}</span>
                                 <div v-else class="input-group date actual-end-datepicker" data-target-input="nearest">
@@ -163,7 +163,7 @@
                             <td v-if="isColumnVisible('plan-effort')">
                                 <span v-if="!task.isEditing">{{ task.estimate_effort }}</span>
                                 <input v-else type="number" v-model="task.editedPlanEffort"
-                                    class="form-control" />
+                                    class="form-control no-spinner" />
                             </td>
 
                             <td v-if="isColumnVisible('actual-effort')">
@@ -181,7 +181,7 @@
                                     </option>
                                 </select>
                             </td>
-                            <td v-if="isColumnVisible('action')" class="project-actions text-center">
+                            <td v-if="isColumnVisible('action')" class="text-center">
                                 <template v-if="!task.isEditing">
                                     <a class="btn btn-info btn-sm mr-2" href="#" @click.prevent="editTask(task)">
                                         <i class="fas fa-pencil-alt"></i> Edit
@@ -215,7 +215,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Log Work for {{ selectedTask.name }}</h5>
+                        <h5 class="modal-title">Log Work</h5>
                         <button type="button" class="close" @click="showLogWorkModal = false">
                             &times;
                         </button>
@@ -284,12 +284,10 @@
 
 <script setup>
 import {
-    defineProps,
     computed,
     ref,
     nextTick,
     onMounted,
-    defineEmits,
 } from "vue";
 import Swal from "sweetalert2";
 
@@ -569,7 +567,7 @@ const submitLogWork = async (taskId) => {
             description: logDescription.value
         };
 
-        await axios.post(`/api/pm/${props.projectId}/tasks/${taskId}/worklog`, payload);
+        await axios.post(`/api/${props.projectId}/tasks/${taskId}/worklog`, payload);
         toastr.success("Work logged successfully!");
 
         // Chỉ reset nếu request thành công
@@ -599,3 +597,14 @@ const submitLogWork = async (taskId) => {
     emit("update-task");
 };
 </script>
+
+<style>
+.no-spinner {
+  appearance: textfield;
+}
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>
