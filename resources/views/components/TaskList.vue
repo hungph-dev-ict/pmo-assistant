@@ -9,7 +9,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th v-if="isColumnVisible('epic_task')" style="width: 44%">
+                        <th v-if="isColumnVisible('epic_task')" style="width: 30%">
                             Epic/Task
                         </th>
                         <th v-if="isColumnVisible('priority')" style="width: 3%">
@@ -18,22 +18,22 @@
                         <th v-if="isColumnVisible('assignee')" style="width: 3%">
                             Assignee
                         </th>
-                        <th v-if="isColumnVisible('plan_start_date')" style="width: 6%">
+                        <th v-if="isColumnVisible('plan_start_date')" style="width: 8%">
                             Plan Start Date
                         </th>
-                        <th v-if="isColumnVisible('plan_end_date')" style="width: 6%">
+                        <th v-if="isColumnVisible('plan_end_date')" style="width: 8%">
                             Plan End Date
                         </th>
-                        <th v-if="isColumnVisible('actual_start_date')" style="width: 6%">
+                        <th v-if="isColumnVisible('actual_start_date')" style="width: 8%">
                             Actual Start Date
                         </th>
-                        <th v-if="isColumnVisible('actual_end_date')" style="width: 6%">
+                        <th v-if="isColumnVisible('actual_end_date')" style="width: 8%">
                             Actual End Date
                         </th>
-                        <th v-if="isColumnVisible('plan-effort')" style="width: 6%">
+                        <th v-if="isColumnVisible('plan-effort')" style="width: 3%">
                             Plan Effort
                         </th>
-                        <th v-if="isColumnVisible('actual-effort')" style="width: 6%">
+                        <th v-if="isColumnVisible('actual-effort')" style="width: 3%">
                             Actual Effort
                         </th>
                         <th v-if="isColumnVisible('status')" style="width: 6%">
@@ -163,7 +163,7 @@
                             <td v-if="isColumnVisible('plan-effort')">
                                 <span v-if="!task.isEditing">{{ task.estimate_effort }}</span>
                                 <input v-else type="number" v-model="task.editedPlanEffort"
-                                    class="form-control" />
+                                    class="form-control no-spinner" />
                             </td>
 
                             <td v-if="isColumnVisible('actual-effort')">
@@ -215,7 +215,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Log Work for {{ selectedTask.name }}</h5>
+                        <h5 class="modal-title">Log Work</h5>
                         <button type="button" class="close" @click="showLogWorkModal = false">
                             &times;
                         </button>
@@ -567,7 +567,7 @@ const submitLogWork = async (taskId) => {
             description: logDescription.value
         };
 
-        await axios.post(`/api/pm/${props.projectId}/tasks/${taskId}/worklog`, payload);
+        await axios.post(`/api/${props.projectId}/tasks/${taskId}/worklog`, payload);
         toastr.success("Work logged successfully!");
 
         // Chỉ reset nếu request thành công
@@ -597,3 +597,14 @@ const submitLogWork = async (taskId) => {
     emit("update-task");
 };
 </script>
+
+<style>
+.no-spinner {
+  appearance: textfield;
+}
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>

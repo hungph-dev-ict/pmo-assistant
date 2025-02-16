@@ -22,8 +22,13 @@ Route::middleware('auth')->group(function () {
 
 
     //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    //     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/my-worklog', [WorklogController::class, 'viewMyWorklog'])->name('my-worklog');
+    Route::get('/api/my-worklog', [WorklogController::class, 'getMyWorklogs']);
+    Route::put('/api/worklog/{worklog_id}/update', [WorklogController::class, 'updateWorklog']);
+    Route::delete('/api/worklog/{worklog_id}/destroy', [WorklogController::class, 'softDeleteWorklog']);
+    Route::post('/api/{project_id}/tasks/{task_id}/worklog', [WorklogController::class, 'store']);
 });
 
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
@@ -49,18 +54,13 @@ Route::group(['middleware' => ['auth', 'role:client']], function () {
 Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::resource('projects', ProjectController::class);
     Route::post('projects/{id}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
-    Route::get('/my-worklog', [WorklogController::class, 'viewMyWorklog'])->name('my-worklog');
 
     Route::get('/api/pm/{project_id}/tasks', [PmController::class, 'listTasks']);
     Route::get('/api/pm/{project_id}/epics', [PmController::class, 'listEpics']);
     Route::post('/api/pm/{project_id}/tasks/store', [PmController::class, 'storeTask']);
     Route::put('/api/pm/{project_id}/tasks/{task_id}/update', [PmController::class, 'updateTask']);
     Route::delete('/api/pm/{project_id}/tasks/{task_id}/destroy', [PmController::class, 'softDeleteTask']);
-    Route::post('/api/pm/{project_id}/tasks/{task_id}/worklog', [WorklogController::class, 'store']);
-    Route::get('/api/my-worklog', [WorklogController::class, 'getMyWorklogs']);
     Route::get('/api/tenant-worklog', [WorklogController::class, 'getTenantWorklogs']);
-    Route::put('/api/worklog/{worklog_id}/update', [WorklogController::class, 'updateWorklog']);
-    Route::delete('/api/worklog/{worklog_id}/destroy', [WorklogController::class, 'softDeleteWorklog']);
 
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');
@@ -70,12 +70,11 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     });
 });
 
-Route::group(['middleware' => ['auth', 'role:pm|staff']], function () {    
+Route::group(['middleware' => ['auth', 'role:pm|staff']], function () {
     Route::get('/api/staff/{project_id}/tasks', [StaffController::class, 'listTasks']);
     Route::put('/api/staff/{project_id}/tasks/{task_id}/update', [StaffController::class, 'updateTask']);
 
-    Route::post('/api/staff/{project_id}/tasks/{task_id}/worklog', [WorklogController::class, 'store']);
-    
+
     Route::prefix('staff/{project_id}')->group(function () {
         Route::get('/task', [StaffController::class, 'listTasks'])->name('staff.task');
         Route::get('/task/{task_id}/edit', [StaffController::class, 'listTasks'])->name('task.edit');

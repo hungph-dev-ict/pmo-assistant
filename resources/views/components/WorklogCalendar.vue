@@ -3,7 +3,12 @@
         <div class="card-header">
             <h3 class="card-title">Worklog Calendar</h3>
             <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                <button
+                    type="button"
+                    class="btn btn-tool"
+                    data-card-widget="collapse"
+                    title="Collapse"
+                >
                     <i class="fas fa-minus"></i>
                 </button>
             </div>
@@ -11,18 +16,29 @@
 
         <div class="card-body">
             <div class="row">
-
                 <!-- Tìm kiếm theo Plan Start Date -->
                 <div class="col-6">
                     <div class="form-group">
                         <label>Filter Logged Date:</label>
                         <div class="d-flex align-items-center">
                             <!-- Plan Start Date (From) -->
-                            <div class="input-group date mr-2" id="filterLogDatePickerFrom" data-target-input="nearest">
-                                <input type="text" id="filterLogDateFrom" class="form-control datetimepicker-input"
-                                    data-target="#filterLogDatePickerFrom" placeholder="From" />
-                                <div class="input-group-append" data-target="#filterLogDatePickerFrom"
-                                    data-toggle="datetimepicker">
+                            <div
+                                class="input-group date mr-2"
+                                id="filterLogDatePickerFrom"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="filterLogDateFrom"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#filterLogDatePickerFrom"
+                                    placeholder="From"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#filterLogDatePickerFrom"
+                                    data-toggle="datetimepicker"
+                                >
                                     <div class="input-group-text">
                                         <i class="fa fa-calendar"></i>
                                     </div>
@@ -33,18 +49,33 @@
                             <span class="mx-2">-</span>
 
                             <!-- Plan Start Date (To) -->
-                            <div class="input-group date ml-2 mr-2" id="filterLogDatePickerTo" data-target-input="nearest">
-                                <input type="text" id="filterLogDateTo" class="form-control datetimepicker-input"
-                                    data-target="#filterLogDatePickerTo" placeholder="To" />
-                                <div class="input-group-append" data-target="#filterLogDatePickerTo"
-                                    data-toggle="datetimepicker">
+                            <div
+                                class="input-group date ml-2 mr-2"
+                                id="filterLogDatePickerTo"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="filterLogDateTo"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#filterLogDatePickerTo"
+                                    placeholder="To"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#filterLogDatePickerTo"
+                                    data-toggle="datetimepicker"
+                                >
                                     <div class="input-group-text">
                                         <i class="fa fa-calendar"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <button @click="applyFilter" class="btn btn-success ml-2">
+                            <button
+                                @click="applyFilter"
+                                class="btn btn-success ml-2"
+                            >
                                 🔍
                             </button>
                         </div>
@@ -56,14 +87,21 @@
                     <thead>
                         <tr>
                             <th class="fixed-column">Logged Date</th>
-                            <th v-for="date in loggedDates" :key="date">{{ getDayOnly(date) }}</th>
+                            <th v-for="date in loggedDates" :key="date">
+                                {{ getDayOnly(date) }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td class="fixed-column">Total Worklogs</td>
-                            <td v-for="date in loggedDates" :key="date"
-                                :class="getCellClass(formattedTotalWorklog[date])">
+                            <td
+                                v-for="date in loggedDates"
+                                :key="date"
+                                :class="
+                                    getCellClass(formattedTotalWorklog[date])
+                                "
+                            >
                                 {{ formattedTotalWorklog[date] }}
                             </td>
                         </tr>
@@ -118,7 +156,7 @@
 </style>
 
 <script setup>
-import { computed, ref, onMounted, nextTick } from "vue";
+import { computed, ref, onMounted, nextTick, watch } from "vue";
 import Swal from "sweetalert2";
 
 const props = defineProps({
@@ -126,7 +164,11 @@ const props = defineProps({
 });
 
 // Ngày mặc định là 30 ngày trước
-const fromDate = ref(new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split("T")[0]);
+const fromDate = ref(
+    new Date(new Date().setDate(new Date().getDate() - 30))
+        .toISOString()
+        .split("T")[0]
+);
 const toDate = ref(new Date().toISOString().split("T")[0]);
 
 // Temp values để người dùng chọn ngày mà chưa lọc ngay
@@ -135,6 +177,18 @@ const tempToDate = ref(toDate.value);
 
 // Dữ liệu worklogs đã lọc (chỉ cập nhật khi bấm "Search")
 const filteredWorklogs = ref([]);
+
+watch(
+    () => props.worklogs,
+    (newWorklogs) => {
+        filteredWorklogs.value = newWorklogs.filter(
+            (worklog) =>
+                worklog.log_date >= fromDate.value &&
+                worklog.log_date <= toDate.value
+        );
+    },
+    { deep: true, immediate: true }
+);
 
 onMounted(() => {
     nextTick(() => {
@@ -176,12 +230,15 @@ onMounted(() => {
                 }
             );
         }
-    })
+    });
 });
 
 // Hàm áp dụng bộ lọc khi nhấn "Search"
 const applyFilter = () => {
-    if (new Date(tempToDate.value) - new Date(tempFromDate.value) > 30 * 24 * 60 * 60 * 1000) {
+    if (
+        new Date(tempToDate.value) - new Date(tempFromDate.value) >
+        30 * 24 * 60 * 60 * 1000
+    ) {
         Swal.fire({
             icon: "error",
             title: "Invalid Date Range",
@@ -194,13 +251,18 @@ const applyFilter = () => {
     toDate.value = tempToDate.value;
 
     filteredWorklogs.value = props.worklogs.filter(
-        (worklog) => worklog.log_date >= fromDate.value && worklog.log_date <= toDate.value
+        (worklog) =>
+            worklog.log_date >= fromDate.value &&
+            worklog.log_date <= toDate.value
     );
 };
 
 // Tạo object chứa tổng thời gian log theo ngày
 const totalWorklogByDate = computed(() => {
-    if (!Array.isArray(filteredWorklogs.value) || filteredWorklogs.value.length === 0) {
+    if (
+        !Array.isArray(filteredWorklogs.value) ||
+        filteredWorklogs.value.length === 0
+    ) {
         return {};
     }
 
@@ -232,15 +294,19 @@ const generateDateRange = (start, end) => {
 };
 
 // Danh sách ngày đầy đủ trong khoảng tìm kiếm
-const loggedDates = computed(() => generateDateRange(fromDate.value, toDate.value));
+const loggedDates = computed(() =>
+    generateDateRange(fromDate.value, toDate.value)
+);
 
 // Định dạng tổng worklog, đảm bảo ngày không có dữ liệu hiển thị "0.00"
 const formattedTotalWorklog = computed(() => {
     const result = {};
 
     // Đảm bảo tất cả ngày trong loggedDates có giá trị mặc định là "0.00"
-    loggedDates.value.forEach(date => {
-        result[date] = totalWorklogByDate.value[date] ? totalWorklogByDate.value[date].toFixed(2) : "0.00";
+    loggedDates.value.forEach((date) => {
+        result[date] = totalWorklogByDate.value[date]
+            ? totalWorklogByDate.value[date].toFixed(2)
+            : "0.00";
     });
 
     return result;

@@ -27,7 +27,7 @@ const blankQuery = ref(true); // Mặc định là false
 
 const fetchWorklogs = async () => {
     try {
-        axios.get('/api/tenant-worklog')
+        axios.get('/api/my-worklog')
             .then(response => {
                 if (response.data.original.success) {
                     worklogs.value = response.data.original.data; // Lấy danh sách worklogs
