@@ -8,13 +8,10 @@
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                @if (app()->environment('local'))
-                    <img src="{{ Vite::asset('resources/images/adminlte/avatar5.png') }}" class="img-circle elevation-2"
-                        alt="User Image">
-                @else
-                    <img src="{{ App\Helpers\ImageHelper::imageToBase64($user->avatar) ?? Vite::asset('resources/images/adminlte/avatar5.png') }}"
-                        class="img-circle elevation-2" alt="User Image">
-                @endif
+                <img src="{{ auth()->user()->avatar
+                    ? App\Helpers\ImageHelper::imageToBase64(auth()->user()->avatar)
+                    : Vite::asset('resources/images/adminlte/avatar5.png') }}"
+                    class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="#" class="d-block">{{ Auth::user()->name }}</a>
