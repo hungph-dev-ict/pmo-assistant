@@ -193,7 +193,7 @@
                             <input type="number" id="inputSpentBudget" name="total_amount_spent" class="form-control"
                                 value="{{ old('total_amount_spent') }}">
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="projectEstimatedProjectDuration">Estimated project duration (months)</label>
                             <input type="text" id="projectEstimatedProjectDuration"
                                 name="project_estimated_project_duration"
@@ -204,7 +204,7 @@
                                     <strong>{{ $errors->first('project_estimated_project_duration') }}</strong>
                                 </span>
                             @enderror
-                        </div>
+                        </div> --}}
                     </div>
                     <!-- /.card-body -->
                 </div>
