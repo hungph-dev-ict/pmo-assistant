@@ -14,6 +14,7 @@
             :currentUserId="numberCurrentUserId"
             @update-task="handleTaskUpdate"
         ></task-add>
+        
         <task-search-box
             :tasks="tasks"
             @updateFilteredTasks="filteredTasks = $event"
