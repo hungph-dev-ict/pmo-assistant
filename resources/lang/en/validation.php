@@ -19,6 +19,7 @@ return [
     ],
 
     'attributes' => [
+        //Project
         'project_name' => 'Project Name',
         'project_description' => 'Project Description',
         'project_status' => 'Status',
@@ -28,6 +29,17 @@ return [
         'project_end_date' => 'End Date',
         'project_estimated_budget' => 'Estimated Budget',
         'project_estimated_project_duration' => 'Estimated Project Duration',
+
+        //Tenant
+        'tenant_name' => 'Tenant Name',
+        'tenant_description' => 'Tenant Description',
+        'tenant_plan' => 'Plan',
+        'tenant_logo' => 'Tenant Logo',
+        'ha_email' => 'Head Account Email',
+        'ha_account' => 'Head Account',
+        'ha_full_name' => 'Head Account Full Name',
+        'ha_avatar' => 'Head Account Avatar',
+        'ha_password' => 'Head Account Password',
     ],
 ];
 

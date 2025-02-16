@@ -29,5 +29,16 @@ return [
         'project_end_date' => 'Ngày kết thúc',
         'project_estimated_budget' => 'Ngân sách ước tính',
         'project_estimated_project_duration' => 'Thời gian ước tính',
+
+        //Tenant
+        'tenant_name' => 'Tên Tenant',
+        'tenant_description' => 'Mô tả Tenant',
+        'tenant_plan' => 'Gói dịch vụ',
+        'tenant_logo' => 'Logo Tenant',
+        'ha_email' => 'Email',
+        'ha_account' => 'Tài khoản',
+        'ha_full_name' => 'Tên đầy đủ',
+        'ha_avatar' => 'Ảnh đại diện',
+        'ha_password' => 'Mật khẩu',
     ],
 ];

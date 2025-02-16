@@ -3,7 +3,18 @@
 return [
     'bulk_insert' => 'Thêm hàng loạt',
     'full_name' => 'Tên đầy đủ',
-    'submit' => 'Lưu',
+
+    //General    
+    'general' => 'Chung',
+    'submit' => 'Lưu',   
+    'cancel' => 'Hủy',
+    'view' => 'Xem',
+    'edit' => 'Sửa',
+    'update' => 'Cập nhật',
+    'delete' => 'Xóa', 
+    'restore' => 'Khôi phục',
+    'showing_entries' => 'Hiển thị <strong class="mx-1">:start</strong> đến <strong class="mx-1">:end</strong> trên tổng số <strong class="mx-1">:total</strong> bản ghi',
+
     
     //Chart
     'gantt_chart' => 'Biểu đồ Gantt',
@@ -17,18 +28,6 @@ return [
     'vacation' => 'Kỳ nghỉ',
     'now' => 'Bây giờ',
 
-    //General
-    'submit' => 'Lưu',   
-    'cancel' => 'Hủy',
-    'view' => 'Xem',
-    'edit' => 'Sửa',
-    'update' => 'Cập nhật',
-    'delete' => 'Xóa', 
-    'showing' => 'Hiển thị',
-    'to' => 'đến',
-    'of' => 'trong',
-    'entries' => 'mục',
-
     //Sidebar
     'project_setting' => 'Cài đặt dự án',
     'projects' => 'Danh sách dự án',
@@ -36,6 +35,14 @@ return [
     'user_setting' => 'Cài đặt người dùng',
     'users' => 'Danh sách người dùng',
     'user_add' => 'Thêm người dùng',
+    'project_management' => 'Quản lý dự án',
+    'task_lists' => 'Danh sách công việc',
+    'members' => 'Thành viên',
+    'chart' => 'Biểu đồ',
+    'logout' => 'Đăng xuất',
+    'tenant_setting' => 'Cài đặt Tenant',
+    'tenants' => 'Danh sách Tenant',
+    'tenant_add' => 'Thêm mới Tenant',
 
     //Project
     'project' => 'Dự án',
@@ -43,7 +50,6 @@ return [
     'project_description' => 'Mô tả dự án',
     'project_start_date' => 'Ngày bắt đầu',
     'project_end_date' => 'Ngày kết thúc',
-    'general' => 'Chung',
     'time_budget' => 'Thời gian & Ngân sách',
     'project_status' => 'Trạng thái',
     'project_select_status' => '-- Chọn trạng thái --',
@@ -59,4 +65,26 @@ return [
     'project_files' => 'Tài liệu dự án',
     'project_add_files' => 'Thêm tài liệu',
     'project_report_contact' => 'Báo cáo liên hệ',
+    'confirm_delete_project' => 'Xác nhận xóa dự án',
+    'confirm_delete_project_message' => 'Bạn có chắc chắn muốn xóa dự án <strong id="projectName"></strong>? Hành động này không thể hoàn tác.',
+    
+    //Tenant  
+    'tenant_name' => 'Tên Tenant',
+    'tenant_description' => 'Mô tả Tenant', 
+    'tenant_logo' => 'Logo Tenant', 
+    'tenant_plan' => 'Gói dịch vụ',
+    'tenant_head_account' => 'Tài khoản điều hành',
+    'tenant_mail' => 'Email',
+    'tenant_account' => 'Tài khoản',
+    'tenant_full_name' => 'Tên đầy đủ',
+    'tenant_upload_avatar' => 'Tải ảnh đại diện',
+    'tenant_password' => 'Mật khẩu',  
+    'choose_file' => 'Chọn tệp',
+    'tenant_select_plan' => '-- Chọn gói dịch vụ --',
+    'show_password' => 'Hiện mật khẩu',
+    'tenant_create_new_tenant' => 'Tạo mới Tenant',
+    'tenant_current_plan' => 'Gói dịch vụ hiện tại',
+    'confirm_delete_tenant' => 'Xác nhận xóa Tenant',
+    'confirm_delete_tenant_message' => 'Bạn có chắc chắn muốn xóa Tenant <strong id="tenantName"></strong>? Hành động này không thể hoàn tác.',
+
 ];

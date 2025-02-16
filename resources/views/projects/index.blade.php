@@ -80,60 +80,42 @@
                                     <!-- Nếu tenant đã xóa mềm -->
                                     <form method="POST" action="{{ route('projects.restore', $project->id) }}">
                                         @csrf
-                                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                        <button type="submit"
+                                            class="btn btn-success btn-sm">{{ __('labels.restore') }}</button>
                                     </form>
                                 @else
                                     <a class="btn btn-primary btn-sm" href="{{ route('projects.show', $project->id) }}">
                                         <i class="fas fa-folder">
                                         </i>
-                                        View
+                                        {{ __('labels.view') }}
                                     </a>
                                     <a class="btn btn-info btn-sm" href="{{ route('projects.edit', $project->id) }}">
                                         <i class="fas fa-pencil-alt">
                                         </i>
-                                        Edit
+                                        {{ __('labels.edit') }}
                                     </a>
                                     <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
                                         data-target="#confirmDeleteModal" data-project-id="{{ $project->id }}"
                                         data-project-name="{{ $project->name }}">
                                         <i class="fas fa-trash">
                                         </i>
-                                        Delete
+                                        {{ __('labels.delete') }}
                                     </a>
                                 @endif
-                            <td class="project-actions text-right">
-                                <a class="btn btn-primary btn-sm" href="{{ route('projects.show', $project->id) }}">
-                                    <i class="fas fa-folder">
-                                    </i>
-                                    {{ __('labels.view') }}
-                                </a>
-                                <a class="btn btn-info btn-sm" href="{{ route('projects.edit', $project->id) }}">
-                                    <i class="fas fa-pencil-alt">
-                                    </i>
-                                    {{ __('labels.edit') }}
-                                </a>
-                                <a class="btn btn-danger btn-sm" href="#">
-                                    <i class="fas fa-trash">
-                                    </i>
-                                    {{ __('labels.delete') }}
-                                </a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
-                {{-- {{$projects->links()}} --}}
             </table>
         </div>
         <!-- /.card-body -->
         <div class="card-footer d-flex justify-content-between align-items-center" style="padding: 0.5rem 1rem;">
             <div class="d-flex">
-                {{ __('labels.showing') }}
-                <strong class="mx-1">{{ $projects->firstItem() }}</strong>
-                {{ __('labels.to') }}
-                <strong class="mx-1">{{ $projects->lastItem() }}</strong>
-                {{ __('labels.of') }}
-                <strong class="mx-1">{{ $projects->total() }}</strong>
-                {{ __('labels.entries') }}
+                {!! __('labels.showing_entries', [
+                    'start' => $projects->firstItem(),
+                    'end' => $projects->lastItem(),
+                    'total' => $projects->total(),
+                ]) !!}
             </div>
             <div class="pagination-wrapper ml-auto">
                 {{ $projects->links('vendor.pagination.default') }}
@@ -146,21 +128,21 @@
         <div class="modal-dialog">
             <div class="modal-content bg-danger">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirm Delete Project</h5>
+                    <h5 class="modal-title">{{ __('labels.confirm_delete_project') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete project <strong id="projectName"></strong>? This action cannot be
-                        undone.</p>
+                    <p>{!! __('labels.confirm_delete_project_message') !!}</p>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-light"
+                        data-dismiss="modal">{{ __('labels.cancel') }}</button>
                     <form method="POST" id="deleteProjectForm" action="{{ route('projects.destroy', $project->id) }}">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-outline-light">Delete</button>
+                        <button type="submit" class="btn btn-outline-light">{{ __('labels.delete') }}</button>
                     </form>
                 </div>
             </div>

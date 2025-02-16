@@ -19,6 +19,7 @@ return [
     ],
 
     'attributes' => [
+        //Project
         'project_name' => 'プロジェクト名',
         'project_description' => 'プロジェクトの説明',
         'project_status' => 'ステータス',
@@ -28,6 +29,17 @@ return [
         'project_end_date' => '終了日',
         'project_estimated_budget' => '予算見積もり',
         'project_estimated_project_duration' => '推定プロジェクト期間',
+
+        // Tenant
+        'tenant_name' => 'テナント名',
+        'tenant_description' => 'テナントの説明',
+        'tenant_plan' => 'プラン',
+        'tenant_logo' => 'テナントのロゴ',
+        'ha_email' => 'メールアドレス',
+        'ha_account' => 'アカウント',
+        'ha_full_name' => 'フルネーム',
+        'ha_avatar' => 'アバター',
+        'ha_password' => 'パスワード',
     ],
 ];
 
