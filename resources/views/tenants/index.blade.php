@@ -5,19 +5,19 @@
 @endsection
 
 @section('page_title')
-    Tenants
+    {{ __('labels.tenants') }}
 @endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Tenants</li>
+    <li class="breadcrumb-item active">{{ __('labels.tenants') }}</li>
 @endsection
 
 @section('content')
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Tenants</h3>
+            <h3 class="card-title">{{ __('labels.tenants') }}</h3>
 
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -38,21 +38,21 @@
                         <th style="width: 5%" class="text-center">
                         </th>
                         <th style="width: 15%">
-                            Name
+                            {{ __('labels.tenant_name') }}
                         </th>
                         <th style="width: 41%">
-                            Description
+                            {{ __('labels.tenant_description') }}
                         </th>
                         <th style="width: 3%" class="text-center">
                         </th>
                         <th style="width: 10%">
-                            Head Account
+                            {{ __('labels.tenant_head_account') }}
                         </th>
                         <th style="width: 9%" class="text-center">
-                            Current Plan
+                            {{ __('labels.tenant_current_plan') }}
                         </th>
                         <th style="width: 15%" class="text-center">
-                            Action
+
                         </th>
                     </tr>
                 </thead>
@@ -97,18 +97,19 @@
                                         <!-- Nếu tenant đã xóa mềm -->
                                         <form method="POST" action="{{ route('tenants.restore', $tenant->id) }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                            <button type="submit"
+                                                class="btn btn-success btn-sm">{{ __('labels.restore') }}</button>
                                         </form>
                                     @else
                                         <!-- Nút Edit -->
                                         <a class="btn btn-info btn-sm mr-2"
                                             href="{{ route('tenants.edit', $tenant->id) }}">
-                                            <i class="fas fa-pencil-alt"></i> Edit
+                                            <i class="fas fa-pencil-alt"></i> {{ __('labels.edit') }}
                                         </a>
                                         <a class="btn btn-danger btn-sm" data-toggle="modal"
                                             data-target="#confirmDeleteModal" data-tenant-id="{{ $tenant->id }}"
                                             data-tenant-name="{{ $tenant->name }}">
-                                            <i class="fas fa-trash"></i> Delete
+                                            <i class="fas fa-trash"></i> {{ __('labels.delete') }}
                                         </a>
                                     @endif
                                 </div>
@@ -121,13 +122,11 @@
         <!-- /.card-body -->
         <div class="card-footer d-flex justify-content-between align-items-center" style="padding: 0.5rem 1rem;">
             <div class="d-flex">
-                Showing
-                <strong class="mx-1">{{ $tenants->firstItem() }}</strong>
-                to
-                <strong class="mx-1">{{ $tenants->lastItem() }}</strong>
-                of
-                <strong class="mx-1">{{ $tenants->total() }}</strong>
-                entries
+                {!! __('labels.showing_entries', [
+                    'start' => $tenants->firstItem(),
+                    'end' => $tenants->lastItem(),
+                    'total' => $tenants->total(),
+                ]) !!}
             </div>
             <div class="pagination-wrapper ml-auto">
                 {{ $tenants->links('vendor.pagination.bootstrap-4') }}
@@ -141,22 +140,22 @@
         <div class="modal-dialog">
             <div class="modal-content bg-danger">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirm Delete Tenant</h5>
+                    <h5 class="modal-title">{{ __('labels.confirm_delete_tenant') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete tenant <strong id="tenantName"></strong>? This action cannot be
-                        undone.</p>
+                    <p>{!! __('labels.confirm_delete_tenant_message') !!}</p>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <form method="POST" id="deleteTenantForm" action="{{ route('tenants.destroy', $tenant->id) }}">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-outline-light">Delete</button>
+                        <button type="submit" class="btn btn-outline-light">{{ __('labels.delete') }}</button>
                     </form>
-                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-light"
+                        data-dismiss="modal">{{ __('labels.cancel') }}</button>
                 </div>
             </div>
         </div>
@@ -179,17 +178,17 @@
             var deleteUrl = '/tenants/' + tenantId;
             modal.find('#deleteTenantForm').attr('action', deleteUrl); // Cập nhật URL trong action
         });
+
+        @if (session('success'))
+            $(function() {
+                toastr.success("{{ session('success') }}");
+            });
+        @endif
+
+        @if (session('error'))
+            $(function() {
+                toastr.success("{{ session('error') }}");
+            });
+        @endif
     </script>
-
-    @if (session('success'))
-        <script>
-            toastr.success("{{ session('success') }}");
-        </script>
-    @endif
-
-    @if (session('error'))
-        <script>
-            toastr.error("{{ session('error') }}");
-        </script>
-    @endif
 @endsection
