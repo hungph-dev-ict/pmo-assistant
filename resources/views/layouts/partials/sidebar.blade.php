@@ -35,7 +35,7 @@
                         <a href="pages/gallery.html" class="nav-link {{ request()->is('pm*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-book"></i>
                             <p>
-                                {{ __('messages.project_management') }}
+                                {{ __('labels.project_management') }}
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
@@ -56,21 +56,21 @@
                                             <a href="{{ route('pm.task', $project->id) }}"
                                                 class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.task') ? 'active' : '' }}">
                                                 <i class="fas fa-list-ul nav-icon"></i>
-                                                <p>{{ __('messages.task_lists') }}</p>
+                                                <p>{{ __('labels.task_lists') }}</p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="{{ route('pm.member', $project->id) }}"
                                                 class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.member') ? 'active' : '' }}">
                                                 <i class="fas fa-user-friends nav-icon"></i>
-                                                <p>{{ __('messages.members') }}</p>
+                                                <p>{{ __('labels.members') }}</p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="{{ route('pm.chart', $project->id) }}"
                                                 class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.chart') ? 'active' : '' }}">
                                                 <i class="fas fa-chart-line nav-icon"></i>
-                                                <p>{{ __('messages.chart') }}</p>
+                                                <p>{{ __('labels.chart') }}</p>
                                             </a>
                                         </li>
                                     </ul>
@@ -97,7 +97,7 @@
                                     <a href="{{ route('staff.task', $project->id) }}"
                                         class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('staff.task') ? 'active' : '' }}">
                                         <i class="fas fa-list-ul nav-icon"></i>
-                                        <p>{{ __('messages.task_lists') }}</p>
+                                        <p>{{ __('labels.task_lists') }}</p>
                                     </a>
                                 </li>
                                 {{-- <li class="nav-item">
@@ -111,7 +111,7 @@
                                     <a href="{{ route('staff.chart', $project->id) }}"
                                         class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('staff.chart') ? 'active' : '' }}">
                                         <i class="fas fa-chart-line nav-icon"></i>
-                                        <p>{{ __('messages.chart') }}</p>
+                                        <p>{{ __('labels.chart') }}</p>
                                     </a>
                                 </li>
                             </ul>
@@ -127,7 +127,7 @@
                             <a href="#" class="nav-link"
                                 onclick="event.preventDefault(); this.closest('form').submit();">
                                 <i class="fas fa-sign-out-alt nav-icon"></i>
-                                <p>{{ __('messages.logout') }}</p>
+                                <p>{{ __('labels.logout') }}</p>
                             </a>
                         </form>
                     </li>

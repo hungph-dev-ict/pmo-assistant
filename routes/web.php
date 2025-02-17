@@ -7,18 +7,22 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PmController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\WorklogController;
+use App\Http\Controllers\Auth\ChangePasswordController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->middleware('guest')->name('password.request');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
     //     Route::resource('projects', ProjectController::class);
+
+    Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])->name('password.change');
+    Route::put('/change-password', [ChangePasswordController::class, 'updatePassword'])->name('password.custom-update');
 
 
     //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

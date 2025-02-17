@@ -111,7 +111,7 @@ class ProjectController extends Controller
         $updateNewProject = $this->projectService->updateProject($idProject, $updateProjectInfo);
         if ($updateNewProject) {
             return redirect()->route('projects.index')
-                ->with('success', 'Project edited successfully.');
+                ->with('success', __('messages.project_updated_success'));
         }
 
         return 500;
@@ -127,10 +127,10 @@ class ProjectController extends Controller
         $result = $this->projectService->deleteProjectById($id);
 
         if ($result) {
-            return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
+            return redirect()->route('projects.index')->with('success', __('messages.project_delete_success'));
         }
 
-        return redirect()->route('projects.index')->with('error', 'Failed to delete project.');
+        return redirect()->route('projects.index')->with('error', __('messages.failed_to_delete_project'));
     }
 
     /**
@@ -142,10 +142,10 @@ class ProjectController extends Controller
         $result = $this->projectService->restoreProjectById($id);
 
         if ($result) {
-            return redirect()->route('projects.index')->with('success', 'Project restored successfully.');
+            return redirect()->route('projects.index')->with('success', __('messages.project_restored_success'));
         }
 
-        return redirect()->route('projects.index')->with('error', 'Failed to restore project.');
+        return redirect()->route('projects.index')->with('error', __('messages.failed_to_restore_project'));
     }
 
 }

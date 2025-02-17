@@ -58,11 +58,11 @@
                     </div>
                 </form>
 
-                @if (Route::has('password.request'))
+                {{-- @if (Route::has('password.request'))
                 <p class="mb-1 mt-3">
                     <a href="{{ route('password.request') }}" class="text-primary">I forgot my password</a>
                 </p>
-                @endif
+                @endif --}}
             </div>
         </div>
     </div>

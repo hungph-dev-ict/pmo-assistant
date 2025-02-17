@@ -11,6 +11,9 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('my-worklog') }}" class="nav-link">My Worklog</a>
         </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ route('password.change') }}" class="nav-link">Change Password</a>
+        </li>
     </ul>
 
     <!-- Right navbar links -->

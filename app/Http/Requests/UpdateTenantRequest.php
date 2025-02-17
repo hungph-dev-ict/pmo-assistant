@@ -36,15 +36,16 @@ class UpdateTenantRequest extends FormRequest
 
     public function attributes(): array
     {
-        return [
-            'tenant_name' => 'Tenant Name',
-            'tenant_description' => 'Tenant Description',
-            'tenant_plan' => 'Plan',
-            'tenant_logo' => 'Tenant Logo',
-            'ha_email' => 'Head Account Email',
-            'ha_account' => 'Head Account',
-            'ha_full_name' => 'Head Account Full Name',
-            'ha_avatar' => 'Head Account Avatar',
+        return [            
+            'tenant_name' => __('validation.attributes.tenant_name'),
+            'tenant_description' => __('validation.attributes.tenant_description'),
+            'tenant_plan' => __('validation.attributes.tenant_plan'),
+            'tenant_logo' => __('validation.attributes.tenant_logo'),
+            'ha_email' => __('validation.attributes.ha_email'),
+            'ha_account' => __('validation.attributes.ha_account'),
+            'ha_full_name' => __('validation.attributes.ha_full_name'),
+            'ha_avatar' => __('validation.attributes.ha_avatar'),
+            'ha_password' => __('validation.attributes.ha_password'),
         ];
     }
 }
