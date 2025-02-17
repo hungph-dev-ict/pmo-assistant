@@ -381,7 +381,7 @@
             tabindex="-1"
             :aria-hidden="!showLogWorkModal"
         >
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Log Work</h5>
