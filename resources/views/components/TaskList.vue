@@ -537,6 +537,7 @@ const showLogWorkModal = ref(false);
 const logDate = ref("");
 const logTime = ref("");
 const logDescription = ref("");
+const globalIsEditting = ref(false);
 
 onMounted(() => {
     tasks.value = props.filteredTasks.map((task) => ({
@@ -544,6 +545,7 @@ onMounted(() => {
         isEditing: false,
         editedName: task.name,
     }));
+    globalIsEditting.value = false;
 });
 
 const isBlankQuery = computed(() => props.blankQuery ?? true);
@@ -559,6 +561,12 @@ const isColumnVisible = (column) => {
 
 // Hàm bật chế độ edit
 const editTask = (task) => {
+    if (globalIsEditting.value) {
+        toastr.error("Other worklog edit is in progress. Please cancel it before edit other.");
+        return;
+    }
+    globalIsEditting.value = true;
+
     task.isEditing = true;
     task.editedName = task.name;
     task.editedPriority = task.priority;
@@ -706,12 +714,12 @@ const updateTask = async (task) => {
         toastr.error(`${errorMessage}: ${errorDetail}`);
     }
     task.isEditing = false;
+    globalIsEditting.value = false;
     // Emit để component cha xử lý
     emit("update-task");
 };
 
 const isOverdue = (planEndDate, status) => {
-    console.log(status);
     if (!planEndDate || !status) return false;
 
     const overdueStatuses = ["Not Started", "In Progress", "Feedback"];
@@ -726,6 +734,7 @@ const cancelEdit = (task) => {
 
     Object.assign(task, task.originalData); // Khôi phục dữ liệu gốc
     task.isEditing = false;
+    globalIsEditting.value = false;
 };
 
 const destroySelect2 = () => {
