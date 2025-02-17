@@ -95,7 +95,7 @@ class TenantController extends Controller
         $createNewTenant = $this->tenantService->createTenant($newTenantInfo, $logo_url, $ha_avatar);
         if ($createNewTenant) {
             return redirect()->route('tenants.index')
-                ->with('success', 'Tenant created successfully.');
+                ->with('success', __('messages.tenant_created_success'));
         }
 
         return 500;
@@ -157,7 +157,7 @@ class TenantController extends Controller
         $updateNewTenant = $this->tenantService->updateTenant($idTenant, $updateTenantInfo, $logo_url, $ha_avatar);
         if ($updateNewTenant) {
             return redirect()->route('tenants.index')
-                ->with('success', 'Tenant created successfully.');
+                ->with('success', __('messages.tenant_updated_success'));
         }
 
         return 500;
@@ -172,10 +172,10 @@ class TenantController extends Controller
         $result = $this->tenantService->deleteTenantById($id);
 
         if ($result) {
-            return redirect()->route('tenants.index')->with('success', 'Tenant deleted successfully.');
+            return redirect()->route('tenants.index')->with('success', __('messages.tenant_delete_success'));
         }
 
-        return redirect()->route('tenants.index')->with('error', 'Failed to delete tenant.');
+        return redirect()->route('tenants.index')->with('error', __('messages.failed_to_delete_tenant'));
     }
 
     /**
@@ -187,9 +187,9 @@ class TenantController extends Controller
         $result = $this->tenantService->restoreTenantById($id);
 
         if ($result) {
-            return redirect()->route('tenants.index')->with('success', 'Tenant restored successfully.');
+            return redirect()->route('tenants.index')->with('success', __('messages.tenant_restored_success'));
         }
 
-        return redirect()->route('tenants.index')->with('error', 'Failed to restore tenant.');
+        return redirect()->route('tenants.index')->with('error', __('messages.failed_to_restore_tenant'));
     }
 }

@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('page_title')
-    Project {{ $project->name }}
+    {{ __('labels.project') }} {{ $project->name }}
 @endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('projects.index') }}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('projects.index') }}">{{ __('labels.projects') }}</a></li>
     <li class="breadcrumb-item active">{{ $project->name }}</li>
 @endsection
 
@@ -14,7 +14,7 @@
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Projects Detail</h3>
+            <h3 class="card-title">{{ __('labels.project_detail') }}</h3>
 
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -32,14 +32,16 @@
                         <div class="col-12 col-sm-4">
                             <div class="info-box bg-light">
                                 <div class="info-box-content">
-                                    <span class="info-box-text text-center text-muted">Estimated budget</span>
+                                    <span
+                                        class="info-box-text text-center text-muted">{{ __('labels.project_estimated_budget') }}</span>
                                     <span
                                         class="info-box-number text-center text-muted mb-0">{{ $project->estimated_budget }}</span>
                                 </div>
                             </div>
                             <div class="info-box bg-light">
                                 <div class="info-box-content">
-                                    <span class="info-box-text text-center text-muted">Status</span>
+                                    <span
+                                        class="info-box-text text-center text-muted">{{ __('labels.project_status') }}</span>
                                     <span class="info-box-number text-center text-muted mb-0">
                                         {{ $project->projectStatus->value1 ?? '' }}
                                     </span>
@@ -49,13 +51,15 @@
                         <div class="col-12 col-sm-4">
                             <div class="info-box bg-light">
                                 <div class="info-box-content">
-                                    <span class="info-box-text text-center text-muted">Total amount spent</span>
+                                    <span
+                                        class="info-box-text text-center text-muted">{{ __('labels.project_total_amount_spent') }}</span>
                                     <span class="info-box-number text-center text-muted mb-0">1000</span>
                                 </div>
                             </div>
                             <div class="info-box bg-light">
                                 <div class="info-box-content">
-                                    <span class="info-box-text text-center text-muted">Start date</span>
+                                    <span
+                                        class="info-box-text text-center text-muted">{{ __('labels.project_start_date') }}</span>
                                     <span
                                         class="info-box-number text-center text-muted mb-0">{{ $project->start_date }}</span>
                                 </div>
@@ -64,14 +68,16 @@
                         <div class="col-12 col-sm-4">
                             <div class="info-box bg-light">
                                 <div class="info-box-content">
-                                    <span class="info-box-text text-center text-muted">Estimated project duration</span>
+                                    <span
+                                        class="info-box-text text-center text-muted">{{ __('labels.project_estimated_project_duration') }}</span>
                                     <span
                                         class="info-box-number text-center text-muted mb-0">{{ $project->estimated_project_duration }}</span>
                                 </div>
                             </div>
                             <div class="info-box bg-light">
                                 <div class="info-box-content">
-                                    <span class="info-box-text text-center text-muted">End date</span>
+                                    <span
+                                        class="info-box-text text-center text-muted">{{ __('labels.project_end_date') }}</span>
                                     <span
                                         class="info-box-number text-center text-muted mb-0">{{ $project->end_date }}</span>
                                 </div>
@@ -80,7 +86,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <h4>Recent Activity</h4>
+                            <h4>{{ __('labels.project_recent_activity') }}</h4>
                             {{-- <div class="post">
                                 <div class="user-block">
                                     <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg"
@@ -110,10 +116,10 @@
                     <p class="text-muted">{{ $project->description }}</p>
                     <br>
                     <div class="text-muted">
-                        <p class="text-sm">Client Company
+                        <p class="text-sm">{{ __('labels.project_client_company') }}
                             <b class="d-block">{{ $project->client_company }}</b>
                         </p>
-                        <p class="text-sm">Project Manager
+                        <p class="text-sm">{{ __('labels.project_manager') }}
                             <b class="d-block">
                                 @if ($project->project_manager)
                                     {{ $project->projectManager->name ?? '' }}
@@ -122,7 +128,7 @@
                         </p>
                     </div>
 
-                    <h5 class="mt-5 text-muted">Project files</h5>
+                    <h5 class="mt-5 text-muted">{{ __('labels.project_files') }}</h5>
                     <ul class="list-unstyled">
                         <li>
                             <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-word"></i>
@@ -146,8 +152,8 @@
                         </li>
                     </ul>
                     <div class="text-center mt-5 mb-3">
-                        <a href="#" class="btn btn-sm btn-primary">Add files</a>
-                        <a href="#" class="btn btn-sm btn-warning">Report contact</a>
+                        <a href="#" class="btn btn-sm btn-primary">{{ __('labels.project_add_files') }}</a>
+                        <a href="#" class="btn btn-sm btn-warning">{{ __('labels.project_report_contact') }}</a>
                     </div>
                 </div>
             </div>

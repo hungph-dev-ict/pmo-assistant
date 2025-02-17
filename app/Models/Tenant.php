@@ -66,7 +66,7 @@ class Tenant extends Model
         // Lấy thông tin tenant hiện tại
         $tenant = self::find($idTenant);
         if (!$tenant) {
-            throw new \Exception("Tenant không tồn tại.");
+            throw new \Exception(__('messages.tenant_not_found'));
         }
 
         // Cập nhật thông tin tenant
@@ -80,7 +80,7 @@ class Tenant extends Model
         // Lấy tài khoản head account của tenant
         $headAccount = User::where('tenant_id', $idTenant)->where('head_account_flg', '1')->first();
         if (!$headAccount) {
-            throw new \Exception("Head Account không tồn tại.");
+            throw new \Exception(__('messages.head_account_not_found'));
         }
 
         // Cập nhật thông tin tài khoản head account

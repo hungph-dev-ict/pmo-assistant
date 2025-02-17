@@ -70,7 +70,7 @@ class Project extends Model
         // Lấy thông tin tenant hiện tại
         $project = self::find($idProject);
         if (!$project) {
-            throw new \Exception("Project không tồn tại.");
+            throw new \Exception(__('messages.project_not_found'));
         }
 
         // Cập nhật thông tin tenant

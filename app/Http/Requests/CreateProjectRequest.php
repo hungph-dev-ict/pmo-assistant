@@ -42,14 +42,15 @@ class CreateProjectRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'project_name' => 'Project Name', 
-            'project_description' => 'Project Description', 
-            'project_status' => 'Status', 
-            'project_client_company' => 'Client Company',
-            'project_project_manager' => 'Project Manager', 
-            'project_start_date' => 'Start Date', 
-            'project_end_date' => 'End Date', 
-            'project_estimated_budget' => 'Estimated budget',
+            'project_name' => __('validation.attributes.project_name'),
+            'project_description' => __('validation.attributes.project_description'),
+            'project_status' => __('validation.attributes.project_status'),
+            'project_client_company' => __('validation.attributes.project_client_company'),
+            'project_project_manager' => __('validation.attributes.project_project_manager'),
+            'project_start_date' => __('validation.attributes.project_start_date'),
+            'project_end_date' => __('validation.attributes.project_end_date'),
+            'project_estimated_budget' => __('validation.attributes.project_estimated_budget'),
+            'project_estimated_project_duration' => __('validation.attributes.project_estimated_project_duration'),
         ];
     }
 
