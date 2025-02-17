@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\ShareProjectManagerData;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\SetLocaleByIp;
+use App\Http\Middleware\LogRequests;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ShareProjectManagerData::class,
             SetLocale::class,
             // SetLocaleByIp::class,
+            LogRequests::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
