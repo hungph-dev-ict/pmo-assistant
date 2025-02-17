@@ -192,14 +192,22 @@
                                 >
                                     <span
                                         :style="{
-                                            color: isOverdue(task.plan_end_date, task.status)
+                                            color: isOverdue(
+                                                task.plan_end_date,
+                                                task.status
+                                            )
                                                 ? 'red'
                                                 : 'inherit',
                                         }"
                                     >
                                         {{ task.plan_end_date }}
                                         <span
-                                            v-if="isOverdue(task.plan_end_date, task.status)"
+                                            v-if="
+                                                isOverdue(
+                                                    task.plan_end_date,
+                                                    task.status
+                                                )
+                                            "
                                             >🔥</span
                                         >
                                     </span>
@@ -499,7 +507,10 @@
                             class="btn btn-primary"
                             @click="submitLogWork(selectedTask.id)"
                         >
-                            Save
+                            <span v-if="isLoading">
+                                <i class="fas fa-spinner fa-spin"></i> Đang xử
+                                lý... </span
+                            ><span v-else> Save </span>
                         </button>
                     </div>
                 </div>
@@ -538,6 +549,7 @@ const logDate = ref("");
 const logTime = ref("");
 const logDescription = ref("");
 const globalIsEditting = ref(false);
+const isLoading = ref(false);
 
 onMounted(() => {
     tasks.value = props.filteredTasks.map((task) => ({
@@ -562,7 +574,9 @@ const isColumnVisible = (column) => {
 // Hàm bật chế độ edit
 const editTask = (task) => {
     if (globalIsEditting.value) {
-        toastr.error("Other worklog edit is in progress. Please cancel it before edit other.");
+        toastr.error(
+            "Other worklog edit is in progress. Please cancel it before edit other."
+        );
         return;
     }
     globalIsEditting.value = true;
@@ -809,13 +823,17 @@ const openLogWorkModal = (task) => {
 };
 
 const submitLogWork = async (taskId) => {
+    if (isLoading.value) return;
+    isLoading.value = true;
     if (!logDate.value) {
         toastr.error("Please enter a valid log date.");
+        isLoading.value = false;
         return;
     }
 
     if (!logTime.value || logTime.value <= 0) {
         toastr.error("Please enter a valid log time.");
+        isLoading.value = false;
         return;
     }
 
@@ -840,6 +858,7 @@ const submitLogWork = async (taskId) => {
 
         // Đóng modal
         showLogWorkModal.value = false;
+        isLoading.value = false;
     } catch (error) {
         console.log(error);
         // Lấy thông tin lỗi từ response
@@ -849,6 +868,7 @@ const submitLogWork = async (taskId) => {
 
         // Hiển thị toastr lỗi với cả message và error detail
         toastr.error(`${errorMessage}: ${errorDetail}`);
+        isLoading.value = false;
     }
 
     // Đóng modal
@@ -856,6 +876,7 @@ const submitLogWork = async (taskId) => {
     logTime.value = "";
     logDate.value = "";
     logDescription.value = "";
+    isLoading.value = false;
 
     emit("update-task");
 };
