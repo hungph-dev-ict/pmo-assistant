@@ -24,13 +24,13 @@ class CreateProjectRequest extends FormRequest
     {
         return [
             'project_name' => 'required|string|max:255', 
-            'project_description' => 'required|string', 
+            'project_description' => 'nullable|string', 
             'project_status' => 'required|integer', 
-            'project_client_company' => 'required|string|max:100',
+            'project_client_company' => 'nullable|string|max:100',
             'project_project_manager' => 'required|integer|exists:users,id', 
-            'project_start_date' => 'required|date', 
-            'project_end_date' => 'required|date', 
-            'project_estimated_budget' => 'required|numeric|min:0',
+            'project_start_date' => 'nullable|date', 
+            'project_end_date' => 'nullable|date', 
+            'project_estimated_budget' => 'nullable|numeric|min:0',
         ];
     }
 

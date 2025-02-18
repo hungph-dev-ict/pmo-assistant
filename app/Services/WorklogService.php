@@ -64,11 +64,25 @@ class WorklogService {
 
         $tenant_user_ids = User::where('tenant_id', $user->tenant_id)->pluck('id')->all();
 
-        $worklogs = Worklog::whereIn('log_user', $tenant_user_ids)->with('task.project', 'task.assigneeUser')->orderBy('log_date', 'desc')->get();
+        $worklogs = Worklog::whereIn('log_user', $tenant_user_ids)->with('user', 'task.project', 'task.assigneeUser')->orderBy('log_date', 'desc')->get();
 
         return response()->json([
             'success' => true,
             'data' => $worklogs
         ]);
+    }
+
+    public function getActualEffortByProject($projectId) {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $totalLogTime = Worklog::whereHas('task', function ($query) use ($projectId) {
+            $query->where('project_id', $projectId);
+        })->sum('log_time');
+
+        return $totalLogTime;
     }
 }

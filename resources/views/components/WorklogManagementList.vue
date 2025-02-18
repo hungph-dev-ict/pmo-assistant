@@ -17,7 +17,7 @@
                         </th>
                         <th
                             v-if="isColumnVisible('epic_task')"
-                            style="width: 40%"
+                            style="width: 30%"
                         >
                             Epic/Task
                         </th>
@@ -38,6 +38,12 @@
                             style="width: 5%"
                         >
                             Actual Effort
+                        </th>
+                        <th
+                            v-if="isColumnVisible('logged-user')"
+                            style="width: 10%"
+                        >
+                            Logged User
                         </th>
                         <th
                             v-if="isColumnVisible('logged-date')"
@@ -72,7 +78,7 @@
                             <td v-if="isColumnVisible('epic_task')">
                                 {{ worklog.task.name }}
                             </td>
-                            <td v-if="isColumnVisible('log-user')">
+                            <td v-if="isColumnVisible('assignee')">
                                 {{ worklog.task.assignee_user.account }}
                             </td>
                             <td v-if="isColumnVisible('plan-effort')">
@@ -80,6 +86,9 @@
                             </td>
                             <td v-if="isColumnVisible('actual-effort')">
                                 {{ worklog.task.actual_effort }}
+                            </td>
+                            <td v-if="isColumnVisible('logged-user')">
+                                {{ worklog.user.account }}
                             </td>
                             <td v-if="isColumnVisible('logged-date')">
                                 <span v-if="!worklog.isEditing">{{

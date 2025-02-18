@@ -6,9 +6,9 @@ use App\Models\User;
 use App\Models\Task;
 use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\TaskService;
+use App\Http\Requests\StoreTaskRequest;
 
 class PmController extends Controller
 {
@@ -33,7 +33,7 @@ class PmController extends Controller
         return view('pm.task', compact('project_id', 'listAssignee', 'project'));
     }
 
-    public function storeTask(Request $request, $project_id)
+    public function storeTask(StoreTaskRequest $request, $project_id)
     {
         try {
             // Chuyển đổi type từ string thành integer
@@ -43,22 +43,7 @@ class PmController extends Controller
             ];
 
             // Validate dữ liệu đầu vào
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:255',
-                'type' => 'required|string|in:epic,task',
-                'parent_id' => 'nullable|exists:tasks,id',
-                'assignee' => 'nullable|integer|exists:users,id',
-                'priority' => 'required|integer|min:0|max:4',
-                'estimate_effort' => 'numeric|min:0',
-                'actual_effort' => 'nullable|numeric|min:0',
-                'plan_start_date' => 'nullable|date',
-                'plan_end_date' => 'nullable|date|after_or_equal:plan_start_date',
-                'actual_start_date' => 'nullable|date',
-                'actual_end_date' => 'nullable|date|after_or_equal:actual_start_date',
-                'status' => 'integer',
-                'progress' => 'integer|min:0|max:100',
-                'created_by' => 'required|exists:users,id',
-            ]);
+            $validatedData = $request->validated();
 
             // Chuyển đổi type từ string sang integer
             $validatedData['type'] = $typeMapping[$validatedData['type']];
@@ -152,14 +137,14 @@ class PmController extends Controller
 
             if (empty($syncResult['attached']) && empty($syncResult['detached']) && empty($syncResult['updated'])) {
                 DB::rollBack(); // 🔹 Không có thay đổi, rollback để tránh cập nhật không cần thiết
-                return redirect()->route('pm.member', ['project_id' => $project_id])->with('warning', 'No changes were made!');
+                return redirect()->route('pm.member', ['project_id' => $project_id])->with('warning', __('messages.no_changes_were_made'));
             }
 
             DB::commit(); // 🔹 Xác nhận thay đổi nếu không có lỗi
-            return redirect()->route('pm.member', ['project_id' => $project_id])->with('success', 'Project members updated successfully!');
+            return redirect()->route('pm.member', ['project_id' => $project_id])->with('success', __('messages.project_members_updated_success'));
         } catch (\Exception $e) {
             DB::rollBack(); // 🔹 Nếu có lỗi, hủy bỏ tất cả thay đổi
-            return redirect()->route('pm.member', ['project_id' => $project_id])->with('error', 'Error updating members: ' . $e->getMessage());
+            return redirect()->route('pm.member', ['project_id' => $project_id])->with('error',  __('messages.error_updating_members', ['message' => $e->getMessage()]));
         }
     }
 

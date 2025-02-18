@@ -52,14 +52,14 @@ class Project extends Model
     public static function createProject($projectData)
     {
         $newProject = self::create([
-            'name' => $projectData['project_name'],
-            'description' => $projectData['project_description'],
-            'status' => $projectData['project_status'],
-            'client_company' => $projectData['project_client_company'],
-            'project_manager' => $projectData['project_project_manager'],
-            'start_date' => $projectData['project_start_date'],
-            'end_date' => $projectData['project_end_date'],
-            'estimated_budget' => $projectData['project_estimated_budget'],
+            'name' => $projectData['project_name'] ?? 'default name',
+            'description' => $projectData['project_description'] ?? null,
+            'status' => $projectData['project_status'] ?? '1',
+            'client_company' => $projectData['project_client_company'] ?? null,
+            'project_manager' => $projectData['project_project_manager'] ?? null,
+            'start_date' => $projectData['project_start_date'] ?? null,
+            'end_date' => $projectData['project_end_date'] ?? null,
+            'estimated_budget' => $projectData['project_estimated_budget'] ?? null,
         ]);
 
         return $newProject;
@@ -75,15 +75,14 @@ class Project extends Model
 
         // Cập nhật thông tin tenant
         $project->update([
-            'name' => $projectData['project_name'],
-            'description' => $projectData['project_description'],
-            'status' => $projectData['project_status'],
-            'client_company' => $projectData['project_client_company'],
+            'name' => $projectData['project_name'] ?? 'default name',
+            'description' => $projectData['project_description'] ?? null,
+            'status' => $projectData['project_status'] ?? '1',
+            'client_company' => $projectData['project_client_company'] ?? null,
             'project_manager' => $projectData['project_project_manager'],
-            'start_date' => $projectData['project_start_date'],
-            'end_date' => $projectData['project_end_date'],
-            'estimated_budget' => $projectData['project_estimated_budget'],
-            'estimated_project_duration' => $projectData['project_estimated_project_duration'],
+            'start_date' => $projectData['project_start_date'] ?? null,
+            'end_date' => $projectData['project_end_date'] ?? null,
+            'estimated_budget' => $projectData['project_estimated_budget'] ?? null,
         ]);
 
         return $project;

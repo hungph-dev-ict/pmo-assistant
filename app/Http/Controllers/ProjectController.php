@@ -5,19 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\Constant;
-use Illuminate\Http\Request;
 use App\Services\ProjectService;
+use App\Services\WorklogService;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use Illuminate\Support\Facades\Auth;
 class ProjectController extends Controller
 {
     protected $projectService;
+    protected $worklogService;
 
     // Tiêm ProjectService vào controller thông qua constructor
-    public function __construct(ProjectService $projectService)
+    public function __construct(ProjectService $projectService, WorklogService $worklogService)
     {
         $this->projectService = $projectService;
+        $this->worklogService = $worklogService;
     }
 
     /**
@@ -84,7 +86,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return view('projects.show',compact('project'));
+        $totalActualEffort = $this->worklogService->getActualEffortByProject($project->id);
+
+        return view('projects.show',compact('project', 'totalActualEffort'));
     }
 
     /**

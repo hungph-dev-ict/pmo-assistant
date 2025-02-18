@@ -76,9 +76,10 @@
                             data-placeholder="Select Columns" style="width: 100%">
                             <option value="project-name">Project</option>
                             <option value="epic_task">Epic/Task</option>
-                            <option value="log-user">Logged User</option>
+                            <option value="assignee">assignee</option>
                             <option value="plan-effort">Plan Effort</option>
                             <option value="actual-effort">Actual Effort</option>
+                            <option value="logged-user">Logged User</option>
                             <option value="logged-date">
                                 Logged Date
                             </option>
@@ -150,7 +151,8 @@ onMounted(() => {
             let defaultColumns = [
                 "project-name",
                 "epic_task",
-                "log-user",
+                "assignee",
+                "logged-user",
                 "logged-date",
                 "logged-time",
                 "description",

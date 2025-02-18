@@ -5,30 +5,30 @@
 @endsection
 
 @section('page_title')
-    {{ $project->name }} - Member
+    {{ $project->name }} - {{__('labels.member')}}
 @endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">{{ $project->name }} - Member</li>
+    <li class="breadcrumb-item active">{{ $project->name }} - {{__('labels.member')}}</li>
 @endsection
 
 @section('content')
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Project Member</h3>
+            <h3 class="card-title">{{__('labels.project_member')}}</h3>
         </div>
         <form id="projectMembersForm" action="{{ route('pm.member.update', ['project_id' => $project->id]) }}" method="POST">
             @csrf
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-5">
-                        <h5>Available Users</h5>
+                        <h5>{{__('labels.available_users')}}</h5>
                         <!-- Search Box -->
                         <div class="input-group mb-3">
                             <input type="text" id="available-users-search" class="form-control"
-                                placeholder="Search users..." />
+                                placeholder="{{ __('labels.search_users') }}" />
                             <div class="input-group-append">
                                 <button id="clear-search" class="btn btn-outline-secondary" type="button">
                                     <i class="fas fa-times"></i>
@@ -51,7 +51,7 @@
                         <button type="button" id="remove-all-users" class="btn btn-danger btn-block mb-2">&lt;&lt;</button>
                     </div>
                     <div class="col-md-5">
-                        <h5>Selected Users</h5>
+                        <h5>{{__('labels.selected_users')}}</h5>
                         <!-- List -->
                         <select id="selected-users" class="form-control" size="10" multiple>
                             @foreach ($membersInProject as $memberInProject)
@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">{{ __('labels.submit') }}</button>
             </div>
         </form>
     </div>
@@ -126,7 +126,7 @@
                 // Focus back to the search box
                 searchBox.focus();
             });
-            // Thêm tất cả option từ elected-users và input 
+            // Thêm tất cả option từ elected-users và input
             document.getElementById("projectMembersForm").addEventListener("submit", function() {
                 const selectedUsers = document.getElementById("selected-users");
                 const allOptionValues = Array.from(selectedUsers.options).map(option => option.value);

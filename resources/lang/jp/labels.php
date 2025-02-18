@@ -4,9 +4,9 @@ return [
     'bulk_insert' => '一括挿入',
     'full_name' => '氏名',
 
-    //General    
+    //General
     'general' => '一般',
-    'submit' => '登録',    
+    'submit' => '登録',
     'cancel' => 'キャンセル',
     'view' => '表示',
     'edit' => '編集',
@@ -14,7 +14,7 @@ return [
     'delete' => '削除',
     'restore' => '復元',
     'showing_entries' => '全<strong class="mx-1">:total</strong>件中<strong class="mx-1">:start</strong>件目から<strong class="mx-1">:end</strong>件目を表示しています。',
-    
+
     //Chart
     'gantt_chart' => 'ガントチャート',
     'start_date' => '開始日',
@@ -35,7 +35,7 @@ return [
     'to' => 'から',
     'of' => 'の',
     'entries' => '件',
-    
+
     //Sidebar
     'project_setting' => 'プロジェクト設定',
     'projects' => 'プロジェクト一覧',
@@ -64,8 +64,8 @@ return [
     'project_client_company' => 'クライアント会社',
     'project_manager' => 'プロジェクトマネージャー',
     'project_select_manager' => '-- プロジェクトマネージャーを選択 --',
-    'project_estimated_budget' => '予算見積もり (MM)',
-    'project_total_amount_spent' => '総支出額 (MM)',
+    'project_estimated_budget' => '予算見積もり (時間)',
+    'project_total_amount_spent' => '総支出額 (時間)',
     'project_estimated_project_duration' => '推定プロジェクト期間 (ヶ月)',
     'project_create_new_project' => '新しいプロジェクトを作成',
     'project_detail' => 'プロジェクトの詳細',
@@ -76,10 +76,10 @@ return [
     'confirm_delete_project' => 'プロジェクトの削除を確認しますか？',
     'confirm_delete_project_message' => '本当にプロジェクト<strong id="projectName"></strong>を削除してもよろしいですか？',
 
-    //Tenant          
-    'tenant_name' => 'テナント名', 
-    'tenant_description' => 'プロジェクトの説明', 
-    'tenant_logo' => 'テナントのロゴ', 
+    //Tenant
+    'tenant_name' => 'テナント名',
+    'tenant_description' => 'プロジェクトの説明',
+    'tenant_logo' => 'テナントのロゴ',
     'tenant_plan' => 'テナントプラン',
     'tenant_head_account' => '代表アカウント',
     'tenant_mail' => 'テナントメール',
@@ -95,4 +95,10 @@ return [
     'confirm_delete_tenant' => 'テナントの削除を確認',
     'confirm_delete_tenant_message' => '本当にテナント<strong id="tenantName"></strong>を削除しますか？この操作は元に戻せません。',
 
+    //Member
+    'project_member' => 'プロジェクトメンバー',
+    'available_users' => '利用可能なユーザー',
+    'selected_users' => '選択したユーザー',
+    'member' => 'メンバー',
+    'search_users' => 'ユーザーを検索...',
 ];

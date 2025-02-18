@@ -4,18 +4,18 @@ return [
     'bulk_insert' => 'Thêm hàng loạt',
     'full_name' => 'Tên đầy đủ',
 
-    //General    
+    //General
     'general' => 'Chung',
-    'submit' => 'Lưu',   
+    'submit' => 'Lưu',
     'cancel' => 'Hủy',
     'view' => 'Xem',
     'edit' => 'Sửa',
     'update' => 'Cập nhật',
-    'delete' => 'Xóa', 
+    'delete' => 'Xóa',
     'restore' => 'Khôi phục',
     'showing_entries' => 'Hiển thị <strong class="mx-1">:start</strong> đến <strong class="mx-1">:end</strong> trên tổng số <strong class="mx-1">:total</strong> bản ghi',
 
-    
+
     //Chart
     'gantt_chart' => 'Biểu đồ Gantt',
     'start_date' => 'Ngày bắt đầu',
@@ -56,8 +56,8 @@ return [
     'project_client_company' => 'Công ty khách hàng',
     'project_manager' => 'Quản lý dự án',
     'project_select_manager' => '-- Chọn quản lý dự án --',
-    'project_estimated_budget' => 'Ngân sách ước tính (triệu)',
-    'project_total_amount_spent' => 'Tổng số tiền đã chi (triệu)',
+    'project_estimated_budget' => 'Ngân sách ước tính (giờ)',
+    'project_total_amount_spent' => 'Tổng số tiền đã chi (giờ)',
     'project_estimated_project_duration' => 'Thời gian ước tính của dự án (tháng)',
     'project_create_new_project' => 'Tạo dự án mới',
     'project_detail' => 'Chi tiết dự án',
@@ -67,18 +67,18 @@ return [
     'project_report_contact' => 'Báo cáo liên hệ',
     'confirm_delete_project' => 'Xác nhận xóa dự án',
     'confirm_delete_project_message' => 'Bạn có chắc chắn muốn xóa dự án <strong id="projectName"></strong>? Hành động này không thể hoàn tác.',
-    
-    //Tenant  
+
+    //Tenant
     'tenant_name' => 'Tên Tenant',
-    'tenant_description' => 'Mô tả Tenant', 
-    'tenant_logo' => 'Logo Tenant', 
+    'tenant_description' => 'Mô tả Tenant',
+    'tenant_logo' => 'Logo Tenant',
     'tenant_plan' => 'Gói dịch vụ',
     'tenant_head_account' => 'Tài khoản điều hành',
     'tenant_mail' => 'Email',
     'tenant_account' => 'Tài khoản',
     'tenant_full_name' => 'Tên đầy đủ',
     'tenant_upload_avatar' => 'Tải ảnh đại diện',
-    'tenant_password' => 'Mật khẩu',  
+    'tenant_password' => 'Mật khẩu',
     'choose_file' => 'Chọn tệp',
     'tenant_select_plan' => '-- Chọn gói dịch vụ --',
     'show_password' => 'Hiện mật khẩu',
@@ -87,4 +87,10 @@ return [
     'confirm_delete_tenant' => 'Xác nhận xóa Tenant',
     'confirm_delete_tenant_message' => 'Bạn có chắc chắn muốn xóa Tenant <strong id="tenantName"></strong>? Hành động này không thể hoàn tác.',
 
+    //Member
+    'project_member' => 'Thành viên dự án',
+    'available_users' => 'Thành viên khả dụng',
+    'selected_users' => 'Thành viên đã chọn',
+    'member' => 'Thành viên',
+    'search_users' => 'Tìm kiếm người dùng...',
 ];

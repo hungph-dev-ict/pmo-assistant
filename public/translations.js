@@ -19,7 +19,10 @@ window.translations = {
             "failed_to_delete_tenant.": "Failed to delete tenant.",
             "failed_to_restore_tenant.": "Failed to restore tenant.",
             "tenant_not_found": "Tenant not found.",
-            "head_account_not_found": "Head Account not found."
+            "head_account_not_found": "Head Account not found.",
+            "no_changes_were_made": "No changes were made!",
+            "project_members_updated_success": "Project members updated successfully!",
+            "error_updating_members": "Error updating members: :message"
         },
         "validation": {
             "accepted": "The :attribute field must be accepted.",
@@ -241,8 +244,8 @@ window.translations = {
             "project_client_company": "Client Company",
             "project_manager": "Project Manager",
             "project_select_manager": "-- Select Project Manager --",
-            "project_estimated_budget": "Estimated Budget (MM)",
-            "project_total_amount_spent": "Total Amount Spent (MM)",
+            "project_estimated_budget": "Estimated Budget (hours)",
+            "project_total_amount_spent": "Total Amount Spent (hours)",
             "project_estimated_project_duration": "Estimated Project Duration (months)",
             "project_create_new_project": "Create new Project",
             "project_detail": "Project Detail",
@@ -268,7 +271,12 @@ window.translations = {
             "tenant_create_new_tenant": "Create new Tenant",
             "tenant_current_plan": "Current Plan",
             "confirm_delete_tenant": "Confirm Delete Tenant",
-            "confirm_delete_tenant_message": "Are you sure you want to delete tenant <strong id=\"tenantName\"><\/strong>? This action cannot be undon."
+            "confirm_delete_tenant_message": "Are you sure you want to delete tenant <strong id=\"tenantName\"><\/strong>? This action cannot be undon.",
+            "project_member": "Project Member",
+            "available_users": "Available Users",
+            "selected_users": "Selected Users",
+            "member": "Member",
+            "search_users": "Search users..."
         }
     },
     "jp": {
@@ -291,7 +299,10 @@ window.translations = {
             "failed_to_delete_tenant": "\u30c6\u30ca\u30f3\u30c8\u306e\u524a\u9664\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002",
             "failed_to_restore_tenant": "\u30c6\u30ca\u30f3\u30c8\u306e\u5fa9\u5143\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002",
             "tenant_not_found": "\u30c6\u30ca\u30f3\u30c8\u304c\u5b58\u5728\u3057\u307e\u305b\u3093\u3002",
-            "head_account_not_found": "\u30d8\u30c3\u30c9\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002"
+            "head_account_not_found": "\u30d8\u30c3\u30c9\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002",
+            "no_changes_were_made": "\u5909\u66f4\u306f\u3042\u308a\u307e\u305b\u3093\u3067\u3057\u305f\uff01",
+            "project_members_updated_success": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u30e1\u30f3\u30d0\u30fc\u304c\u6b63\u5e38\u306b\u66f4\u65b0\u3055\u308c\u307e\u3057\u305f\uff01",
+            "error_updating_members": "\u30e1\u30f3\u30d0\u30fc\u306e\u66f4\u65b0\u30a8\u30e9\u30fc: :message"
         },
         "validation": {
             "required": ":attribute \u306f\u5fc5\u9808\u3067\u3059\u3002",
@@ -349,9 +360,12 @@ window.translations = {
             "task": "\u30bf\u30b9\u30af",
             "project": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8",
             "from": "\u304b\u3089",
-            "to": "\u307e\u3067",
+            "to": "\u304b\u3089",
             "vacation": "\u4f11\u6687",
             "now": "\u73fe\u5728",
+            "showing": "\u8868\u793a\u4e2d",
+            "of": "\u306e",
+            "entries": "\u4ef6",
             "project_setting": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u8a2d\u5b9a",
             "projects": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u4e00\u89a7",
             "project_add": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u8ffd\u52a0",
@@ -376,8 +390,8 @@ window.translations = {
             "project_client_company": "\u30af\u30e9\u30a4\u30a2\u30f3\u30c8\u4f1a\u793e",
             "project_manager": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u30de\u30cd\u30fc\u30b8\u30e3\u30fc",
             "project_select_manager": "-- \u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u30de\u30cd\u30fc\u30b8\u30e3\u30fc\u3092\u9078\u629e --",
-            "project_estimated_budget": "\u4e88\u7b97\u898b\u7a4d\u3082\u308a (MM)",
-            "project_total_amount_spent": "\u7dcf\u652f\u51fa\u984d (MM)",
+            "project_estimated_budget": "\u4e88\u7b97\u898b\u7a4d\u3082\u308a (\u6642\u9593)",
+            "project_total_amount_spent": "\u7dcf\u652f\u51fa\u984d (\u6642\u9593)",
             "project_estimated_project_duration": "\u63a8\u5b9a\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u671f\u9593 (\u30f6\u6708)",
             "project_create_new_project": "\u65b0\u3057\u3044\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u3092\u4f5c\u6210",
             "project_detail": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u306e\u8a73\u7d30",
@@ -403,7 +417,12 @@ window.translations = {
             "tenant_create_new_tenant": "\u65b0\u3057\u3044\u30c6\u30ca\u30f3\u30c8\u3092\u4f5c\u6210",
             "tenant_current_plan": "\u73fe\u5728\u306e\u30d7\u30e9\u30f3",
             "confirm_delete_tenant": "\u30c6\u30ca\u30f3\u30c8\u306e\u524a\u9664\u3092\u78ba\u8a8d",
-            "confirm_delete_tenant_message": "\u672c\u5f53\u306b\u30c6\u30ca\u30f3\u30c8<strong id=\"tenantName\"><\/strong>\u3092\u524a\u9664\u3057\u307e\u3059\u304b\uff1f\u3053\u306e\u64cd\u4f5c\u306f\u5143\u306b\u623b\u305b\u307e\u305b\u3093\u3002"
+            "confirm_delete_tenant_message": "\u672c\u5f53\u306b\u30c6\u30ca\u30f3\u30c8<strong id=\"tenantName\"><\/strong>\u3092\u524a\u9664\u3057\u307e\u3059\u304b\uff1f\u3053\u306e\u64cd\u4f5c\u306f\u5143\u306b\u623b\u305b\u307e\u305b\u3093\u3002",
+            "project_member": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u30e1\u30f3\u30d0\u30fc",
+            "available_users": "\u5229\u7528\u53ef\u80fd\u306a\u30e6\u30fc\u30b6\u30fc",
+            "selected_users": "\u9078\u629e\u3057\u305f\u30e6\u30fc\u30b6\u30fc",
+            "member": "\u30e1\u30f3\u30d0\u30fc",
+            "search_users": "\u30e6\u30fc\u30b6\u30fc\u3092\u691c\u7d22..."
         }
     },
     "vi": {
@@ -426,7 +445,10 @@ window.translations = {
             "failed_to_delete_tenant": "X\u00f3a Tenant th\u1ea5t b\u1ea1i.",
             "failed_to_restore_tenant": "Kh\u00f4i ph\u1ee5c Tenant th\u1ea5t b\u1ea1i.",
             "tenant_not_found": "Tenant kh\u00f4ng t\u1ed3n t\u1ea1i.",
-            "head_account_not_found": "T\u00e0i kho\u1ea3n \u0111i\u1ec1u h\u00e0nh kh\u00f4ng t\u1ed3n t\u1ea1i."
+            "head_account_not_found": "T\u00e0i kho\u1ea3n \u0111i\u1ec1u h\u00e0nh kh\u00f4ng t\u1ed3n t\u1ea1i.",
+            "no_changes_were_made": "Kh\u00f4ng c\u00f3 thay \u0111\u1ed5i n\u00e0o!",
+            "project_members_updated_success": "C\u1eadp nh\u1eadt th\u00e0nh vi\u00ean d\u1ef1 \u00e1n th\u00e0nh c\u00f4ng!",
+            "error_updating_members": "L\u1ed7i c\u1eadp nh\u1eadt th\u00e0nh vi\u00ean: :message"
         },
         "validation": {
             "required": ":attribute l\u00e0 b\u1eaft bu\u1ed9c.",
@@ -511,8 +533,8 @@ window.translations = {
             "project_client_company": "C\u00f4ng ty kh\u00e1ch h\u00e0ng",
             "project_manager": "Qu\u1ea3n l\u00fd d\u1ef1 \u00e1n",
             "project_select_manager": "-- Ch\u1ecdn qu\u1ea3n l\u00fd d\u1ef1 \u00e1n --",
-            "project_estimated_budget": "Ng\u00e2n s\u00e1ch \u01b0\u1edbc t\u00ednh (tri\u1ec7u)",
-            "project_total_amount_spent": "T\u1ed5ng s\u1ed1 ti\u1ec1n \u0111\u00e3 chi (tri\u1ec7u)",
+            "project_estimated_budget": "Ng\u00e2n s\u00e1ch \u01b0\u1edbc t\u00ednh (gi\u1edd)",
+            "project_total_amount_spent": "T\u1ed5ng s\u1ed1 ti\u1ec1n \u0111\u00e3 chi (gi\u1edd)",
             "project_estimated_project_duration": "Th\u1eddi gian \u01b0\u1edbc t\u00ednh c\u1ee7a d\u1ef1 \u00e1n (th\u00e1ng)",
             "project_create_new_project": "T\u1ea1o d\u1ef1 \u00e1n m\u1edbi",
             "project_detail": "Chi ti\u1ebft d\u1ef1 \u00e1n",
@@ -538,7 +560,12 @@ window.translations = {
             "tenant_create_new_tenant": "T\u1ea1o m\u1edbi Tenant",
             "tenant_current_plan": "G\u00f3i d\u1ecbch v\u1ee5 hi\u1ec7n t\u1ea1i",
             "confirm_delete_tenant": "X\u00e1c nh\u1eadn x\u00f3a Tenant",
-            "confirm_delete_tenant_message": "B\u1ea1n c\u00f3 ch\u1eafc ch\u1eafn mu\u1ed1n x\u00f3a Tenant <strong id=\"tenantName\"><\/strong>? H\u00e0nh \u0111\u1ed9ng n\u00e0y kh\u00f4ng th\u1ec3 ho\u00e0n t\u00e1c."
+            "confirm_delete_tenant_message": "B\u1ea1n c\u00f3 ch\u1eafc ch\u1eafn mu\u1ed1n x\u00f3a Tenant <strong id=\"tenantName\"><\/strong>? H\u00e0nh \u0111\u1ed9ng n\u00e0y kh\u00f4ng th\u1ec3 ho\u00e0n t\u00e1c.",
+            "project_member": "Th\u00e0nh vi\u00ean d\u1ef1 \u00e1n",
+            "available_users": "Th\u00e0nh vi\u00ean kh\u1ea3 d\u1ee5ng",
+            "selected_users": "Th\u00e0nh vi\u00ean \u0111\u00e3 ch\u1ecdn",
+            "member": "Th\u00e0nh vi\u00ean",
+            "search_users": "T\u00ecm ki\u1ebfm ng\u01b0\u1eddi d\u00f9ng..."
         }
     }
 };
