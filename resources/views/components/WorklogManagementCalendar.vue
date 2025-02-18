@@ -56,7 +56,7 @@
                 <table class="table-sm custom-table">
                     <thead>
                         <tr>
-                            <th class="fixed-column">Assignee</th>
+                            <th class="fixed-column">Logged User</th>
                             <th v-for="date in loggedDates" :key="date">{{ getDayOnly(date) }}</th>
                         </tr>
                     </thead>
@@ -205,7 +205,7 @@ const totalWorklogByUserAndDate = computed(() => {
     }
 
     return filteredWorklogs.value.reduce((acc, worklog) => {
-        const userId = worklog.task?.assignee_user?.id || 'unknown'; // Nếu không có user, gán 'unknown'
+        const userId = worklog.user?.id || 'unknown'; // Nếu không có user, gán 'unknown'
         const date = worklog.log_date;
         const time = parseFloat(worklog.log_time) || 0;
 
@@ -257,8 +257,8 @@ const formattedTotalWorklog = computed(() => {
 
 
 const getUserAccount = (userId) => {
-    const user = filteredWorklogs.value.find(w => w.task?.assignee_user?.id == userId);
-    return user?.task?.assignee_user?.account || 'Unknown';
+    const user = filteredWorklogs.value.find(w => w.user?.id == userId);
+    return user?.user?.account || 'Unknown';
 };
 
 // Hàm chỉ lấy ngày (bỏ tháng/năm)

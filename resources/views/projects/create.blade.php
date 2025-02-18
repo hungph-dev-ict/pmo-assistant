@@ -52,7 +52,7 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="projectName">{{ __('labels.project_name') }}</label>
+                            <label for="projectName">{{ __('labels.project_name') }}<span style="color: red;">*</span></label>
                             <input type="text" id="projectName" name="project_name"
                                 class="form-control @error('project_name') is-invalid @enderror"
                                 value="{{ old('project_name') }}">
@@ -73,7 +73,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="projectStatus">{{ __('labels.project_status') }}</label>
+                            <label for="projectStatus">{{ __('labels.project_status') }}<span style="color: red;">*</span></label>
                             <select id="projectStatus" name="project_status"
                                 class="form-control custom-select @error('project_status') is-invalid @enderror">
                                 <option selected disabled>{{ __('labels.project_select_status') }}</option>
@@ -102,7 +102,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="projectProjectManager">{{ __('labels.project_manager') }}</label>
+                            <label for="projectProjectManager">{{ __('labels.project_manager') }}<span style="color: red;">*</span></label>
                             <select id="projectProjectManager" name="project_project_manager"
                                 class="form-control select2 @error('project_project_manager') is-invalid @enderror"
                                 style="width: 100%;">
@@ -202,7 +202,7 @@
                                     <strong>{{ $errors->first('project_estimated_project_duration') }}</strong>
                                 </span>
                             @enderror
-                        </div> --}}
+                        </div>
                     </div>
                     <!-- /.card-body -->
                 </div>

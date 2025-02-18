@@ -35,7 +35,7 @@
                                     <span
                                         class="info-box-text text-center text-muted">{{ __('labels.project_estimated_budget') }}</span>
                                     <span
-                                        class="info-box-number text-center text-muted mb-0">{{ $project->estimated_budget }}</span>
+                                        class="info-box-number text-center text-muted mb-0">{{ $project->estimated_budget ?? 'N/A' }}</span>
                                 </div>
                             </div>
                             <div class="info-box bg-light">
@@ -53,7 +53,7 @@
                                 <div class="info-box-content">
                                     <span
                                         class="info-box-text text-center text-muted">{{ __('labels.project_total_amount_spent') }}</span>
-                                    <span class="info-box-number text-center text-muted mb-0">1000</span>
+                                    <span class="info-box-number text-center text-muted mb-0">{{ $totalActualEffort }}</span>
                                 </div>
                             </div>
                             <div class="info-box bg-light">
@@ -61,7 +61,7 @@
                                     <span
                                         class="info-box-text text-center text-muted">{{ __('labels.project_start_date') }}</span>
                                     <span
-                                        class="info-box-number text-center text-muted mb-0">{{ $project->start_date }}</span>
+                                        class="info-box-number text-center text-muted mb-0">{{ $project->start_date->format('Y-m-d') ?? 'N/A' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                                     <span
                                         class="info-box-text text-center text-muted">{{ __('labels.project_estimated_project_duration') }}</span>
                                     <span
-                                        class="info-box-number text-center text-muted mb-0">{{ $project->estimated_project_duration }}</span>
+                                        class="info-box-number text-center text-muted mb-0">{{ $project->estimated_project_duration ?? 'N/A' }}</span>
                                 </div>
                             </div>
                             <div class="info-box bg-light">
@@ -79,15 +79,15 @@
                                     <span
                                         class="info-box-text text-center text-muted">{{ __('labels.project_end_date') }}</span>
                                     <span
-                                        class="info-box-number text-center text-muted mb-0">{{ $project->end_date }}</span>
+                                        class="info-box-number text-center text-muted mb-0">{{ $project->end_date->format('Y-m-d') ?? 'N/A' }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-12">
                             <h4>{{ __('labels.project_recent_activity') }}</h4>
-                            {{-- <div class="post">
+                            <div class="post">
                                 <div class="user-block">
                                     <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg"
                                         alt="user image">
@@ -107,9 +107,9 @@
                                     <a href="#" class="link-black text-sm"><i class="fas fa-link mr-1"></i> Demo
                                         File 1 v2</a>
                                 </p>
-                            </div> --}}
+                            </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
                     <h3 class="text-primary"><i class="fas fa-paint-brush"></i> {{ $project->name }}</h3>
@@ -117,7 +117,7 @@
                     <br>
                     <div class="text-muted">
                         <p class="text-sm">{{ __('labels.project_client_company') }}
-                            <b class="d-block">{{ $project->client_company }}</b>
+                            <b class="d-block">{{ $project->client_company ?? 'N/A' }}</b>
                         </p>
                         <p class="text-sm">{{ __('labels.project_manager') }}
                             <b class="d-block">
@@ -128,7 +128,7 @@
                         </p>
                     </div>
 
-                    <h5 class="mt-5 text-muted">{{ __('labels.project_files') }}</h5>
+                    {{-- <h5 class="mt-5 text-muted">{{ __('labels.project_files') }}</h5>
                     <ul class="list-unstyled">
                         <li>
                             <a href="" class="btn-link text-secondary"><i class="far fa-fw fa-file-word"></i>
@@ -154,7 +154,7 @@
                     <div class="text-center mt-5 mb-3">
                         <a href="#" class="btn btn-sm btn-primary">{{ __('labels.project_add_files') }}</a>
                         <a href="#" class="btn btn-sm btn-warning">{{ __('labels.project_report_contact') }}</a>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

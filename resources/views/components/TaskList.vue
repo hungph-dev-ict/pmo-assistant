@@ -448,7 +448,7 @@
 
                         <!-- Log Date (Datepicker) -->
                         <div class="form-group">
-                            <label for="logDate">Log Date</label>
+                            <label for="logDate">Log Date<span style="color: red;">*</span></label>
                             <div
                                 class="input-group date"
                                 id="logDatePicker"
@@ -475,7 +475,7 @@
 
                         <!-- Log Time -->
                         <div class="form-group">
-                            <label>Log Time (Hours)</label>
+                            <label>Log Time (Hours)<span style="color: red;">*</span></label>
                             <input
                                 type="number"
                                 class="form-control"

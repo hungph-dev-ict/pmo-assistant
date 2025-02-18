@@ -56,8 +56,8 @@ return [
     'project_client_company' => 'Công ty khách hàng',
     'project_manager' => 'Quản lý dự án',
     'project_select_manager' => '-- Chọn quản lý dự án --',
-    'project_estimated_budget' => 'Ngân sách ước tính (triệu)',
-    'project_total_amount_spent' => 'Tổng số tiền đã chi (triệu)',
+    'project_estimated_budget' => 'Ngân sách ước tính (giờ)',
+    'project_total_amount_spent' => 'Tổng số tiền đã chi (giờ)',
     'project_estimated_project_duration' => 'Thời gian ước tính của dự án (tháng)',
     'project_create_new_project' => 'Tạo dự án mới',
     'project_detail' => 'Chi tiết dự án',
@@ -89,8 +89,8 @@ return [
 
     //Member
     'project_member' => 'Thành viên dự án',
-    'available_users' => 'Người dùng có sẵn',
-    'selected_users' => 'Người dùng đã chọn',
+    'available_users' => 'Thành viên khả dụng',
+    'selected_users' => 'Thành viên đã chọn',
     'member' => 'Thành viên',
     'search_users' => 'Tìm kiếm người dùng...',
 ];

@@ -24,13 +24,13 @@ class UpdateProjectRequest extends FormRequest
     {
         return [
             'project_name' => 'required|string|max:255', 
-            'project_description' => 'required|string', 
+            'project_description' => 'nullable|string', 
             'project_status' => 'required|integer', 
-            'project_client_company' => 'required|string|max:100',
+            'project_client_company' => 'nullable|string|max:100',
             'project_project_manager' => 'required|integer|exists:users,id', 
-            'project_start_date' => 'required|date', 
-            'project_end_date' => 'required|date', 
-            'project_estimated_budget' => 'required|numeric|min:0',
+            'project_start_date' => 'nullable|date', 
+            'project_end_date' => 'nullable|date', 
+            'project_estimated_budget' => 'nullable|numeric|min:0',
         ];
     }
 
@@ -45,7 +45,6 @@ class UpdateProjectRequest extends FormRequest
             'project_start_date' => __('validation.attributes.project_start_date'),
             'project_end_date' => __('validation.attributes.project_end_date'),
             'project_estimated_budget' => __('validation.attributes.project_estimated_budget'),
-            'project_estimated_project_duration' => __('validation.attributes.project_estimated_project_duration'),
         ];
     }
 }

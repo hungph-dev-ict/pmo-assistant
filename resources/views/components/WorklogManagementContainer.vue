@@ -55,6 +55,8 @@ const handleBlankQuery = (value) => {
 const visibleColumns = ref([
     "project-name",
     "epic_task",
+    "assignee",
+    "logged-user",
     "logged-date",
     "logged-time",
     "description",

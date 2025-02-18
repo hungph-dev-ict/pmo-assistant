@@ -14,144 +14,144 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <form @submit.prevent="handleSubmit">
-                            <div class="row">
-                                <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Task Type<span style="color: red;">*</span></label>
+                                    <select ref="typeSelect" class="form-control select2" style="width: 100%;">
+                                        <option value="" selected disabled>-- Select Task Type --</option>
+                                        <option value="epic">Epic</option>
+                                        <option value="task">Task</option>
+                                    </select>
+                                </div>
+
+                                <!-- Nếu chọn Epic, hiển thị ô nhập Epic Title -->
+                                <div v-if="selectedTaskType === 'epic'" class="form-group">
+                                    <label>Epic Title<span style="color: red;">*</span></label>
+                                    <input type="text" v-model="epicTitle" class="form-control"
+                                        placeholder="Enter Epic Title">
+                                </div>
+
+                                <!-- Nếu chọn Task, hiển thị Select Epic + Task Title -->
+                                <div v-if="selectedTaskType === 'task'">
                                     <div class="form-group">
-                                        <label>Task Type</label>
-                                        <select ref="typeSelect" class="form-control select2" style="width: 100%;">
-                                            <option value="" selected disabled>-- Select Task Type --</option>
-                                            <option value="epic">Epic</option>
-                                            <option value="task">Task</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Nếu chọn Epic, hiển thị ô nhập Epic Title -->
-                                    <div v-if="selectedTaskType === 'epic'" class="form-group">
-                                        <label>Epic Title</label>
-                                        <input type="text" v-model="epicTitle" class="form-control"
-                                            placeholder="Enter Epic Title">
-                                    </div>
-
-                                    <!-- Nếu chọn Task, hiển thị Select Epic + Task Title -->
-                                    <div v-if="selectedTaskType === 'task'">
-                                        <div class="form-group">
-                                            <label>Select Epic</label>
-                                            <select v-if="selectedTaskType === 'task'" v-model="selectedEpic"
-                                                class="form-control select2" ref="epicSelect">
-                                                <option value="" selected disabled>Select an Epic</option>
-                                                <option v-for="epic in epicList" :key="epic.id" :value="epic.id">
-                                                    {{ epic.name }}
-                                                </option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label>Task Title</label>
-                                            <input type="text" v-model="taskTitle" class="form-control"
-                                                placeholder="Enter Task Title">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="assignee">Assignee</label>
-                                        <select id="assignee" v-model="selectedAssignee" name="assignee"
-                                            class="form-control select2" style="width: 100%;" ref="assigneeSelect">
-                                            <option value="">Assignee</option>
-                                            <option v-for="assignee in parsedListAssignee" :key="assignee.id"
-                                                :value="assignee.id">
-                                                {{ assignee.account }}
+                                        <label>Select Epic<span style="color: red;">*</span></label>
+                                        <select v-if="selectedTaskType === 'task'" v-model="selectedEpic"
+                                            class="form-control select2" ref="epicSelect">
+                                            <option value="" selected disabled>Select an Epic</option>
+                                            <option v-for="epic in epicList" :key="epic.id" :value="epic.id">
+                                                {{ epic.name }}
                                             </option>
                                         </select>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="priority">Priority</label>
-                                        <select id="priority" name="priority" v-model="selectedPriority"
-                                            class="form-control select2" style="width: 100%;" ref="prioritySelect">
-                                            <option value="" selected disabled>Select a Priority</option>
-                                            <option value="0">On Hold</option>
-                                            <option value="1">Low</option>
-                                            <option value="2">Medium</option>
-                                            <option value="3">High</option>
-                                            <option value="4">Critical</option>
-                                        </select>
+                                        <label>Task Title<span style="color: red;">*</span></label>
+                                        <input type="text" v-model="taskTitle" class="form-control"
+                                            placeholder="Enter Task Title">
                                     </div>
+                                </div>
 
-                                    <div class="form-group">
-                                        <label>Estimate Effort (Hours)</label>
-                                        <input type="number" v-model="estimateEffort" class="form-control">
-                                    </div>
+                                <div class="form-group">
+                                    <label for="assignee">Assignee</label>
+                                    <select id="assignee" v-model="selectedAssignee" name="assignee"
+                                        class="form-control select2" style="width: 100%;" ref="assigneeSelect">
+                                        <option value="">Assignee</option>
+                                        <option v-for="assignee in parsedListAssignee" :key="assignee.id"
+                                            :value="assignee.id">
+                                            {{ assignee.account }}
+                                        </option>
+                                    </select>
+                                </div>
 
-                                    <!-- <div class="form-group">
+                                <div class="form-group">
+                                    <label for="priority">Priority<span style="color: red;">*</span></label>
+                                    <select id="priority" name="priority" v-model="selectedPriority"
+                                        class="form-control select2" style="width: 100%;" ref="prioritySelect">
+                                        <option value="" selected disabled>Select a Priority</option>
+                                        <option value="0">On Hold</option>
+                                        <option value="1">Low</option>
+                                        <option value="2">Medium</option>
+                                        <option value="3">High</option>
+                                        <option value="4">Critical</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Plan Effort (Hours)</label>
+                                    <input type="number" v-model="estimateEffort" class="form-control">
+                                </div>
+
+                                <!-- <div class="form-group">
                                         <label>Actual Effort (Hours)</label>
                                         <input type="number" v-model="actualEffort" class="form-control">
                                     </div> -->
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="planStartDate">Plan Start Date</label>
+                                    <div class="input-group date" id="planStartDatePicker" data-target-input="nearest">
+                                        <input type="text" id="planStartDate" v-model="planStartDate"
+                                            class="form-control datetimepicker-input"
+                                            data-target="#planStartDatePicker" />
+                                        <div class="input-group-append" data-target="#planStartDatePicker"
+                                            data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="planStartDate">Plan Start Date</label>
-                                        <div class="input-group date" id="planStartDatePicker"
-                                            data-target-input="nearest">
-                                            <input type="text" id="planStartDate" v-model="planStartDate"
-                                                class="form-control datetimepicker-input"
-                                                data-target="#planStartDatePicker" />
-                                            <div class="input-group-append" data-target="#planStartDatePicker"
-                                                data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
+
+                                <div class="form-group">
+                                    <label for="planEndDate">Plan End Date</label>
+                                    <div class="input-group date" id="planEndDatePicker" data-target-input="nearest">
+                                        <input type="text" id="planEndDate" v-model="planEndDate"
+                                            class="form-control datetimepicker-input"
+                                            data-target="#planEndDatePicker" />
+                                        <div class="input-group-append" data-target="#planEndDatePicker"
+                                            data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="form-group">
-                                        <label for="planEndDate">Plan End Date</label>
-                                        <div class="input-group date" id="planEndDatePicker"
-                                            data-target-input="nearest">
-                                            <input type="text" id="planEndDate" v-model="planEndDate"
-                                                class="form-control datetimepicker-input"
-                                                data-target="#planEndDatePicker" />
-                                            <div class="input-group-append" data-target="#planEndDatePicker"
-                                                data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
+                                <div class="form-group">
+                                    <label for="actualStartDate">Actual Start Date</label>
+                                    <div class="input-group date" id="actualStartDatePicker"
+                                        data-target-input="nearest">
+                                        <input type="text" id="actualStartDate" v-model="actualStartDate"
+                                            class="form-control datetimepicker-input"
+                                            data-target="#actualStartDatePicker" />
+                                        <div class="input-group-append" data-target="#actualStartDatePicker"
+                                            data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="form-group">
-                                        <label for="actualStartDate">Actual Start Date</label>
-                                        <div class="input-group date" id="actualStartDatePicker"
-                                            data-target-input="nearest">
-                                            <input type="text" id="actualStartDate" v-model="actualStartDate"
-                                                class="form-control datetimepicker-input"
-                                                data-target="#actualStartDatePicker" />
-                                            <div class="input-group-append" data-target="#actualStartDatePicker"
-                                                data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="actualEndDate">Actual End Date</label>
-                                        <div class="input-group date" id="actualEndDatePicker"
-                                            data-target-input="nearest">
-                                            <input type="text" id="actualEndDate" v-model="actualEndDate"
-                                                class="form-control datetimepicker-input"
-                                                data-target="#actualEndDatePicker" />
-                                            <div class="input-group-append" data-target="#actualEndDatePicker"
-                                                data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
+                                <div class="form-group">
+                                    <label for="actualEndDate">Actual End Date</label>
+                                    <div class="input-group date" id="actualEndDatePicker" data-target-input="nearest">
+                                        <input type="text" id="actualEndDate" v-model="actualEndDate"
+                                            class="form-control datetimepicker-input"
+                                            data-target="#actualEndDatePicker" />
+                                        <div class="input-group-append" data-target="#actualEndDatePicker"
+                                            data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <input type="submit" value="Add Task" class="btn btn-success float-right">
-                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- <input type="submit" value="Add Task" class="btn btn-success float-right"> -->
+                                <button class="btn btn-success" @click="handleSubmit()">
+                                    <span v-if="isLoading">
+                                        <i class="fas fa-spinner fa-spin"></i> Đang xử
+                                        lý... </span><span v-else> Save </span>
+                                </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -197,6 +197,8 @@ const epicSelect = ref(null); // Thẻ select epic
 const assigneeSelect = ref(null); // Thẻ select epic
 const prioritySelect = ref(null); // Thẻ select epic
 
+const isLoading = ref(false);
+
 const fetchEpics = async () => {
     try {
         const { data } = await axios.get(`/api/pm/${props.projectId}/epics`);
@@ -234,6 +236,8 @@ const emit = defineEmits(["update-task"]);
 
 // Gửi API lưu task
 const handleSubmit = async () => {
+    if (isLoading.value) return;
+    isLoading.value = true;
     try {
         const payload = {
             name: selectedTaskType.value === "task" ? taskTitle.value : epicTitle.value, // Tên task
@@ -258,6 +262,7 @@ const handleSubmit = async () => {
 
         // Emit để component cha xử lý
         emit("update-task");
+        isLoading.value = false;
     } catch (error) {
         // Lấy thông tin lỗi từ response
         const errorMessage = error.response?.data?.message || "Failed to create task!";
@@ -265,6 +270,7 @@ const handleSubmit = async () => {
 
         // Hiển thị toastr lỗi với cả message và error detail
         toastr.error(`${errorMessage}: ${errorDetail}`);
+        isLoading.value = false;
     }
 };
 
