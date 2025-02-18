@@ -57,6 +57,8 @@ return [
     'project_select_manager' => '-- Select Project Manager --',
     'project_estimated_budget' => 'Estimated Budget (hours)',
     'project_total_amount_spent' => 'Total Amount Spent (hours)',
+    'project_plan_effort' => 'Plan Effort',
+    'project_actual_effort' => 'Actual Effort',
     'project_estimated_project_duration' => 'Estimated Project Duration (months)',
     'project_create_new_project' => 'Create new Project',
     'project_detail' => 'Project Detail',

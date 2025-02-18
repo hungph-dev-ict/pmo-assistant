@@ -10,6 +10,7 @@ use App\Services\WorklogService;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use Illuminate\Support\Facades\Auth;
+
 class ProjectController extends Controller
 {
     protected $projectService;
@@ -27,7 +28,6 @@ class ProjectController extends Controller
      */
     public function index()
     {
-
         $projects = collect(); // Mặc định là collection rỗng
         $userId = Auth::id();
 
@@ -52,9 +52,16 @@ class ProjectController extends Controller
             } elseif (Auth::user()->hasRole('staff')) {
                 $projects = Auth::user()->projects()->withTrashed()->paginate(10);
             }
+
+            // Gán tổng actual effort cho từng project
+            foreach ($projects as $project) {
+                $project->total_actual_effort = $this->worklogService->getActualEffortByProject($project->id);
+            }
         }
+
         return view('projects.index', compact('projects'));
     }
+
 
     public function create()
     {
@@ -88,7 +95,7 @@ class ProjectController extends Controller
     {
         $totalActualEffort = $this->worklogService->getActualEffortByProject($project->id);
 
-        return view('projects.show',compact('project', 'totalActualEffort'));
+        return view('projects.show', compact('project', 'totalActualEffort'));
     }
 
     /**
@@ -151,5 +158,4 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.index')->with('error', __('messages.failed_to_restore_project'));
     }
-
 }

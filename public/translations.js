@@ -246,6 +246,8 @@ window.translations = {
             "project_select_manager": "-- Select Project Manager --",
             "project_estimated_budget": "Estimated Budget (hours)",
             "project_total_amount_spent": "Total Amount Spent (hours)",
+            "project_plan_effort": "Plan Effort",
+            "project_actual_effort": "Actual Effort",
             "project_estimated_project_duration": "Estimated Project Duration (months)",
             "project_create_new_project": "Create new Project",
             "project_detail": "Project Detail",
@@ -277,6 +279,18 @@ window.translations = {
             "selected_users": "Selected Users",
             "member": "Member",
             "search_users": "Search users..."
+        },
+        "auth": {
+            "failed": "These credentials do not match our records.",
+            "password": "The provided password is incorrect.",
+            "throttle": "Too many login attempts. Please try again in :seconds seconds.",
+            "forgot_password": "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",
+            "reset_password": "Reset your password by entering a new one below."
+        },
+        "units": {
+            "hours": "hours",
+            "md": "MD",
+            "mm": "MM"
         }
     },
     "jp": {
@@ -392,6 +406,8 @@ window.translations = {
             "project_select_manager": "-- \u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u30de\u30cd\u30fc\u30b8\u30e3\u30fc\u3092\u9078\u629e --",
             "project_estimated_budget": "\u4e88\u7b97\u898b\u7a4d\u3082\u308a (\u6642\u9593)",
             "project_total_amount_spent": "\u7dcf\u652f\u51fa\u984d (\u6642\u9593)",
+            "project_plan_effort": "\u8a08\u753b\u5de5\u6570",
+            "project_actual_effort": "\u5b9f\u7e3e\u5de5\u6570",
             "project_estimated_project_duration": "\u63a8\u5b9a\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u671f\u9593 (\u30f6\u6708)",
             "project_create_new_project": "\u65b0\u3057\u3044\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u3092\u4f5c\u6210",
             "project_detail": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u306e\u8a73\u7d30",
@@ -423,6 +439,15 @@ window.translations = {
             "selected_users": "\u9078\u629e\u3057\u305f\u30e6\u30fc\u30b6\u30fc",
             "member": "\u30e1\u30f3\u30d0\u30fc",
             "search_users": "\u30e6\u30fc\u30b6\u30fc\u3092\u691c\u7d22..."
+        },
+        "auth": {
+            "forgot_password": "\u30d1\u30b9\u30ef\u30fc\u30c9\u3092\u304a\u5fd8\u308c\u3067\u3059\u304b\uff1f\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\u3092\u5165\u529b\u3057\u3066\u3044\u305f\u3060\u3051\u308c\u3070\u3001\u65b0\u3057\u3044\u30d1\u30b9\u30ef\u30fc\u30c9\u3092\u9078\u629e\u3067\u304d\u308b\u30ea\u30bb\u30c3\u30c8\u30ea\u30f3\u30af\u3092\u304a\u9001\u308a\u3057\u307e\u3059\u3002",
+            "reset_password": "\u65b0\u3057\u3044\u30d1\u30b9\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u3001\u30d1\u30b9\u30ef\u30fc\u30c9\u3092\u30ea\u30bb\u30c3\u30c8\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
+        },
+        "units": {
+            "hours": "\u6642\u9593",
+            "md": "\u4eba\u65e5",
+            "mm": "\u4eba\u6708"
         }
     },
     "vi": {
@@ -535,6 +560,8 @@ window.translations = {
             "project_select_manager": "-- Ch\u1ecdn qu\u1ea3n l\u00fd d\u1ef1 \u00e1n --",
             "project_estimated_budget": "Ng\u00e2n s\u00e1ch \u01b0\u1edbc t\u00ednh (gi\u1edd)",
             "project_total_amount_spent": "T\u1ed5ng s\u1ed1 ti\u1ec1n \u0111\u00e3 chi (gi\u1edd)",
+            "project_plan_effort": "C\u00f4ng s\u1ee9c k\u1ebf ho\u1ea1ch",
+            "project_actual_effort": "C\u00f4ng s\u1ee9c th\u1ef1c t\u1ebf",
             "project_estimated_project_duration": "Th\u1eddi gian \u01b0\u1edbc t\u00ednh c\u1ee7a d\u1ef1 \u00e1n (th\u00e1ng)",
             "project_create_new_project": "T\u1ea1o d\u1ef1 \u00e1n m\u1edbi",
             "project_detail": "Chi ti\u1ebft d\u1ef1 \u00e1n",
@@ -566,6 +593,15 @@ window.translations = {
             "selected_users": "Th\u00e0nh vi\u00ean \u0111\u00e3 ch\u1ecdn",
             "member": "Th\u00e0nh vi\u00ean",
             "search_users": "T\u00ecm ki\u1ebfm ng\u01b0\u1eddi d\u00f9ng..."
+        },
+        "auth": {
+            "forgot_password": "Qu\u00ean m\u1eadt kh\u1ea9u? Ch\u1ec9 c\u1ea7n cho ch\u00fang t\u00f4i bi\u1ebft \u0111\u1ecba ch\u1ec9 email c\u1ee7a b\u1ea1n v\u00e0 ch\u00fang t\u00f4i s\u1ebd g\u1eedi m\u1ed9t li\u00ean k\u1ebft \u0111\u1eb7t l\u1ea1i m\u1eadt kh\u1ea9u \u0111\u1ec3 b\u1ea1n c\u00f3 th\u1ec3 \u0111\u1eb7t m\u1eadt kh\u1ea9u m\u1edbi.",
+            "reset_password": "\u0110\u1eb7t l\u1ea1i m\u1eadt kh\u1ea9u c\u1ee7a b\u1ea1n b\u1eb1ng c\u00e1ch nh\u1eadp m\u1eadt kh\u1ea9u m\u1edbi b\u00ean d\u01b0\u1edbi."
+        },
+        "units": {
+            "hours": "gi\u1edd",
+            "md": "ng\u00e0y c\u00f4ng",
+            "mm": "th\u00e1ng c\u00f4ng"
         }
     }
 };

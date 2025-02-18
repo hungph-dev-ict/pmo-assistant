@@ -36,10 +36,13 @@
                             #
                         </th>
                         <th style="width: 20%">
-                            {{ __('labels.project_name') }}
+                            {{ __('labels.project') }}
                         </th>
-                        <th style="width: 30%">
-                            {{ __('labels.project_description') }}
+                        <th style="width: 15%">
+                            {{ __('labels.project_plan_effort') }}
+                        </th>
+                        <th style="width: 15%">
+                            {{ __('labels.project_actual_effort') }}
                         </th>
                         <th>
                             {{ __('labels.project_start_date') }}
@@ -67,13 +70,26 @@
                                 </small>
                             </td>
                             <td>
-                                {{ $project->description }}
+                                {{ rtrim(rtrim(number_format($project->estimated_budget / 24 / 22, 3), '0'), '.') }}
+                                {{ __('units.mm') }} - 
+                                {{ rtrim(rtrim(number_format($project->estimated_budget / 24, 2), '0'), '.') }}
+                                {{ __('units.md') }} - 
+                                {{ rtrim(rtrim(number_format($project->estimated_budget, 1), '0'), '.') }}
+                                {{ __('units.hours') }}
                             </td>
                             <td>
-                                {{ $project->start_date }}
+                                {{ rtrim(rtrim(number_format($project->total_actual_effort / 24 / 22, 3), '0'), '.') }}
+                                {{ __('units.mm') }} - 
+                                {{ rtrim(rtrim(number_format($project->total_actual_effort / 24, 2), '0'), '.') }}
+                                {{ __('units.md') }} - 
+                                {{ rtrim(rtrim(number_format($project->total_actual_effort, 1), '0'), '.') }}
+                                {{ __('units.hours') }}
+                            </td>
+                            <td>
+                                {{ $project->start_date?->format('Y-m-d') ?? 'N/A' }}
                             </td>
                             <td class="project-state">
-                                {{ $project->end_date }}
+                                {{ $project->end_date?->format('Y-m-d') ?? 'N/A' }}
                             </td>
                             <td class="text-center">
                                 @if ($project->trashed())

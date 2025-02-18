@@ -216,8 +216,8 @@
 
         <div class="row">
             <div class="col-12">
-                <a href="#" class="btn btn-secondary">{{ __('labels.cancel') }}</a>
-                <input type="submit" value="{{ __('labels.update') }}" class="btn btn-success float-right">
+                <a href="{{ route('projects.index') }}" class="btn btn-secondary float-right">{{ __('labels.cancel') }}</a>
+                <input type="submit" value="{{ __('labels.update') }}" class="btn btn-success">
             </div>
         </div>
         </section>

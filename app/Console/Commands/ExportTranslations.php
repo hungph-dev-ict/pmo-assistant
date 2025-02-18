@@ -21,6 +21,8 @@ class ExportTranslations extends Command
                 'messages' => trans('messages'),
                 'validation' => trans('validation'),
                 'labels' => trans('labels'),
+                'auth' => trans('auth'),
+                'units' => trans('units'),
             ];
         }
 

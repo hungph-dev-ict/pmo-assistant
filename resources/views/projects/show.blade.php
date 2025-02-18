@@ -33,9 +33,15 @@
                             <div class="info-box bg-light">
                                 <div class="info-box-content">
                                     <span
-                                        class="info-box-text text-center text-muted">{{ __('labels.project_estimated_budget') }}</span>
-                                    <span
-                                        class="info-box-number text-center text-muted mb-0">{{ $project->estimated_budget ?? 'N/A' }}</span>
+                                        class="info-box-text text-center text-muted">{{ __('labels.project_plan_effort') }}</span>
+                                    <span class="info-box-number text-center text-muted mb-0">
+                                        {{ rtrim(rtrim(number_format($project->estimated_budget / 24 / 22, 3), '0'), '.') }}
+                                        {{ __('units.mm') }} -
+                                        {{ rtrim(rtrim(number_format($project->estimated_budget / 24, 2), '0'), '.') }}
+                                        {{ __('units.md') }} -
+                                        {{ rtrim(rtrim(number_format($project->estimated_budget, 1), '0'), '.') }}
+                                        {{ __('units.hours') }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="info-box bg-light">
@@ -52,8 +58,15 @@
                             <div class="info-box bg-light">
                                 <div class="info-box-content">
                                     <span
-                                        class="info-box-text text-center text-muted">{{ __('labels.project_total_amount_spent') }}</span>
-                                    <span class="info-box-number text-center text-muted mb-0">{{ $totalActualEffort }}</span>
+                                        class="info-box-text text-center text-muted">{{ __('labels.project_actual_effort') }}</span>
+                                    <span class="info-box-number text-center text-muted mb-0">
+                                        {{ rtrim(rtrim(number_format($totalActualEffort / 24 / 22, 3), '0'), '.') }}
+                                        {{ __('units.mm') }} -
+                                        {{ rtrim(rtrim(number_format($totalActualEffort / 24, 3), '0'), '.') }}
+                                        {{ __('units.md') }} -
+                                        {{ rtrim(rtrim(number_format($totalActualEffort, 3), '0'), '.') }}
+                                        {{ __('units.hours') }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="info-box bg-light">
@@ -61,7 +74,7 @@
                                     <span
                                         class="info-box-text text-center text-muted">{{ __('labels.project_start_date') }}</span>
                                     <span
-                                        class="info-box-number text-center text-muted mb-0">{{ $project->start_date->format('Y-m-d') ?? 'N/A' }}</span>
+                                        class="info-box-number text-center text-muted mb-0">{{ $project->start_date?->format('Y-m-d') ?? 'N/A' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -79,7 +92,7 @@
                                     <span
                                         class="info-box-text text-center text-muted">{{ __('labels.project_end_date') }}</span>
                                     <span
-                                        class="info-box-number text-center text-muted mb-0">{{ $project->end_date->format('Y-m-d') ?? 'N/A' }}</span>
+                                        class="info-box-number text-center text-muted mb-0">{{ $project->end_date?->format('Y-m-d') ?? 'N/A' }}</span>
                                 </div>
                             </div>
                         </div>
