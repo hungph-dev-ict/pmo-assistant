@@ -149,7 +149,7 @@
                     <p>{!! __('labels.confirm_delete_tenant_message') !!}</p>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <form method="POST" id="deleteTenantForm" action="{{ route('tenants.destroy', $tenant->id) }}">
+                    <form method="POST" id="deleteTenantForm">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-outline-light">{{ __('labels.delete') }}</button>

@@ -27,18 +27,23 @@ const blankQuery = ref(true); // Mặc định là false
 
 const fetchWorklogs = async () => {
     try {
-        axios.get('/api/tenant-worklog')
-            .then(response => {
-                if (response.data.original.success) {
-                    worklogs.value = response.data.original.data; // Lấy danh sách worklogs
-                    filteredWorklogs.value = response.data.original.data;
-                } else {
-                    console.error('API trả về lỗi:', response.data);
-                }
-            })
-            .catch(error => {
-                console.error('Lỗi khi gọi API:', error);
-            });
+        const { data } = await axios.get('/api/tenant-worklog');
+
+        if (data.original.success) {
+            const oldFilteredWorklogs = new Set(filteredWorklogs.value.map(worklog => worklog.id)); // Lưu ID của worklogs đã lọc
+
+            worklogs.value = data.original.data;
+
+            // Nếu danh sách filteredWorklogs ban đầu rỗng, giữ toàn bộ worklogs mới
+            if (filteredWorklogs.value.length === 0) {
+                filteredWorklogs.value = [...worklogs.value];
+            } else {
+                // Giữ lại danh sách đã lọc trước đó nếu có
+                filteredWorklogs.value = worklogs.value.filter(worklog => oldFilteredWorklogs.has(worklog.id));
+            }
+        } else {
+            console.error('API trả về lỗi:', data);
+        }
     } catch (error) {
         console.error("Lỗi khi lấy dữ liệu worklog:", error);
     }

@@ -71,7 +71,7 @@ return [
 
     //Tenant
     'tenant_name' => 'Tenant Name',
-    'tenant_description' => 'Project Description',
+    'tenant_description' => 'Tenant Description',
     'tenant_logo' => 'Tenant Logo',
     'tenant_plan' => 'Plan',
     'tenant_head_account' => 'Head Account',

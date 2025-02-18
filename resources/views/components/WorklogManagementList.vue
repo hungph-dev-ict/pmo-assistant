@@ -79,7 +79,7 @@
                                 {{ worklog.task.name }}
                             </td>
                             <td v-if="isColumnVisible('assignee')">
-                                {{ worklog.task.assignee_user.account }}
+                                {{ worklog.task?.assignee_user?.account }}
                             </td>
                             <td v-if="isColumnVisible('plan-effort')">
                                 {{ worklog.task.estimate_effort }}
@@ -88,7 +88,7 @@
                                 {{ worklog.task.actual_effort }}
                             </td>
                             <td v-if="isColumnVisible('logged-user')">
-                                {{ worklog.user.account }}
+                                {{ worklog.user?.account }}
                             </td>
                             <td v-if="isColumnVisible('logged-date')">
                                 <span v-if="!worklog.isEditing">{{

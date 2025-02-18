@@ -1,38 +1,17 @@
 <template>
     <div>
-        <upload-file-create-tasks
-            v-if="!hasPermissionStaff"
-            :projectId="projectId"
-            :listAssignee="parsedListAssignee"
-            :currentUserId="numberCurrentUserId"
-            @update-task="handleTaskUpdate"
-        ></upload-file-create-tasks>
+        <upload-file-create-tasks v-if="!hasPermissionStaff" :projectId="projectId" :listAssignee="parsedListAssignee"
+            :currentUserId="numberCurrentUserId" @update-task="handleTaskUpdate"></upload-file-create-tasks>
 
-        <task-add
-            v-if="!hasPermissionStaff"
-            :projectId="projectId"
-            :listAssignee="parsedListAssignee"
-            :currentUserId="numberCurrentUserId"
-            @update-task="handleTaskUpdate"
-        ></task-add>
-        
-        <task-search-box
-            :tasks="tasks"
-            @updateFilteredTasks="filteredTasks = $event"
-            @blankQuery="handleBlankQuery"
-            @updateVisibleColumns="updateVisibleColumns"
-        ></task-search-box>
+        <task-add v-if="!hasPermissionStaff" :projectId="projectId" :listAssignee="parsedListAssignee"
+            :currentUserId="numberCurrentUserId" @update-task="handleTaskUpdate"></task-add>
 
-        <task-list
-            :projectId="projectId"
-            :filteredTasks="filteredTasks"
-            :blankQuery="blankQuery"
-            :visibleColumns="visibleColumns"
-            :listAssignee="parsedListAssignee"
-            :hasPermissionStaff="hasPermissionStaff"
-            :currentUserId="numberCurrentUserId"
-            @update-task="handleTaskUpdate"
-        ></task-list>
+        <task-search-box :tasks="tasks" @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
+            @updateVisibleColumns="updateVisibleColumns"></task-search-box>
+
+        <task-list :projectId="projectId" :filteredTasks="filteredTasks" :blankQuery="blankQuery"
+            :visibleColumns="visibleColumns" :listAssignee="parsedListAssignee" :hasPermissionStaff="hasPermissionStaff"
+            :currentUserId="numberCurrentUserId" :currentUserAccount="currentUserAccount" @update-task="handleTaskUpdate"></task-list>
     </div>
 </template>
 
@@ -53,6 +32,10 @@ const props = defineProps({
     currentUserId: {
         type: [Number, String], // Có thể là Number hoặc String
         default: 0,
+    },
+    currentUserAccount: {
+        type: String, // Có thể là Number hoặc String
+        default: "",
     },
     userRole: {
         type: [Array, String], // Có thể là Array hoặc String
@@ -94,8 +77,19 @@ const fetchTasks = async () => {
             ? `/api/staff/${props.projectId}/tasks`
             : `/api/pm/${props.projectId}/tasks`;
         const { data } = await axios.get(url);
+
+        const oldFilteredTasks = new Set(filteredTasks.value.map(task => task.id)); // Lưu ID của tasks đã lọc
+
         tasks.value = data.tasks;
-        filteredTasks.value = data.tasks;
+
+        // Nếu danh sách filteredTasks ban đầu rỗng, giữ toàn bộ tasks mới
+        if (filteredTasks.value.length === 0) {
+            filteredTasks.value = [...tasks.value];
+        } else {
+            // Giữ lại danh sách đã lọc trước đó nếu có
+            filteredTasks.value = tasks.value.filter(task => oldFilteredTasks.has(task.id));
+        }
+
     } catch (error) {
         console.error("Lỗi khi lấy dữ liệu task:", error);
     }
