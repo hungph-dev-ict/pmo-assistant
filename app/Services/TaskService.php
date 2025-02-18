@@ -74,7 +74,7 @@ class TaskService
     public function getTasksByProject($projectId)
     {
         $tasks = Task::where('project_id', $projectId)
-            ->with(['taskStatus', 'taskPriority', 'assigneeUser'])
+            ->with(['taskStatus', 'taskPriority', 'assigneeUser:id,account'])
             ->orderByRaw('COALESCE(parent_id, id), parent_id IS NOT NULL, id')
             ->get()
             ->map(function ($task, $index) {
@@ -100,7 +100,7 @@ class TaskService
             });
 
         // Lấy danh sách assignee duy nhất từ danh sách task
-        $assignees = $tasks->pluck('assignee')->filter()->unique('id')->values();
+        $assignees = $tasks->pluck('assignee:id,account')->filter()->unique('id')->values();
 
         return [
             'tasks' => $tasks,
