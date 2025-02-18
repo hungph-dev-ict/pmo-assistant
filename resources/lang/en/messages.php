@@ -24,4 +24,9 @@ return [
     'failed_to_restore_tenant.' => 'Failed to restore tenant.',
     'tenant_not_found' => 'Tenant not found.',
     'head_account_not_found' => 'Head Account not found.',
+
+    //Member
+    'no_changes_were_made' => 'No changes were made!',
+    'project_members_updated_success' => 'Project members updated successfully!',
+    'error_updating_members' => 'Error updating members: :message',
 ];
