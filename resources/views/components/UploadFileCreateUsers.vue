@@ -3,26 +3,86 @@
         <div class="card-header">
             <h3 class="card-title">By Excel, CSV File</h3>
             <div class="card-tools">
-                <button type="button" class="btn btn-tool" @click="toggleCollapse">
-                    <i :class="isCollapsed ? 'fas fa-plus' : 'fas fa-minus'"></i>
+                <button
+                    type="button"
+                    class="btn btn-tool"
+                    @click="toggleCollapse"
+                >
+                    <i
+                        :class="isCollapsed ? 'fas fa-plus' : 'fas fa-minus'"
+                    ></i>
                 </button>
             </div>
         </div>
 
         <div class="card-body" v-if="!isCollapsed">
-            <div class="form-group">
-                <label for="fileInput">File input <span style="color: red">*</span></label>
-                <div class="input-group">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="fileInput" @change="handleFileChange" />
-                        <label class="custom-file-label" for="fileInput">{{ fileName }}</label>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="fileInput"
+                            >File input <span style="color: red">*</span></label
+                        >
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input
+                                    type="file"
+                                    class="custom-file-input"
+                                    id="fileInput"
+                                    @change="handleFileChange"
+                                />
+                                <label
+                                    class="custom-file-label"
+                                    for="fileInput"
+                                    >{{ fileName }}</label
+                                >
+                            </div>
+                        </div>
+                        <ul v-if="validationErrors.length">
+                            <li
+                                v-for="(error, index) in validationErrors"
+                                :key="index"
+                                style="color: red"
+                            >
+                                {{ error }}
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <ul v-if="validationErrors.length">
-                    <li v-for="(error, index) in validationErrors" :key="index" style="color: red">
-                        {{ error }}
-                    </li>
-                </ul>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Example CSV File:</label>
+                        <div>
+                            <a
+                                href="https://drive.google.com/file/d/11hsjUiBw-PTFZfRZyJz-TtfvXhX10lj9/view?usp=sharing"
+                                target="_blank"
+                                class="btn btn-primary"
+                            >
+                                Download
+                            </a>
+                        </div>
+                        <p style="margin-top: 10px">
+                            Please ensure your CSV follows the required format.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Example Excel File:</label>
+                        <div>
+                            <a
+                                href="https://docs.google.com/spreadsheets/d/1fKJmsik4XiUEuTeDRd7g-0Tt93X7UZVy/edit?usp=sharing&ouid=115586820982859937661&rtpof=true&sd=true"
+                                target="_blank"
+                                class="btn btn-primary"
+                            >
+                                Download
+                            </a>
+                        </div>
+                        <p style="margin-top: 10px">
+                            Please make sure to convert your Excel file to CSV
+                            before importing.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -30,11 +90,16 @@
             <span v-if="isLoading">
                 <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
             </span>
-            <span v-else> <button type="button" class="btn btn-primary" @click="submitFile(users)"
-                    :disabled="!selectedFile || isLoading">
+            <span v-else>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="submitFile(users)"
+                    :disabled="!selectedFile || isLoading"
+                >
                     Submit
-                </button> </span>
-
+                </button>
+            </span>
         </div>
     </div>
 </template>
@@ -90,16 +155,29 @@ const processCsv = (csvText) => {
     validationErrors.value = [];
     users.value = [];
 
-    const lines = csvText.trim().split("\n").map((line) => line.split(",").map((cell) => cell.trim()));
+    const lines = csvText
+        .trim()
+        .split("\n")
+        .map((line) => line.split(",").map((cell) => cell.trim()));
     if (lines.length < 2) {
-        validationErrors.value.push("⚠️ File CSV phải có ít nhất 1 dòng dữ liệu.");
+        validationErrors.value.push(
+            "⚠️ File CSV phải có ít nhất 1 dòng dữ liệu."
+        );
         return;
     }
 
     const headers = lines[0];
-    const requiredHeaders = ["email", "account", "full_name", "job_position", "password"];
+    const requiredHeaders = [
+        "email",
+        "account",
+        "full_name",
+        "job_position",
+        "password",
+    ];
     if (!arraysEqual(headers, requiredHeaders)) {
-        validationErrors.value.push("⚠️ Headers CSV không hợp lệ! Phải là: email, account, full_name, job_position, password.");
+        validationErrors.value.push(
+            "⚠️ Headers CSV không hợp lệ! Phải là: email, account, full_name, job_position, password."
+        );
         return;
     }
 
@@ -109,7 +187,9 @@ const processCsv = (csvText) => {
     lines.slice(1).forEach((row, index) => {
         const lineNumber = index + 2;
         if (row.length !== requiredHeaders.length) {
-            validationErrors.value.push(`⚠️ Dòng ${lineNumber} không đủ ${requiredHeaders.length} cột.`);
+            validationErrors.value.push(
+                `⚠️ Dòng ${lineNumber} không đủ ${requiredHeaders.length} cột.`
+            );
             return;
         }
 
@@ -117,19 +197,31 @@ const processCsv = (csvText) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailRegex.test(email)) {
-            validationErrors.value.push(`⚠️ Email dòng ${lineNumber} không hợp lệ: "${email}".`);
+            validationErrors.value.push(
+                `⚠️ Email dòng ${lineNumber} không hợp lệ: "${email}".`
+            );
         }
 
         if (emails.has(email)) {
-            validationErrors.value.push(`⚠️ Email dòng ${lineNumber} bị trùng.`);
+            validationErrors.value.push(
+                `⚠️ Email dòng ${lineNumber} bị trùng.`
+            );
         }
         if (accounts.has(account)) {
-            validationErrors.value.push(`⚠️ Account dòng ${lineNumber} bị trùng.`);
+            validationErrors.value.push(
+                `⚠️ Account dòng ${lineNumber} bị trùng.`
+            );
         }
 
         emails.add(email);
         accounts.add(account);
-        users.value.push({ email, account, full_name: fullName, job_position: jobPosition, password });
+        users.value.push({
+            email,
+            account,
+            full_name: fullName,
+            job_position: jobPosition,
+            password,
+        });
     });
 };
 
@@ -160,7 +252,9 @@ const submitFile = async (userList) => {
     }
 };
 
-const arraysEqual = (arr1, arr2) => arr1.length === arr2.length && arr1.every((val, index) => val === arr2[index]);
+const arraysEqual = (arr1, arr2) =>
+    arr1.length === arr2.length &&
+    arr1.every((val, index) => val === arr2[index]);
 </script>
 
 <style scoped>

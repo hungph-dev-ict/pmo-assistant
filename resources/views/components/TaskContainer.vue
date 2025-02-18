@@ -1,17 +1,45 @@
 <template>
     <div>
-        <upload-file-create-tasks v-if="!hasPermissionStaff" :projectId="projectId" :listAssignee="parsedListAssignee"
-            :currentUserId="numberCurrentUserId" @update-task="handleTaskUpdate"></upload-file-create-tasks>
+        <upload-file-create-tasks
+            v-if="!hasPermissionStaff"
+            :projectId="projectId"
+            :listAssignee="parsedListAssignee"
+            :currentUserId="numberCurrentUserId"
+            @update-task="handleTaskUpdate"
+        ></upload-file-create-tasks>
 
-        <task-add v-if="!hasPermissionStaff" :projectId="projectId" :listAssignee="parsedListAssignee"
-            :currentUserId="numberCurrentUserId" @update-task="handleTaskUpdate"></task-add>
+        <task-add
+            v-if="!hasPermissionStaff"
+            :projectId="projectId"
+            :listAssignee="parsedListAssignee"
+            :currentUserId="numberCurrentUserId"
+            @update-task="handleTaskUpdate"
+        ></task-add>
 
-        <task-search-box :tasks="tasks" @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
-            @updateVisibleColumns="updateVisibleColumns"></task-search-box>
+        <task-search-box
+            :tasks="tasks"
+            @updateFilteredTasks="filteredTasks = $event"
+            @blankQuery="handleBlankQuery"
+            @updateVisibleColumns="updateVisibleColumns"
+        ></task-search-box>
 
-        <task-list :projectId="projectId" :filteredTasks="filteredTasks" :blankQuery="blankQuery"
-            :visibleColumns="visibleColumns" :listAssignee="parsedListAssignee" :hasPermissionStaff="hasPermissionStaff"
-            :currentUserId="numberCurrentUserId" :currentUserAccount="currentUserAccount" @update-task="handleTaskUpdate"></task-list>
+        <div class="relative">
+            <div v-if="taskListIsLoading" class="overlay">
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            </div>
+            <task-list
+                :projectId="projectId"
+                :filteredTasks="filteredTasks"
+                :blankQuery="blankQuery"
+                :visibleColumns="visibleColumns"
+                :listAssignee="parsedListAssignee"
+                :hasPermissionStaff="hasPermissionStaff"
+                :currentUserId="numberCurrentUserId"
+                :currentUserAccount="currentUserAccount"
+                @update-task="handleTaskUpdate"
+            ></task-list>
+        </div>
     </div>
 </template>
 
@@ -71,14 +99,19 @@ const tasks = ref([]); // Danh sách task gốc
 const filteredTasks = ref([]); // Danh sách task đã lọc
 const blankQuery = ref(true); // Mặc định là false
 
+const taskListIsLoading = ref(false); // Biến kiểm soát trạng thái loading
+
 const fetchTasks = async () => {
+    taskListIsLoading.value = true; // Bắt đầu loading
     try {
         const url = hasPermissionStaff.value
             ? `/api/staff/${props.projectId}/tasks`
             : `/api/pm/${props.projectId}/tasks`;
         const { data } = await axios.get(url);
 
-        const oldFilteredTasks = new Set(filteredTasks.value.map(task => task.id)); // Lưu ID của tasks đã lọc
+        const oldFilteredTasks = new Set(
+            filteredTasks.value.map((task) => task.id)
+        ); // Lưu ID của tasks đã lọc
 
         tasks.value = data.tasks;
 
@@ -87,11 +120,14 @@ const fetchTasks = async () => {
             filteredTasks.value = [...tasks.value];
         } else {
             // Giữ lại danh sách đã lọc trước đó nếu có
-            filteredTasks.value = tasks.value.filter(task => oldFilteredTasks.has(task.id));
+            filteredTasks.value = tasks.value.filter((task) =>
+                oldFilteredTasks.has(task.id)
+            );
         }
-
     } catch (error) {
         console.error("Lỗi khi lấy dữ liệu task:", error);
+    } finally {
+        taskListIsLoading.value = false; // Kết thúc loading
     }
 };
 
@@ -125,3 +161,40 @@ const handleTaskUpdate = async () => {
 
 onMounted(fetchTasks);
 </script>
+
+<style scoped>
+.relative {
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    z-index: 10;
+    border-radius: 8px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
