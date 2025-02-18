@@ -66,6 +66,8 @@ return [
     'project_select_manager' => '-- プロジェクトマネージャーを選択 --',
     'project_estimated_budget' => '予算見積もり (時間)',
     'project_total_amount_spent' => '総支出額 (時間)',
+    'project_plan_effort' => '計画工数',
+    'project_actual_effort' => '実績工数',
     'project_estimated_project_duration' => '推定プロジェクト期間 (ヶ月)',
     'project_create_new_project' => '新しいプロジェクトを作成',
     'project_detail' => 'プロジェクトの詳細',
