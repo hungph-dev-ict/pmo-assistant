@@ -155,7 +155,7 @@
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-outline-light"
                         data-dismiss="modal">{{ __('labels.cancel') }}</button>
-                    <form method="POST" id="deleteProjectForm" action="{{ route('projects.destroy', $project->id) }}">
+                    <form method="POST" id="deleteProjectForm">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-outline-light">{{ __('labels.delete') }}</button>

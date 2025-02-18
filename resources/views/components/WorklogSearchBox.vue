@@ -190,8 +190,8 @@ const filterWorklogs = () => {
     if (searchQuery.value.trim()) {
         const query = searchQuery.value.toLowerCase();
         filtered = filtered.filter((worklog) =>
-            worklog.task.name.toLowerCase().includes(query) ||
-            worklog.description.toLowerCase().includes(query)
+            worklog.task?.name?.toLowerCase().includes(query) ||
+            worklog.description?.toLowerCase().includes(query)
         );
     }
 

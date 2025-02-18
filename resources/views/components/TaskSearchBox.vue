@@ -489,6 +489,7 @@ const emit = defineEmits([
     "updateFilteredTasks",
     "blankQuery",
     "updateVisibleColumns",
+    "updateSearchQuery",
 ]);
 
 const uniqueAssignees = computed(() => {

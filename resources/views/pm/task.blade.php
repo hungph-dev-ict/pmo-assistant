@@ -20,7 +20,7 @@
 @section('content')
     <div id="task-list">
         <task-container project-id="{{ $project_id }}" list-assignee="{{ $listAssignee }}"
-            current-userid="{{ auth()->user()->id }}" user-role="{{ auth()->user()->getRoleNames() }}"></task-container>
+            current-userid="{{ auth()->user()->id }}" current-user-account="{{ auth()->user()->account }}" user-role="{{ auth()->user()->getRoleNames() }}"></task-container>
     </div>
 @endsection
 
