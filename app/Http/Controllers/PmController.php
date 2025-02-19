@@ -24,7 +24,6 @@ class PmController extends Controller
     {
         $project = Project::findOrFail($project_id);
         if ($request->ajax()) {
-            $tasks = Task::where('project_id', $project_id)->with('assigneeUser')->get();
             $data = $this->taskService->getTasksByProject($project_id);
 
             return response()->json($data);

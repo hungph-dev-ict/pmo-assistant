@@ -1,7 +1,20 @@
 <template>
-    <div class="card">
+    <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">List Task</h3>
+            <div class="card-tools">
+                <!-- <button @click="exportTasks" class="btn btn-info btn-sm mr-2">
+                    Export to CSV
+                </button> -->
+                <button
+                    type="button"
+                    class="btn btn-tool"
+                    data-card-widget="collapse"
+                    title="Collapse"
+                >
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
         </div>
 
         <div class="card-body">
@@ -581,7 +594,7 @@
 </template>
 
 <script setup>
-import { computed, ref, nextTick, onMounted } from "vue";
+import { computed, ref, nextTick, onMounted, reactive } from "vue";
 import Swal from "sweetalert2";
 
 const props = defineProps({
@@ -984,6 +997,16 @@ const priorityClass = (priority) => {
         default:
             return "badge badge-light"; // Màu nhạt cho trạng thái không xác định
     }
+};
+
+const filters = reactive({
+  status: "0",
+  priority: "3",
+});
+
+const exportTasks = () => {
+  const params = new URLSearchParams(filters).toString();
+  window.location.href = `/export-tasks?${params}`;
 };
 </script>
 
