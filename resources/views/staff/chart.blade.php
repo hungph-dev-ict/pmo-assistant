@@ -99,7 +99,7 @@
                 markers: [{
                         value: '{{ date('n/j/Y') }}',
                         color: 'red',
-                        label_text: 'Now '
+                        label_text: '{{ __('labels.now') }} '
                     },
                     {
                         value: ['1/25/2025', '2/2/2025'],

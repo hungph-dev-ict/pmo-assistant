@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\TaskService;
 use App\Http\Requests\StoreTaskRequest;
+use Illuminate\Support\Str;
 
 class PmController extends Controller
 {
@@ -151,40 +152,38 @@ class PmController extends Controller
     public function viewChart($projectId)
     {
         $project = Project::find($projectId);
-        // Lấy tất cả tasks thuộc dự án, bao gồm cả epic (cha) và task con
         $tasks = Task::where('project_id', $projectId)->get();
 
-        // Tạo cấu trúc cây với epic làm cha
         $taskTree = $tasks->whereNull('parent_id')->map(function ($epic) {
+            $startDate = $epic->plan_start_date ? date('n/j/Y', strtotime($epic->plan_start_date)) : null;
+            $endDate = $epic->plan_end_date ? date('n/j/Y', strtotime($epic->plan_end_date)) : null;
+            $yValues = ($startDate && $endDate) ? [$startDate, $endDate] : null; // Nếu cả hai đều null, set null
+
             return [
-                'name' => $epic->name, // Epic name
+                'name' => Str::limit($epic->name, 27, '...'),
                 'points' => collect([
-                    (object)[ // Thêm epic vào points
-                        'name' => $epic->name,
-                        'y' => [
-                            date('n/j/Y', strtotime($epic->plan_start_date)),
-                            date('n/j/Y', strtotime($epic->plan_end_date))
-                        ]
+                    (object)[
+                        'name' => Str::limit($epic->name, 17, '...'),
+                        'y' => $yValues
                     ]
                 ])->merge($epic->children->map(function ($task) {
-                    return (object)[ // Các task con
-                        'name' => $task->name,
-                        'y' => [
-                            date('n/j/Y', strtotime($task->plan_start_date)),
-                            date('n/j/Y', strtotime($task->plan_end_date))
-                        ]
-                    ];
-                }))->values()->toArray(), // Chuyển về mảng
-            ];
-        })->values()->toArray(); // Chuyển về mảng
+                    $startDate = $task->plan_start_date ? date('n/j/Y', strtotime($task->plan_start_date)) : null;
+                    $endDate = $task->plan_end_date ? date('n/j/Y', strtotime($task->plan_end_date)) : null;
+                    $yValues = ($startDate && $endDate) ? [$startDate, $endDate] : null; // Nếu cả hai đều null, set null
 
-        // Lấy min/max date của tất cả task trong dự án
-        $minDate = $tasks->min('plan_start_date');
-        $maxDate = $tasks->max('plan_end_date');
+                    return (object)[
+                        'name' => Str::limit($task->name, 17, '...'),
+                        'y' => $yValues
+                    ];
+                }))->values()->toArray(),
+            ];
+        })->values()->toArray();
+
+        $minDate = $tasks->whereNotNull('plan_start_date')->min('plan_start_date');
+        $maxDate = $tasks->whereNotNull('plan_end_date')->max('plan_end_date');
 
         return view('pm.chart', compact('taskTree', 'minDate', 'maxDate', 'project'));
     }
-
 
     public function store(Request $request, $project_id)
     {
