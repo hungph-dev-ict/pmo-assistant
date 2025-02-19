@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('page_title')
-    {{ $project->name }} - {{ __('messages.chart') }}
+    {{ $project->name }} - {{ __('labels.gantt_chart') }}
 @endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard')}}</a></li>
-    <li class="breadcrumb-item active">{{ $project->name }} - {{ __('messages.chart') }}</li>
+    <li class="breadcrumb-item active">{{ $project->name }} - {{ __('labels.gantt_chart') }}</li>
 @endsection
 
 @section('content')
@@ -105,7 +105,7 @@
                 markers: [{
                         value: '{{ date('n/j/Y') }}',
                         color: 'red',
-                        label_text: '{{ __('labels.now') }}'
+                        label_text: '{{ __('labels.now') }} '
                     },
                     {
                         value: ['1/25/2025', '2/2/2025'],

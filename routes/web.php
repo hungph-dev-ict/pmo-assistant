@@ -10,6 +10,7 @@ use App\Http\Controllers\WorklogController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\TaskExportController;
 
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
@@ -77,7 +78,9 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
 Route::group(['middleware' => ['auth', 'role:pm|staff']], function () {
     Route::get('/api/staff/{project_id}/tasks', [StaffController::class, 'listTasks']);
     Route::put('/api/staff/{project_id}/tasks/{task_id}/update', [StaffController::class, 'updateTask']);
-
+    
+    Route::get('/export-tasks', [TaskExportController::class, 'export'])->name('tasks.export');
+    
 
     Route::prefix('staff/{project_id}')->group(function () {
         Route::get('/task', [StaffController::class, 'listTasks'])->name('staff.task');
