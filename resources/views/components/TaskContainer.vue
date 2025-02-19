@@ -23,7 +23,7 @@
             @updateVisibleColumns="updateVisibleColumns"
         ></task-search-box>
 
-        <div class="relative">
+        <div class="relative" ref="taskListContainer">
             <div v-if="taskListIsLoading" class="overlay">
                 <div class="spinner"></div>
                 <p>Loading...</p>
@@ -38,13 +38,13 @@
                 :currentUserId="numberCurrentUserId"
                 :currentUserAccount="currentUserAccount"
                 @update-task="handleTaskUpdate"
-            ></task-list>
+            />
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, nextTick } from "vue";
 import axios from "axios";
 import TaskAdd from "./TaskAdd.vue";
 import TaskSearchBox from "./TaskSearchBox.vue";
@@ -70,6 +70,8 @@ const props = defineProps({
         default: () => [],
     },
 });
+
+const taskListContainer = ref(null);
 
 const userRoles = computed(() => {
     try {
@@ -101,7 +103,7 @@ const blankQuery = ref(true); // Mặc định là false
 
 const taskListIsLoading = ref(false); // Biến kiểm soát trạng thái loading
 
-const fetchTasks = async () => {
+const fetchTasks = async (loadNew = false) => {
     taskListIsLoading.value = true; // Bắt đầu loading
     try {
         const url = hasPermissionStaff.value
@@ -116,7 +118,7 @@ const fetchTasks = async () => {
         tasks.value = data.tasks;
 
         // Nếu danh sách filteredTasks ban đầu rỗng, giữ toàn bộ tasks mới
-        if (filteredTasks.value.length === 0) {
+        if (filteredTasks.value.length === 0 || loadNew) {
             filteredTasks.value = [...tasks.value];
         } else {
             // Giữ lại danh sách đã lọc trước đó nếu có
@@ -128,6 +130,11 @@ const fetchTasks = async () => {
         console.error("Lỗi khi lấy dữ liệu task:", error);
     } finally {
         taskListIsLoading.value = false; // Kết thúc loading
+        nextTick(() => {
+            if (taskListContainer.value && loadNew) {
+                taskListContainer.value.scrollIntoView({ behavior: "smooth" });
+            }
+        });
     }
 };
 
@@ -155,8 +162,8 @@ const updateVisibleColumns = (columns) => {
 };
 
 // Khi task được cập nhật, fetch lại danh sách task
-const handleTaskUpdate = async () => {
-    await fetchTasks();
+const handleTaskUpdate = (loadNew = false) => {
+    fetchTasks(loadNew);
 };
 
 onMounted(fetchTasks);
@@ -194,7 +201,11 @@ onMounted(fetchTasks);
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>
