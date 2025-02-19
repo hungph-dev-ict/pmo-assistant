@@ -66,13 +66,13 @@
                                                 <p>{{ __('labels.members') }}</p>
                                             </a>
                                         </li>
-                                        <li class="nav-item">
+                                        {{-- <li class="nav-item">
                                             <a href="{{ route('pm.chart', $project->id) }}"
                                                 class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.chart') ? 'active' : '' }}">
                                                 <i class="fas fa-chart-line nav-icon"></i>
                                                 <p>{{ __('labels.chart') }}</p>
                                             </a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </li>
                             @endforeach
@@ -107,13 +107,13 @@
                                         <p>{{ __('messages.members') }}</p>
                                     </a>
                                 </li> --}}
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="{{ route('staff.chart', $project->id) }}"
                                         class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('staff.chart') ? 'active' : '' }}">
                                         <i class="fas fa-chart-line nav-icon"></i>
                                         <p>{{ __('labels.chart') }}</p>
                                     </a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
                     @endforeach
