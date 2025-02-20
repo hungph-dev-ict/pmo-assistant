@@ -39,7 +39,7 @@
                         <select id="available-users" class="form-control" size="10" multiple>
                             @foreach ($membersNotInProject as $memberNotInProject)
                                 <option value="{{ $memberNotInProject->id }}">
-                                    {{ $memberNotInProject->name . ' - ' . $memberNotInProject->name . ' - ' . $memberNotInProject->jobPosition->value1 }}
+                                    {{ $memberNotInProject->account . ' - ' . $memberNotInProject->name . ' - ' . $memberNotInProject->jobPosition->value1 }}
                                 </option>
                             @endforeach
                         </select>
