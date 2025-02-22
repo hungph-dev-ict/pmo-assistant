@@ -68,6 +68,10 @@ class UserController extends Controller
             "Tester" => 5,
             "Comtor" => 6,
             "Other" => 7,
+            "PMO" => 8,
+            "Auditor" => 9,
+            "Team Lead" => 10,
+            "Tech Lead" => 11
         ];
 
         // Kiểm tra số dòng có khớp nhau không
@@ -186,7 +190,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($user_id);
 
-        $jobPositions = Constant::where('group', 'job_position')->get();
+        $jobPositions = Constant::where('group', 'job_position')->orderByRaw('CAST(value3 AS UNSIGNED)')->get();
         return view('users.edit', compact('user', 'jobPositions'));
     }
 

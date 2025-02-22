@@ -30,7 +30,7 @@
                     @include('layouts.partials.client-sidebar')
                 @endrole
 
-                @role('client|pm')
+                @role('pm')
                     <li class="nav-item {{ request()->is('pm*') ? 'menu-open' : '' }}">
                         <a href="pages/gallery.html" class="nav-link {{ request()->is('pm*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-book"></i>

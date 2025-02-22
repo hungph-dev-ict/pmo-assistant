@@ -29,6 +29,8 @@ class User extends Authenticatable
         'head_account_flg',
         'password',
         'job_position',
+        'sub_role_1',
+        'sub_role_2',
         'status',
         'avatar',
     ];
@@ -79,6 +81,18 @@ class User extends Authenticatable
             ->where('group', 'job_position');
     }
 
+    public function subRole1()
+    {
+        return $this->hasOne(Constant::class, 'key', 'sub_role_1')
+            ->where('group', 'job_position');
+    }
+
+    public function subRole2()
+    {
+        return $this->hasOne(Constant::class, 'key', 'sub_role_2')
+            ->where('group', 'job_position');
+    }
+
     public function userStatus()
     {
         return $this->hasOne(Constant::class, 'key', 'status')
@@ -124,6 +138,8 @@ class User extends Authenticatable
             'account' => $userData['user_account'],
             'name' => $userData['user_name'],
             'job_position' => $userData['user_job_position'] ?? '7',
+            'sub_role_1' => $userData['user_sub_role_1'] ?? '7',
+            'sub_role_2' => $userData['user_sub_role_2'] ?? '7',
         ]);        
         
         return $user;

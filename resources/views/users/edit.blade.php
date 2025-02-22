@@ -69,10 +69,10 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="userJobPosition">Job Position <span style="color: red;">*</span></label>
+                            <label for="userJobPosition">Main role<span style="color: red;">*</span></label>
                             <select id="userJobPosition" name="user_job_position"
                                 class="form-control select @error('user_job_position') is-invalid @enderror">
-                                <option selected disabled>-- Select Job Position --</option>
+                                <option selected disabled>-- Select Main Role --</option>
                                 @foreach ($jobPositions as $jobPosition)
                                     <option value="{{ $jobPosition->key }}"
                                         {{ old('user_job_position', $user->job_position) == $jobPosition->key ? 'selected' : '' }}>
@@ -83,6 +83,42 @@
                             @error('user_job_position')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('user_job_position') }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="userSubRole1">Sub Role 1</label>
+                            <select id="userSubRole1" name="user_sub_role_1"
+                                class="form-control select @error('user_sub_role_1') is-invalid @enderror">
+                                <option selected disabled>-- Select Sub Role 1 --</option>
+                                @foreach ($jobPositions as $jobPosition)
+                                    <option value="{{ $jobPosition->key }}"
+                                        {{ old('user_sub_role_1', $user->sub_role_1) == $jobPosition->key ? 'selected' : '' }}>
+                                        {{ $jobPosition->value1 . ' - ' . $jobPosition->value2 }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('user_sub_role_1')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('user_sub_role_1') }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="userSubRole2">Sub Role 2</label>
+                            <select id="userSubRole2" name="user_sub_role_2"
+                                class="form-control select @error('user_sub_role_2') is-invalid @enderror">
+                                <option selected disabled>-- Select Sub Role 2 --</option>
+                                @foreach ($jobPositions as $jobPosition)
+                                    <option value="{{ $jobPosition->key }}"
+                                        {{ old('user_sub_role_2', $user->sub_role_2) == $jobPosition->key ? 'selected' : '' }}>
+                                        {{ $jobPosition->value1 . ' - ' . $jobPosition->value2 }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('user_sub_role_2')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('user_sub_role_2') }}</strong>
                                 </span>
                             @enderror
                         </div>
