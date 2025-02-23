@@ -41,20 +41,23 @@
                         <th style="width: 12%">
                             Name
                         </th>
-                        <th style="width: 12%">
+                        <th style="width: 11%">
                             Email
                         </th>
-                        <th style="width: 14%" class="text-center">
+                        <th style="width: 11%" class="text-center">
                             Job Position
+                        </th>
+                        <th style="width: 11%" class="text-center">
+                            Sub Role 1
+                        </th>
+                        <th style="width: 11%" class="text-center">
+                            Sub Role 2
                         </th>
                         <th style="width: 8%" class="text-center">
                             Status
                         </th>
-                        <th style="width: 14%">
+                        <th style="width: 10%">
                             Created At
-                        </th>
-                        <th style="width: 14%">
-                            Updated At
                         </th>
                         <th style="width: 20%" class="text-center">
                             Action
@@ -90,30 +93,45 @@
                             </td>
                             <td class="project-state">
                                 <a>
-                                    {{ $user->jobPosition->value1 ?? 'N/A' }}
+                                    {{ $user->jobPosition->value1 ?? '-' }}
                                 </a>
                                 <br />
                                 <small>
-                                    {{ $user->jobPosition->value2 ?? 'N/A' }}
+                                    {{ $user->jobPosition->value2 ?? '-' }}
+                                </small>
+                            </td>
+                            <td class="project-state">
+                                <a>
+                                    {{ $user->subRole1->value1 ?? '-' }}
+                                </a>
+                                <br />
+                                <small>
+                                    {{ $user->subRole1->value2 ?? '-' }}
+                                </small>
+                            </td>
+                            <td class="project-state">
+                                <a>
+                                    {{ $user->subRole2->value1 ?? '-' }}
+                                </a>
+                                <br />
+                                <small>
+                                    {{ $user->subRole2->value2 ?? '-' }}
                                 </small>
                             </td>
                             <td class="project-state">
                                 @if ($user->status == 0)
-                                    <span class="badge badge-secondary">{{ $user->userStatus->value1 ?? 'N/A' }}</span>
+                                    <span class="badge badge-secondary">{{ $user->userStatus->value1 ?? '-' }}</span>
                                     <!-- Màu xám khi status là 0 -->
                                 @elseif ($user->status == 1)
-                                    <span class="badge badge-success">{{ $user->userStatus->value1 ?? 'N/A' }}</span>
+                                    <span class="badge badge-success">{{ $user->userStatus->value1 ?? '-' }}</span>
                                     <!-- Màu xanh khi status là 1 -->
                                 @else
-                                    <span class="badge badge-warning">{{ $user->userStatus->value1 ?? 'N/A' }}</span>
-                                    <!-- Màu vàng khi N/A -->
+                                    <span class="badge badge-warning">{{ $user->userStatus->value1 ?? '-' }}</span>
+                                    <!-- Màu vàng khi - -->
                                 @endif
                             </td>
                             <td>
                                 {{ $user->created_at }}
-                            </td>
-                            <td>
-                                {{ $user->updated_at }}
                             </td>
                             <td class="text-center">
                                 @if ($user->trashed())
