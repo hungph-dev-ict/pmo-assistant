@@ -566,7 +566,7 @@ const updateTask = async (task) => {
 
         // Hiển thị toastr lỗi với cả message và error detail
         // toastr.error(`${errorMessage}: ${errorDetail}`);
-        console.logerror
+        toastr.error(error.response?.data?.error || "❌ Có lỗi xảy ra khi gửi dữ liệu.");
     }
     task.isEditing = false;
     globalIsEditting.value = false;
@@ -580,7 +580,7 @@ const isOverdue = (planEndDate, status) => {
     const overdueStatuses = ["Not Started", "In Progress", "Feedback", "Reopen"];
     const today = new Date().toISOString().split("T")[0];
 
-    return overdueStatuses.includes(status) && today >= planEndDate;
+    return overdueStatuses.includes(status) && today > planEndDate;
 };
 
 const isDelayedStart = (planStartDate, status) => {

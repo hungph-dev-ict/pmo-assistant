@@ -9,6 +9,10 @@
 <meta property="og:description" content="{{ Str::limit(strip_tags($task->description), 100) }}">
 <meta property="og:image" content="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}">
 <meta property="og:url" content="{{ url('/' . $task->project->id . '/task/' . $task->id) }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chi tiết công việc - {{ $task->name }}">
+<meta name="twitter:description" content="{{ Str::limit(strip_tags($task->description), 100) }}">
+<meta name="twitter:image" content="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}">
 @endsection
 
 @section('breadcrumb')

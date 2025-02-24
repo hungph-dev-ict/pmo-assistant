@@ -160,7 +160,7 @@
                                     <ul class="nav nav-treeview">
                                         <li class="nav-item">
                                             <a href="{{ route('pm.task', $project->id) }}"
-                                                class="nav-link {{ $currentProjectId == $project->id || (request()->segment(2) == $project->id || request()->routeIs('pm.task')) ? 'active' : '' }}">
+                                                class="nav-link {{ (($currentProjectId == $project->id || request()->segment(2) == $project->id) && request()->routeIs('pm.task')) ? 'active' : '' }}">
                                                 <i class="fas fa-list-ul nav-icon"></i>
                                                 <p>{{ __('labels.task_lists') }}</p>
                                             </a>
@@ -180,13 +180,13 @@
                 @endrole
 
 
-                @if(Auth::user()->hasRole('staff') && !Auth::user()->hasRole('client'))
+                @if(Auth::user()->hasRole('staff') && !Auth::user()->hasRole('client') && !Auth::user()->hasRole('pm'))
                     @foreach ($staff_projects as $project)
                         <li
                             class="nav-item {{ request()->segment(2) == $project->id && request()->routeIs('staff.*') ? 'menu-open' : '' }}">
                             <a href="pages/gallery.html"
                                 class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('staff.*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
+                                <i class="nav-icon fas fa-gift"></i>
                                 <p>
                                     {{ $project->name }}
                                     <i class="fas fa-angle-left right"></i>

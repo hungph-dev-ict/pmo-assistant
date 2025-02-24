@@ -97,7 +97,7 @@
                                 </a>
                                 <br />
                                 <small>
-                                    {{ $user->jobPosition->value2 ?? '-' }}
+                                    {{ $user->jobPosition->value2 ?? '' }}
                                 </small>
                             </td>
                             <td class="project-state">
@@ -106,7 +106,7 @@
                                 </a>
                                 <br />
                                 <small>
-                                    {{ $user->subRole1->value2 ?? '-' }}
+                                    {{ $user->subRole1->value2 ?? '' }}
                                 </small>
                             </td>
                             <td class="project-state">
@@ -115,7 +115,7 @@
                                 </a>
                                 <br />
                                 <small>
-                                    {{ $user->subRole2->value2 ?? '-' }}
+                                    {{ $user->subRole2->value2 ?? '' }}
                                 </small>
                             </td>
                             <td class="project-state">

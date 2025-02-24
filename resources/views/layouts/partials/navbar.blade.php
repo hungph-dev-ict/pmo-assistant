@@ -11,13 +11,14 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('my-worklog') }}" class="nav-link">My Worklog</a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{ route('password.change') }}" class="nav-link">Change Password</a>
-        </li>
+        
     </ul>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ route('password.change') }}" class="nav-link">Change Password</a>
+        </li>
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
                 @if(app()->getLocale() == 'en')
