@@ -29,6 +29,8 @@ class User extends Authenticatable
         'head_account_flg',
         'password',
         'job_position',
+        'sub_role_1',
+        'sub_role_2',
         'status',
         'avatar',
     ];
@@ -79,6 +81,18 @@ class User extends Authenticatable
             ->where('group', 'job_position');
     }
 
+    public function subRole1()
+    {
+        return $this->hasOne(Constant::class, 'key', 'sub_role_1')
+            ->where('group', 'job_position');
+    }
+
+    public function subRole2()
+    {
+        return $this->hasOne(Constant::class, 'key', 'sub_role_2')
+            ->where('group', 'job_position');
+    }
+
     public function userStatus()
     {
         return $this->hasOne(Constant::class, 'key', 'status')
@@ -97,35 +111,46 @@ class User extends Authenticatable
         ]);
     }
     public static function createUserByForm($userData)
-    {        
+    {
         $newUser = self::create([
             'email' => $userData['user_email'],
             'account' => $userData['user_account'],
             'name' => $userData['user_name'],
             'password' => Hash::make($userData['user_password']),
             'job_position' => $userData['user_job_position'] ?? '7',
+            'sub_role_1' => $userData['user_sub_role_1'] ?? null,
+            'sub_role_2' => $userData['user_sub_role_2'] ?? null,
             'tenant_id' => auth()->user()->tenant_id, // Tự động lấy tenant_id từ user đăng nhập
-            'status' => '1',            
+            'status' => '1',
             'head_account_flg' => '0',
         ]);
-        
+
         return $newUser;
     }
     public static function updateUser($idUser, $userData)
-    {   
+    {
         $user = self::find($idUser);
-        
+
         if (!$user) {
             throw new \Exception("User không tồn tại.");
         }
 
-        $user->update([            
+        $updateData = [
             'email' => $userData['user_email'],
             'account' => $userData['user_account'],
             'name' => $userData['user_name'],
             'job_position' => $userData['user_job_position'] ?? '7',
-        ]);        
-        
+            'sub_role_1' => $userData['user_sub_role_1'] ?? null,
+            'sub_role_2' => $userData['user_sub_role_2'] ?? null,
+        ];
+
+        // Loại bỏ các giá trị rỗng
+        $updateData = array_filter($updateData, function ($value) {
+            return $value !== null && $value !== '';
+        });
+
+        $user->update($updateData);
+
         return $user;
     }
 }

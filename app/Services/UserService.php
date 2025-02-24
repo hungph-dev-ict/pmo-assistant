@@ -22,37 +22,106 @@ class UserService
 
     public function createUserByForm(array $data)
     {
-        
         $user = User::createUserByForm($data);
 
         $tenant = $user->tenant;
 
-        // Gán vai trò cho user
-        $role = ($user->job_position <= 2) ? 'pm' : 'staff';
-        $user->assignRole($role);
+        // Xác định role chính
+        if (in_array($user->job_position, [1, 8, 9])) {
+            $role = 'client';
+        } elseif (in_array($user->job_position, [2, 3, 10, 11])) {
+            $role = 'pm';
+        } else {
+            $role = 'staff';
+        }
+
+        // Xác định sub_role_1
+        if (in_array($user->sub_role_1, [1, 8, 9])) {
+            $sub_role_1 = 'client';
+        } elseif (in_array($user->sub_role_1, [2, 3, 10, 11])) {
+            $sub_role_1 = 'pm';
+        } else {
+            $sub_role_1 = 'staff';
+        }
+
+        // Xác định sub_role_2
+        if (in_array($user->sub_role_2, [1, 8, 9])) {
+            $sub_role_2 = 'client';
+        } elseif (in_array($user->sub_role_2, [2, 3, 10, 11])) {
+            $sub_role_2 = 'pm';
+        } else {
+            $sub_role_2 = 'staff';
+        }
+
+        // Tạo danh sách role cần gán
+        $roles = [$role];
+
+        if (!empty($user->sub_role_1) && !$user->hasRole($user->sub_role_1)) {
+            $roles[] = $sub_role_1;
+        }
+
+        if (!empty($user->sub_role_2) && !$user->hasRole($user->sub_role_2)) {
+            $roles[] = $sub_role_2;
+        }
+
+        // Cập nhật tất cả role một lần duy nhất
+        $user->syncRoles($roles);
 
         // Gửi email thông báo
         Mail::to($user->email)->send(new TenantUserRegisteredMail(
-            $user, 
+            $user,
             $data['user_password'],
             $tenant->name ?? 'Unknown Tenant', // Kiểm tra nếu không có tenant
-            ucfirst($role)        
+            ucfirst($role)
         ));
 
         return $user;
     }
     public function updateUser($idUser, array $data)
     {
-        
+
         $user = User::updateUser($idUser, $data);
 
-        $tenant = $user->tenant;
-
-        // Gán vai trò cho user
-        $role = ($user->job_position <= 2) ? 'pm' : 'staff';
-        if (!$user->hasRole($role)) { 
-            $user->syncRoles($role); // Chỉ cập nhật khi role thay đổi
+        // Xác định role chính
+        if (in_array($user->job_position, [1, 8, 9])) {
+            $role = 'client';
+        } elseif (in_array($user->job_position, [2, 3, 10, 11])) {
+            $role = 'pm';
+        } else {
+            $role = 'staff';
         }
+
+        // Xác định sub_role_1
+        if (in_array($user->sub_role_1, [1, 8, 9])) {
+            $sub_role_1 = 'client';
+        } elseif (in_array($user->sub_role_1, [2, 3, 10, 11])) {
+            $sub_role_1 = 'pm';
+        } else {
+            $sub_role_1 = 'staff';
+        }
+
+        // Xác định sub_role_2
+        if (in_array($user->sub_role_2, [1, 8, 9])) {
+            $sub_role_2 = 'client';
+        } elseif (in_array($user->sub_role_2, [2, 3, 10, 11])) {
+            $sub_role_2 = 'pm';
+        } else {
+            $sub_role_2 = 'staff';
+        }
+
+        // Tạo danh sách role cần gán
+        $roles = [$role];
+
+        if (!empty($user->sub_role_1) && !$user->hasRole($user->sub_role_1)) {
+            $roles[] = $sub_role_1;
+        }
+
+        if (!empty($user->sub_role_2) && !$user->hasRole($user->sub_role_2)) {
+            $roles[] = $sub_role_2;
+        }
+
+        // Cập nhật tất cả role một lần duy nhất
+        $user->syncRoles($roles);
 
         return $user;
     }

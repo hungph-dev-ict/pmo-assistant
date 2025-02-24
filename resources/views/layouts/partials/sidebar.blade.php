@@ -30,9 +30,46 @@
                     @include('layouts.partials.client-sidebar')
                 @endrole
 
-                @role('client|pm')
-                    <li class="nav-item {{ request()->is('pm*') ? 'menu-open' : '' }}">
-                        <a href="pages/gallery.html" class="nav-link {{ request()->is('pm*') ? 'active' : '' }}">
+                @php
+                    // Lấy Task ID từ URL
+                    $currentTaskId = request()->segment(1) == 'task' ? request()->segment(2) : null;
+
+                    // Tìm Project ID nào chứa Task ID này
+                    $currentProjectId = null;
+                    if ($currentTaskId) {
+                        foreach ($projects as $project) {
+                            $taskIds = $project->tasks->pluck('id')->toArray();
+                            if (in_array($currentTaskId, $taskIds)) {
+                                $currentProjectId = $project->id;
+                                break;
+                            }
+                        }
+                    }
+                @endphp
+
+                @role('pm')
+                    @php
+                        // Lấy Task ID từ URL
+                        $currentTaskId = request()->segment(1) == 'task' ? request()->segment(2) : null;
+
+                        // Kiểm tra Task ID có thuộc Project nào không
+                        $currentProjectId = null;
+                        if ($currentTaskId) {
+                            foreach ($projects as $project) {
+                                $taskIds = $project->tasks->pluck('id')->toArray();
+                                if (in_array($currentTaskId, $taskIds)) {
+                                    $currentProjectId = $project->id;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Kiểm tra có Project nào đang mở không
+                        $isMenuOpen = request()->is('pm*') || $currentProjectId;
+                    @endphp
+
+                    <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
                             <i class="nav-icon fas fa-book"></i>
                             <p>
                                 {{ __('labels.project_management') }}
@@ -41,10 +78,13 @@
                         </a>
                         <ul class="nav nav-treeview">
                             @foreach ($projects as $project)
-                                <li
-                                    class="nav-item {{ request()->segment(2) == $project->id && request()->routeIs('pm.*') ? 'menu-open' : '' }}">
-                                    <a href="#"
-                                        class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.*') ? 'active' : '' }}">
+                                @php
+                                    $isActiveProject = request()->segment(2) == $project->id;
+                                    $isActiveProject = $isActiveProject || $currentProjectId == $project->id;
+                                @endphp
+
+                                <li class="nav-item {{ $isActiveProject ? 'menu-open' : '' }}">
+                                    <a href="#" class="nav-link {{ $isActiveProject ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             {{ $project->name }}
@@ -54,7 +94,7 @@
                                     <ul class="nav nav-treeview">
                                         <li class="nav-item">
                                             <a href="{{ route('pm.task', $project->id) }}"
-                                                class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.task') ? 'active' : '' }}">
+                                                class="nav-link {{ $currentProjectId == $project->id || (request()->segment(2) == $project->id || request()->routeIs('pm.task')) ? 'active' : '' }}">
                                                 <i class="fas fa-list-ul nav-icon"></i>
                                                 <p>{{ __('labels.task_lists') }}</p>
                                             </a>
@@ -66,19 +106,13 @@
                                                 <p>{{ __('labels.members') }}</p>
                                             </a>
                                         </li>
-                                        {{-- <li class="nav-item">
-                                            <a href="{{ route('pm.chart', $project->id) }}"
-                                                class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.chart') ? 'active' : '' }}">
-                                                <i class="fas fa-chart-line nav-icon"></i>
-                                                <p>{{ __('labels.chart') }}</p>
-                                            </a>
-                                        </li> --}}
                                     </ul>
                                 </li>
                             @endforeach
                         </ul>
                     </li>
                 @endrole
+
 
                 @role('staff')
                     @foreach ($projects as $project)

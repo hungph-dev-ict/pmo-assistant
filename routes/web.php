@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PmController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WorklogController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +25,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])->name('password.change');
     Route::put('/change-password', [ChangePasswordController::class, 'updatePassword'])->name('password.custom-update');
-
 
     //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     //     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
 
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');
+        Route::get('/task/{task_id}', [TaskController::class, 'show'])->name('pm.task.show');
         Route::get('/member', [PmController::class, 'listMembers'])->name('pm.member');
         Route::post('/member/update', [PmController::class, 'updateMembers'])->name('pm.member.update');
         Route::get('/chart', [PmController::class, 'viewChart'])->name('pm.chart');
@@ -78,12 +79,13 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
 Route::group(['middleware' => ['auth', 'role:pm|staff']], function () {
     Route::get('/api/staff/{project_id}/tasks', [StaffController::class, 'listTasks']);
     Route::put('/api/staff/{project_id}/tasks/{task_id}/update', [StaffController::class, 'updateTask']);
-    
+
     Route::get('/export-tasks', [TaskExportController::class, 'export'])->name('tasks.export');
-    
+    Route::put('/api/tasks/{task_id}/update', [TaskController::class, 'updateTask']);
 
     Route::prefix('staff/{project_id}')->group(function () {
         Route::get('/task', [StaffController::class, 'listTasks'])->name('staff.task');
+        Route::get('/task/{task_id}', [TaskController::class, 'show'])->name('staff.task.show');
         Route::get('/task/{task_id}/edit', [StaffController::class, 'listTasks'])->name('task.edit');
         Route::get('/task/{task_id}/destroy', [StaffController::class, 'listTasks'])->name('task.destroy');
         Route::get('/task', [StaffController::class, 'listTasks'])->name('staff.task');

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Task extends Model
 {
@@ -30,6 +31,7 @@ class Task extends Model
         'status',
         'created_by',
         'type',
+        'memo'
     ];
 
 
@@ -73,5 +75,15 @@ class Task extends Model
     {
         return $this->hasOne(Constant::class, 'key', 'priority')
             ->where('group', 'task_priority');
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y/m/d H:i:s');
+    }
+
+    public function components()
+    {
+        return $this->belongsToMany(Component::class, 'task_component');
     }
 }

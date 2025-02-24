@@ -55,5 +55,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'update own tasks',
             'view basic charts'
         ]);
+
+        // Tạo vai trò Staff và gán quyền liên quan đến task
+        $userRole = Role::firstOrCreate(['name' => 'manager']);
+        $userRole = Role::firstOrCreate(['name' => 'auditor']);
     }
 }

@@ -101,7 +101,7 @@ class ConstantsTableSeeder extends Seeder
             [
                 'group' => 'project_status',
                 'key' => '2',
-                'value1' => 'On hold',
+                'value1' => 'Pending',
                 'value2' => NULL,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -163,9 +163,17 @@ class ConstantsTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'group' => 'task_status', 
+                'key' => '5',
+                'value1' => 'Reopen', // Trạng thái đã hoàn thành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'group' => 'task_priority', 
                 'key' => '0',
-                'value1' => 'On Hold', // Trạng thái chưa bắt đầu
+                'value1' => 'Pending', // Trạng thái chưa bắt đầu
                 'value2' => NULL,
                 'created_at' => now(),
                 'updated_at' => now(),

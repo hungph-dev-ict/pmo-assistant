@@ -13,7 +13,6 @@ class TaskExportController extends Controller
     {
         // Nhận các điều kiện filter từ frontend
         $filters = $request->all();
-        Log::debug($filters);
 
         // Query dữ liệu với điều kiện filter
         $tasks = Task::query();
@@ -26,7 +25,6 @@ class TaskExportController extends Controller
         }
 
         $tasks = $tasks->get();
-        Log::debug($tasks);
 
 
         // Xuất file CSV

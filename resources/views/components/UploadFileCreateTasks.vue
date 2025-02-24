@@ -151,8 +151,9 @@ const statusMap = {
     Resolved: 2,
     Feedback: 3,
     Done: 4,
+    Reopen: 5,
 };
-const priorityMap = { "On Hold": 0, Low: 1, Medium: 2, High: 3, Critical: 4 };
+const priorityMap = { "Pending": 0, Low: 1, Medium: 2, High: 3, Critical: 4 };
 
 const handleFileChange = (event) => {
     const file = event.target.files[0];
