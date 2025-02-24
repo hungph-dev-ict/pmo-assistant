@@ -143,12 +143,7 @@ class User extends Authenticatable
             'sub_role_1' => $userData['user_sub_role_1'] ?? null,
             'sub_role_2' => $userData['user_sub_role_2'] ?? null,
         ];
-
-        // Loại bỏ các giá trị rỗng
-        $updateData = array_filter($updateData, function ($value) {
-            return $value !== null && $value !== '';
-        });
-
+        
         $user->update($updateData);
 
         return $user;
