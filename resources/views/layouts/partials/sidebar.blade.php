@@ -37,7 +37,7 @@
                     // Tìm Project ID nào chứa Task ID này
                     $currentProjectId = null;
                     if ($currentTaskId) {
-                        foreach ($projects as $project) {
+                        foreach ($client_projects as $project) {
                             $taskIds = $project->tasks->pluck('id')->toArray();
                             if (in_array($currentTaskId, $taskIds)) {
                                 $currentProjectId = $project->id;
@@ -47,6 +47,72 @@
                     }
                 @endphp
 
+                @role('client')
+                    @php
+                        // Lấy Task ID từ URL
+                        $currentTaskId = request()->segment(1) == 'task' ? request()->segment(2) : null;
+
+                        // Kiểm tra Task ID có thuộc Project nào không
+                        $currentProjectId = null;
+                        if ($currentTaskId) {
+                            foreach ($pm_projects as $project) {
+                                $taskIds = $project->tasks->pluck('id')->toArray();
+                                if (in_array($currentTaskId, $taskIds)) {
+                                    $currentProjectId = $project->id;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Kiểm tra có Project nào đang mở không
+                        $isMenuOpen = request()->is('pm*') || $currentProjectId;
+                    @endphp
+
+                    <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-book"></i>
+                            <p>
+                                Tenant Projects
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @foreach ($client_projects as $project)
+                                @php
+                                    $isActiveProject = request()->segment(2) == $project->id;
+                                    $isActiveProject = $isActiveProject || $currentProjectId == $project->id;
+                                @endphp
+
+                                <li class="nav-item {{ $isActiveProject ? 'menu-open' : '' }}">
+                                    <a href="#" class="nav-link {{ $isActiveProject ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            {{ $project->name }}
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a href="{{ route('pm.task', $project->id) }}"
+                                                class="nav-link {{ $currentProjectId == $project->id || (request()->segment(2) == $project->id || request()->routeIs('pm.task')) ? 'active' : '' }}">
+                                                <i class="fas fa-list-ul nav-icon"></i>
+                                                <p>{{ __('labels.task_lists') }}</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('pm.member', $project->id) }}"
+                                                class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.member') ? 'active' : '' }}">
+                                                <i class="fas fa-user-friends nav-icon"></i>
+                                                <p>{{ __('labels.members') }}</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </li>
+                @endrole
+
                 @role('pm')
                     @php
                         // Lấy Task ID từ URL
@@ -55,7 +121,7 @@
                         // Kiểm tra Task ID có thuộc Project nào không
                         $currentProjectId = null;
                         if ($currentTaskId) {
-                            foreach ($projects as $project) {
+                            foreach ($pm_projects as $project) {
                                 $taskIds = $project->tasks->pluck('id')->toArray();
                                 if (in_array($currentTaskId, $taskIds)) {
                                     $currentProjectId = $project->id;
@@ -77,7 +143,7 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            @foreach ($projects as $project)
+                            @foreach ($pm_projects as $project)
                                 @php
                                     $isActiveProject = request()->segment(2) == $project->id;
                                     $isActiveProject = $isActiveProject || $currentProjectId == $project->id;
@@ -115,7 +181,7 @@
 
 
                 @role('staff')
-                    @foreach ($projects as $project)
+                    @foreach ($staff_projects as $project)
                         <li
                             class="nav-item {{ request()->segment(2) == $project->id && request()->routeIs('staff.*') ? 'menu-open' : '' }}">
                             <a href="pages/gallery.html"

@@ -17,32 +17,41 @@ class ShareProjectManagerData
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $pm_projects = collect();
+        $client_projects = collect();
+        $staff_projects = collect();
+
         if (auth()->check()) {
             $userId = Auth::id();
             if ($userId) {
                 if (Auth::user()->hasRole('pm')) {
-                    $projects = Project::where('project_manager', $userId)
-                        ->with(['tasks:id,project_id']) // Chỉ lấy id của tasks
+                    $pm_projects = Project::where('project_manager', $userId)
+                        ->with(['tasks:id,project_id'])
                         ->get();
-                } elseif (Auth::user()->hasRole('client')) {
-                    $projects = Project::whereIn('id', function ($query) use ($userId) {
+                }
+
+                if (Auth::user()->hasRole('client')) {
+                    $client_projects = Project::whereIn('id', function ($query) use ($userId) {
                         $query->select('projects.id')
                             ->from('projects')
                             ->join('users as pm', 'pm.id', '=', 'projects.project_manager')
                             ->join('users as head_user', 'head_user.tenant_id', '=', 'pm.tenant_id')
-                            ->where('head_user.id', $userId)
-                            ->where('head_user.head_account_flg', true);
+                            ->where('head_user.id', $userId);
                     })
-                        ->with(['tasks:id,project_id']) // Chỉ lấy id của tasks
+                        ->with(['tasks:id,project_id'])
                         ->get();
-                } elseif (Auth::user()->hasRole('staff')) {
-                    $projects = Auth::user()->projects()->with(['tasks:id,project_id'])->get();
-                } else {
-                    $projects = collect();
                 }
 
-                // Chia sẻ dữ liệu này với tất cả view
-                view()->share('projects', $projects);
+                if (Auth::user()->hasRole('staff')) {
+                    $staff_projects = Auth::user()->projects()->with(['tasks:id,project_id'])->get();
+                }
+
+                // Chia sẻ từng loại dự án với tất cả view
+                view()->share([
+                    'pm_projects' => $pm_projects,
+                    'client_projects' => $client_projects,
+                    'staff_projects' => $staff_projects,
+                ]);
             }
         }
 
