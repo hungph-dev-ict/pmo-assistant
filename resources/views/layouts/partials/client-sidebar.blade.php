@@ -53,7 +53,7 @@
     <a href="#" class="nav-link {{ request()->routeIs('client.worklogs.*') ? 'active' : '' }}">
         <i class="nav-icon fas fa-briefcase"></i>
         <p>
-            Worklog setting
+            Worklog Setting
             <i class="fas fa-angle-left right"></i>
         </p>
     </a>

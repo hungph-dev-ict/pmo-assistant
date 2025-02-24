@@ -25,9 +25,11 @@ class ShareProjectManagerData
             $userId = Auth::id();
             if ($userId) {
                 if (Auth::user()->hasRole('pm')) {
-                    $pm_projects = Project::where('project_manager', $userId)
-                        ->with(['tasks:id,project_id'])
-                        ->get();
+                    $pm_projects = Project::whereHas('users', function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    })
+                    ->with(['tasks:id,project_id'])
+                    ->get();
                 }
 
                 if (Auth::user()->hasRole('client')) {

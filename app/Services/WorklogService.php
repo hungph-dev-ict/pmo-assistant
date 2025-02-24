@@ -58,7 +58,7 @@ class WorklogService {
     public function getTenantWorklogs() {
         $user = Auth::user();
 
-        if (!$user || !$user->head_account_flg) {
+        if (!$user || !$user->hasRole('client')) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 

@@ -65,7 +65,7 @@
                             <button @click="edit(editTask)" class="btn btn-info btn-sm mr-2">
                                 Edit
                             </button>
-                            <button @click="deleteTask(editTask)" class="btn btn-danger btn-sm mr-2">
+                            <button v-if="hasPermissionPm" @click="deleteTask(editTask) " class="btn btn-danger btn-sm mr-2">
                                 Delete
                             </button>
                         </template>
