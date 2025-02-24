@@ -49,6 +49,12 @@ class Project extends Model
         return $this->belongsTo(Constant::class, 'status', 'key')
             ->where('group', 'project_status');
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'project_id', 'id');
+    }
+    
     public static function createProject($projectData)
     {
         $newProject = self::create([

@@ -200,13 +200,6 @@ const props = defineProps({
 
 // Tạo danh sách task dưới dạng ref để có thể cập nhật giá trị
 const worklogs = ref([]);
-const statusList = ref([
-    "Not Started",
-    "In Progress",
-    "Resolved",
-    "Feedback",
-    "Done",
-]);
 
 const selectedTask = ref(null);
 const globalIsEditting = ref(false);

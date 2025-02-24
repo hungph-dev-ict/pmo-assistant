@@ -15,6 +15,7 @@ import WorklogContainer from "../views/components/WorklogContainer.vue";
 import WorklogManagementContainer from "../views/components/WorklogManagementContainer.vue";
 import BulkInsertUsers from "../views/components/BulkInsertUsers.vue";
 import UploadFileCreateUsers from "../views/components/UploadFileCreateUsers.vue";
+import TaskDetail from "../views/components/TaskDetail.vue";
 
 const taskListElement = document.querySelector("#task-list");
 if (taskListElement) {
@@ -23,10 +24,19 @@ if (taskListElement) {
     if (taskContainerElement) {
         const projectId = taskContainerElement.getAttribute("project-id");
         const listAssignee = taskContainerElement.getAttribute("list-assignee");
-        const currentUserId = taskContainerElement.getAttribute("current-userid");
-        const currentUserAccount = taskContainerElement.getAttribute("current-user-account");
+        const currentUserId =
+            taskContainerElement.getAttribute("current-userid");
+        const currentUserAccount = taskContainerElement.getAttribute(
+            "current-user-account"
+        );
         const userRole = taskContainerElement.getAttribute("user-role");
-        createApp(TaskContainer, { projectId, listAssignee, currentUserId, currentUserAccount, userRole }).mount(taskListElement);
+        createApp(TaskContainer, {
+            projectId,
+            listAssignee,
+            currentUserId,
+            currentUserAccount,
+            userRole,
+        }).mount(taskListElement);
     } else {
         console.error(
             "❌ Không tìm thấy <task-container> bên trong #task-list!"
@@ -37,9 +47,9 @@ if (taskListElement) {
 const worklogListElement = document.querySelector("#worklog-list");
 if (worklogListElement) {
     const worklogContainerElement =
-    worklogListElement.querySelector("worklog-container");
+        worklogListElement.querySelector("worklog-container");
     if (worklogContainerElement) {
-        createApp(WorklogContainer, {  }).mount(worklogListElement);
+        createApp(WorklogContainer, {}).mount(worklogListElement);
     } else {
         console.error(
             "❌ Không tìm thấy <task-container> bên trong #task-list!"
@@ -47,12 +57,18 @@ if (worklogListElement) {
     }
 }
 
-const worklogManagementListElement = document.querySelector("#worklog-management-list");
+const worklogManagementListElement = document.querySelector(
+    "#worklog-management-list"
+);
 if (worklogManagementListElement) {
     const worklogManagementContainerElement =
-    worklogManagementListElement.querySelector("worklog-management-container");
+        worklogManagementListElement.querySelector(
+            "worklog-management-container"
+        );
     if (WorklogManagementContainer) {
-        createApp(WorklogManagementContainer, {  }).mount(worklogManagementContainerElement);
+        createApp(WorklogManagementContainer, {}).mount(
+            worklogManagementContainerElement
+        );
     } else {
         console.error(
             "❌ Không tìm thấy <task-container> bên trong #task-list!"
@@ -83,18 +99,44 @@ if (bulkInsertElement) {
     }
 }
 
-const upfileCreateUsersElement = document.querySelector("#upfile-create-users-element");
+const upfileCreateUsersElement = document.querySelector(
+    "#upfile-create-users-element"
+);
 if (upfileCreateUsersElement) {
     const submitUrl = upfileCreateUsersElement
         .querySelector("upfile-create-users")
         ?.getAttribute("submit-url");
 
     if (submitUrl) {
-        createApp(UploadFileCreateUsers, { submitUrl }).mount(upfileCreateUsersElement);
+        createApp(UploadFileCreateUsers, { submitUrl }).mount(
+            upfileCreateUsersElement
+        );
     } else {
         console.error(
             "❌ Không tìm thấy thuộc tính submit-url trên <upfile-create-users-element>!"
         );
+    }
+}
+
+const taskDetail = document.querySelector("#task-detail");
+if (taskDetail) {
+    const taskAttr = taskDetail
+        .querySelector("task-detail")
+        ?.getAttribute("task");
+    const listAssigneeAttr = taskDetail
+        .querySelector("task-detail")
+        ?.getAttribute("list-assignee");
+    const userRole = taskDetail
+        .querySelector("task-detail")
+        ?.getAttribute("user-role");
+
+    try {
+        const task = JSON.parse(taskAttr); // Chuyển đổi từ string thành object
+        const listAssignee = JSON.parse(listAssigneeAttr);
+
+        createApp(TaskDetail, { task, listAssignee, userRole }).mount(taskDetail);
+    } catch (error) {
+        console.error("❌ Lỗi khi parse JSON:", error);
     }
 }
 
