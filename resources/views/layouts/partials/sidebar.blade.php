@@ -94,7 +94,7 @@
                                     <ul class="nav nav-treeview">
                                         <li class="nav-item">
                                             <a href="{{ route('pm.task', $project->id) }}"
-                                                class="nav-link {{ $currentProjectId == $project->id || (request()->segment(2) == $project->id || request()->routeIs('pm.task')) ? 'active' : '' }}">
+                                                class="nav-link {{ (($currentProjectId == $project->id || request()->segment(2) == $project->id) && request()->routeIs('pm.task')) ? 'active' : '' }}">
                                                 <i class="fas fa-list-ul nav-icon"></i>
                                                 <p>{{ __('labels.task_lists') }}</p>
                                             </a>
