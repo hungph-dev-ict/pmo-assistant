@@ -98,7 +98,13 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
     // Route::get('tasks', [TaskController::class, 'index']);
 });
 
+Route::get('/{project_id}/task/{task_id}', function ($task_id, $project_id) {
+    return redirect()->route('redirect.task', ['task_id' => $task_id, 'project_id' => $project_id]);
+})->middleware('auth')->name('task.redirect');
 
+Route::get('/redirect/{project_id}/task/{task_id}', function ($task_id) {
+    return app(\App\Http\Middleware\RedirectTaskRoute::class)->handle(request(), function () {});
+})->middleware('auth')->name('redirect.task');
 
 Route::get('/db-check', function () {
     try {

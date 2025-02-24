@@ -70,7 +70,7 @@
 
                     <li class="nav-item {{ $isMenuOpen ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ $isMenuOpen ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-book"></i>
+                            <i class="nav-icon fas fa-project-diagram"></i>
                             <p>
                                 Tenant Projects
                                 <i class="fas fa-angle-left right"></i>
@@ -113,7 +113,7 @@
                     </li>
                 @endrole
 
-                @role('pm')
+                @if(Auth::user()->hasRole('pm') && !Auth::user()->hasRole('client'))
                     @php
                         // Lấy Task ID từ URL
                         $currentTaskId = request()->segment(1) == 'task' ? request()->segment(2) : null;
@@ -180,7 +180,7 @@
                 @endrole
 
 
-                @role('staff')
+                @if(Auth::user()->hasRole('staff') && !Auth::user()->hasRole('client'))
                     @foreach ($staff_projects as $project)
                         <li
                             class="nav-item {{ request()->segment(2) == $project->id && request()->routeIs('staff.*') ? 'menu-open' : '' }}">
