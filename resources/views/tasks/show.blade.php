@@ -4,6 +4,13 @@
     {{ $task->name }}
 @endsection
 
+@section('custom_meta')
+<meta property="og:title" content="Chi tiết công việc - {{ $task->name }}">
+<meta property="og:description" content="{{ Str::limit(strip_tags($task->description), 100) }}">
+<meta property="og:image" content="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}">
+<meta property="og:url" content="{{ url('/' . $task->project->id . '/task/' . $task->id) }}">
+@endsection
+
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{{ route('pm.task', $task->project->id) }}">{{ $task->project->name }}</a></li>
