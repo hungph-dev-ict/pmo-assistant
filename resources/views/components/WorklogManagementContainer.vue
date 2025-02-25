@@ -33,8 +33,8 @@ const worklogListIsLoading = ref(false); // Biến kiểm soát trạng thái lo
 
 const currentPath = computed(() => window.location.pathname);
 
-const isPMRoute = computed(() => currentPath.value.includes("/pm/"));
-const isTenantRoute = computed(() => currentPath.value.includes("/tenant/"));
+const isPMRoute = computed(() => currentPath.value.includes("pm/"));
+const isTenantRoute = computed(() => currentPath.value.includes("tenant/"));
 
 const fetchWorklogs = async () => {
     worklogListIsLoading.value = true; // Bắt đầu loading
