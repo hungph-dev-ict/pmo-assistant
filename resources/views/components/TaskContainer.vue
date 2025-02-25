@@ -18,7 +18,7 @@
             <task-list v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff" :projectId="projectId"
                 :filteredTasks="filteredTasks" :blankQuery="blankQuery" :visibleColumns="visibleColumns"
                 :listAssignee="parsedListAssignee"
-                :hasPermissionStaff="hasPermissionStaff" :currentUserId="numberCurrentUserId"
+                :hasPermissionClient="hasPermissionClient" :hasPermissionPm="hasPermissionPm" :hasPermissionStaff="hasPermissionStaff" :currentUserId="numberCurrentUserId"
                 :currentUserAccount="currentUserAccount" @update-task="handleTaskUpdate" />
         </div>
     </div>
