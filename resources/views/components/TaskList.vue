@@ -17,13 +17,13 @@
                 <thead>
                     <tr>
                         <th style="width: 2%">#</th>
-                        <th v-if="isColumnVisible('epic_task')" style="width: 28%">
+                        <th v-if="isColumnVisible('epic_task')" style="width: 24%">
                             Epic/Task
                         </th>
-                        <th v-if="isColumnVisible('priority')" style="width: 3%">
+                        <th v-if="isColumnVisible('priority')" style="width: 5%">
                             Priority
                         </th>
-                        <th v-if="isColumnVisible('assignee')" style="width: 3%">
+                        <th v-if="isColumnVisible('assignee')" style="width: 5%">
                             Assignee
                         </th>
                         <th v-if="isColumnVisible('plan_start_date')" style="width: 8%">
@@ -65,7 +65,7 @@
                                     └
                                 </span>
 
-                                <a v-if="!task.isEditing || (task.isEditing && hasPermissionStaff)"
+                                <a v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)"
                                     :href="props.hasPermissionStaff ? `/staff/${props.projectId}/task/${task.id}` : `/pm/${props.projectId}/task/${task.id}`"
                                     class="text-blue-500 hover:underline">
                                     {{ task.name }}
@@ -74,10 +74,9 @@
                                 <input v-else type="text" v-model="task.editedName" class="form-control" />
                             </td>
                             <td v-if="isColumnVisible('priority')">
-                                <span v-if="
-                                    !task.isEditing ||
-                                    (task.isEditing && hasPermissionStaff)
-                                " :class="priorityClass(task.priority)">{{ task.priority }}</span>
+                                <span
+                                    v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)"
+                                    :class="priorityClass(task.priority)">{{ task.priority }}</span>
                                 <select v-else class="form-control priority-select" v-model="task.editedPriority">
                                     <option :key="0" :value="'Pending'">
                                         Pending
@@ -91,10 +90,8 @@
                                 </select>
                             </td>
                             <td v-if="isColumnVisible('assignee')">
-                                <span v-if="
-                                    !task.isEditing ||
-                                    (task.isEditing && hasPermissionStaff)
-                                ">
+                                <span
+                                    v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)">
                                     <strong v-if="
                                         task.assignee?.account ==
                                         currentUserAccount
@@ -114,17 +111,16 @@
                             </td>
 
                             <td v-if="isColumnVisible('plan_start_date')">
-                                <span v-if="
-                                    !task.isEditing ||
-                                    (task.isEditing && hasPermissionStaff)
-                                "><span :style="{
-                                    color: isDelayedStart(
-                                        task.plan_start_date,
-                                        task.status
-                                    )
-                                        ? 'red'
-                                        : 'inherit',
-                                }">
+                                <span
+                                    v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)"><span
+                                        :style="{
+                                            color: isDelayedStart(
+                                                task.plan_start_date,
+                                                task.status
+                                            )
+                                                ? 'red'
+                                                : 'inherit',
+                                        }">
                                         {{ task.plan_start_date }}
                                         <span v-if="
                                             isDelayedStart(
@@ -146,10 +142,8 @@
                             </td>
 
                             <td v-if="isColumnVisible('plan_end_date')">
-                                <span v-if="
-                                    !task.isEditing ||
-                                    (task.isEditing && hasPermissionStaff)
-                                ">
+                                <span
+                                    v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)">
                                     <span :style="{
                                         color: isOverdue(
                                             task.plan_end_date,
@@ -180,10 +174,9 @@
                             </td>
 
                             <td v-if="isColumnVisible('actual_start_date')">
-                                <span v-if="
-                                    !task.isEditing ||
-                                    (task.isEditing && hasPermissionStaff)
-                                ">{{ task.actual_start_date }}</span>
+                                <span
+                                    v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)">{{
+                                    task.actual_start_date }}</span>
                                 <div v-else class="input-group date actual-start-datepicker"
                                     data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
@@ -198,10 +191,9 @@
                             </td>
 
                             <td v-if="isColumnVisible('actual_end_date')">
-                                <span v-if="
-                                    !task.isEditing ||
-                                    (task.isEditing && hasPermissionStaff)
-                                ">{{ task.actual_end_date }}</span>
+                                <span
+                                    v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)">{{
+                                    task.actual_end_date }}</span>
                                 <div v-else class="input-group date actual-end-datepicker" data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
                                         v-model="task.editedActualEndDate" data-target=".actual-end-datepicker" />
@@ -215,8 +207,8 @@
                             </td>
 
                             <td v-if="isColumnVisible('plan-effort')">
-                                <span v-if="!task.isEditing ||
-                                    (task.isEditing && hasPermissionStaff)">{{
+                                <span
+                                    v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)">{{
                                         task.estimate_effort
                                     }}</span>
                                 <input v-else type="number" v-model="task.editedPlanEffort"
@@ -366,6 +358,8 @@ const props = defineProps({
     blankQuery: Boolean,
     visibleColumns: Array,
     listAssignee: Array,
+    hasPermissionClient: Boolean,
+    hasPermissionPm: Boolean,
     hasPermissionStaff: Boolean,
     currentUserId: Number,
     currentUserAccount: String,
