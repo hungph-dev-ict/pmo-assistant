@@ -1,7 +1,8 @@
 <template>
     <div class="card card-success">
         <div class="card-header">
-            <h3 class="card-title">Tenant Worklog Calendar</h3>
+            <h3 class="card-title" v-if="isTenantRoute">Tenant Worklog Calendar</h3>
+            <h3 class="card-title" v-if="isPMRoute">Project Worklog Calendar</h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                     <i class="fas fa-minus"></i>
@@ -125,6 +126,9 @@ import Swal from "sweetalert2";
 const props = defineProps({
     worklogs: Array,
 });
+
+const isPMRoute = computed(() => currentPath.value.includes("/pm/"));
+const isTenantRoute = computed(() => currentPath.value.includes("/tenant/"));
 
 // Ngày mặc định là 30 ngày trước
 const fromDate = ref(new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split("T")[0]);
