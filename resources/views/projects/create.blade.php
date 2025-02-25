@@ -52,7 +52,8 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="projectName">{{ __('labels.project_name') }}<span style="color: red;">*</span></label>
+                            <label for="projectName">{{ __('labels.project_name') }}<span
+                                    style="color: red;">*</span></label>
                             <input type="text" id="projectName" name="project_name"
                                 class="form-control @error('project_name') is-invalid @enderror"
                                 value="{{ old('project_name') }}">
@@ -73,7 +74,8 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="projectStatus">{{ __('labels.project_status') }}<span style="color: red;">*</span></label>
+                            <label for="projectStatus">{{ __('labels.project_status') }}<span
+                                    style="color: red;">*</span></label>
                             <select id="projectStatus" name="project_status"
                                 class="form-control custom-select @error('project_status') is-invalid @enderror">
                                 <option selected disabled>{{ __('labels.project_select_status') }}</option>
@@ -102,7 +104,8 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="projectProjectManager">{{ __('labels.project_manager') }}<span style="color: red;">*</span></label>
+                            <label for="projectProjectManager">{{ __('labels.project_manager') }}<span
+                                    style="color: red;">*</span></label>
                             <select id="projectProjectManager" name="project_project_manager"
                                 class="form-control select2 @error('project_project_manager') is-invalid @enderror"
                                 style="width: 100%;">
@@ -212,9 +215,8 @@
 
         <div class="row">
             <div class="col-12">
-                <a href="#" class="btn btn-secondary">{{ __('labels.cancel') }}</a>
-                <input type="submit" value="{{ __('labels.project_create_new_project') }}"
-                    class="btn btn-success float-right">
+                <input type="submit" value="{{ __('labels.project_create_new_project') }}" class="btn btn-success">
+                <a href="#" class="btn btn-secondary float-right">{{ __('labels.cancel') }}</a>
             </div>
         </div>
         </div>

@@ -1,7 +1,8 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">List Tenant Worklog</h3>
+            <h3 class="card-title" v-if="isTenantRoute">List Tenant Worklog</h3>
+            <h3 class="card-title" v-if="isPMRoute">List Project Worklog</h3>
         </div>
 
         <div class="card-body">
@@ -201,11 +202,12 @@ const props = defineProps({
 // Tạo danh sách task dưới dạng ref để có thể cập nhật giá trị
 const worklogs = ref([]);
 
-const selectedTask = ref(null);
 const globalIsEditting = ref(false);
-const logDate = ref("");
-const logTime = ref("");
-const logDescription = ref("");
+
+const currentPath = computed(() => window.location.pathname);
+
+const isPMRoute = computed(() => currentPath.value.includes("/pm/"));
+const isTenantRoute = computed(() => currentPath.value.includes("/tenant/"));
 
 onMounted(() => {
     worklogs.value = props.filteredWorklogs.map((worklog) => ({

@@ -4,21 +4,24 @@
             <!-- Box Comment -->
             <div class="card card-widget">
                 <div class="card-header">
-                    <h3 v-if="!isEditingInfo || !hasPermissionPm" class="card-title"> <span v-if="props.task.type == 1"> {{
-                        props.task.parent.name }} </span> / {{
-                                props.task.name }}</h3>
+                    <h3 v-if="!isEditingInfo || !hasPermissionPm" class="card-title">
+                        <span v-if="props.task.type == 1"> {{
+                            props.task.parent.name }} / </span>{{
+                                props.task.name }}
+                    </h3>
                     <template v-else>
                         <label>Title</label>
                         <input type="text" v-model="editTask.name" class="form-control" />
                     </template>
                     <span v-if="!isEditingInfo || !hasPermissionPm" :class="statusClass(props.task.status)">{{
                         props.task.task_status.value1
-                    }}</span>
+                        }}</span>
                     <!-- /.user-block -->
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <p v-if="!isEditingInfo || !hasPermissionPm" class="text-muted description"> {{ props.task.description }}</p>
+                    <p v-if="!isEditingInfo || !hasPermissionPm" class="text-muted description"> {{
+                        props.task.description }}</p>
                     <template v-else>
                         <label>Description</label>
                         <textarea v-model="editTask.description" rows="10" class="form-control"></textarea>
@@ -65,7 +68,8 @@
                             <button @click="edit(editTask)" class="btn btn-info btn-sm mr-2">
                                 Edit
                             </button>
-                            <button v-if="hasPermissionPm" @click="deleteTask(editTask) " class="btn btn-danger btn-sm mr-2">
+                            <button v-if="hasPermissionPm" @click="deleteTask(editTask)"
+                                class="btn btn-danger btn-sm mr-2">
                                 Delete
                             </button>
                         </template>
@@ -103,7 +107,8 @@
 
                         <li class="nav-item">
                             <span class="nav-link">
-                                Priority <strong v-if="!isEditingInfo || !hasPermissionPm" :class="priorityClass(props.task.priority)">
+                                Priority <strong v-if="!isEditingInfo || !hasPermissionPm"
+                                    :class="priorityClass(props.task.priority)">
                                     {{
                                         props.task.task_priority.value1
                                     }}</strong>
@@ -124,7 +129,7 @@
                             <span class="nav-link">
                                 Assignee <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
                                     props.task.assignee_user?.account
-                                }} - {{ props.task.assignee_user?.name }}</strong>
+                                    }} - {{ props.task.assignee_user?.name }}</strong>
                                 <select v-else class="form-control" id="selectAssignee" v-model="editTask.assignee">
                                     <option v-for="user in listAssignee" :value="user.id">
                                         {{ user.account }}
@@ -137,7 +142,7 @@
                                 Plan Start Date
                                 <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
                                     props.task.plan_start_date ?? "-"
-                                }}</strong>
+                                    }}</strong>
 
                                 <div v-else class="input-group date" id="dpPlanStartDate" data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
@@ -157,7 +162,7 @@
                                 Plan End Date
                                 <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
                                     props.task.plan_end_date ?? "-"
-                                }}</strong>
+                                    }}</strong>
 
                                 <div v-else class="input-group date" id="dpPlanEndDate" data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
@@ -177,7 +182,7 @@
                                 Actual Start Date
                                 <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
                                     props.task.actual_start_date ?? "-"
-                                }}</strong>
+                                    }}</strong>
 
                                 <div v-else class="input-group date" id="dpActualStartDate" data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
@@ -197,7 +202,7 @@
                                 Actual End Date
                                 <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
                                     props.task.actual_end_date ?? "-"
-                                }}</strong>
+                                    }}</strong>
 
                                 <div v-else class="input-group date" id="dpActualEndDate" data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
@@ -216,7 +221,7 @@
                             <span class="nav-link">
                                 Plan Effort <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
                                     props.task.estimate_effort
-                                }}</strong>
+                                    }}</strong>
                                 <input v-else type="text" v-model="editTask.estimate_effort" class="form-control" />
                             </span>
                         </li>
@@ -224,7 +229,7 @@
                             <span class="nav-link">
                                 Actual Effort <strong class="float-right">{{
                                     props.task.actual_effort
-                                    }}</strong>
+                                }}</strong>
                             </span>
                         </li>
 
