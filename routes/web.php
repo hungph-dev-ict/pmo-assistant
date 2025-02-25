@@ -66,12 +66,14 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::put('/api/pm/{project_id}/tasks/{task_id}/update', [PmController::class, 'updateTask']);
     Route::delete('/api/pm/{project_id}/tasks/{task_id}/destroy', [PmController::class, 'softDeleteTask']);
     Route::get('/api/tenant-worklog', [WorklogController::class, 'getTenantWorklogs']);
+    Route::get('/api/project/{project_id}/worklog', [WorklogController::class, 'getProjectWorklogs']);
 
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');
-        Route::get('/task/{task_id}', [TaskController::class, 'show'])->name('pm.task.show');
+        Route::get('/task/{task_id}', [TaskController::class, 'show'])->middleware('redirect.task')->name('pm.task.show');
         Route::get('/member', [PmController::class, 'listMembers'])->name('pm.member');
         Route::post('/member/update', [PmController::class, 'updateMembers'])->name('pm.member.update');
+        Route::get('/worklogs/management', [WorklogController::class, 'viewProjectWorklogs'])->name('pm.worklogs.management');
         Route::get('/chart', [PmController::class, 'viewChart'])->name('pm.chart');
     });
 });
@@ -85,7 +87,7 @@ Route::group(['middleware' => ['auth', 'role:pm|staff']], function () {
 
     Route::prefix('staff/{project_id}')->group(function () {
         Route::get('/task', [StaffController::class, 'listTasks'])->name('staff.task');
-        Route::get('/task/{task_id}', [TaskController::class, 'show'])->name('staff.task.show');
+        Route::get('/task/{task_id}', [TaskController::class, 'show'])->middleware('redirect.task')->name('staff.task.show');
         Route::get('/task/{task_id}/edit', [StaffController::class, 'listTasks'])->name('task.edit');
         Route::get('/task/{task_id}/destroy', [StaffController::class, 'listTasks'])->name('task.destroy');
         Route::get('/task', [StaffController::class, 'listTasks'])->name('staff.task');
@@ -93,18 +95,6 @@ Route::group(['middleware' => ['auth', 'role:pm|staff']], function () {
         Route::get('/chart', [StaffController::class, 'viewChart'])->name('staff.chart');
     });
 });
-
-Route::group(['middleware' => ['auth', 'role:user']], function () {
-    // Route::get('tasks', [TaskController::class, 'index']);
-});
-
-Route::get('/{project_id}/task/{task_id}', function ($task_id, $project_id) {
-    return redirect()->route('redirect.task', ['task_id' => $task_id, 'project_id' => $project_id]);
-})->middleware('auth')->name('task.redirect');
-
-Route::get('/redirect/{project_id}/task/{task_id}', function ($task_id) {
-    return app(\App\Http\Middleware\RedirectTaskRoute::class)->handle(request(), function () {});
-})->middleware('auth')->name('redirect.task');
 
 Route::get('/db-check', function () {
     try {

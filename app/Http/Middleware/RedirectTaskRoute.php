@@ -10,22 +10,25 @@ class RedirectTaskRoute
 {
     public function handle(Request $request, Closure $next)
     {
-        // Nếu chưa đăng nhập, chuyển hướng đến trang login
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
         $user = Auth::user();
-        $taskId = $request->route('task_id'); // Lấy ID task từ URL
-        $projectId = $request->route('project_id'); // Lấy ID project từ URL
+        $taskId = $request->route('task_id');
+        $projectId = $request->route('project_id');
 
-        // Kiểm tra vai trò của user và điều hướng tương ứng
-        if ($user->hasRole('client|pm')) {
+        // Lấy URL hiện tại để kiểm tra nếu user đang ở nhầm route
+        $currentPath = $request->path();
+
+        if ($user->hasRole('pm') && str_contains($currentPath, 'staff/')) {
             return redirect()->route('pm.task.show', ['project_id' => $projectId, 'task_id' => $taskId]);
-        } elseif ($user->hasRole('staff')) {
+        }
+
+        if ($user->hasRole('staff') && str_contains($currentPath, 'pm/')) {
             return redirect()->route('staff.task.show', ['project_id' => $projectId, 'task_id' => $taskId]);
         }
 
-        return abort(403, 'Bạn không có quyền truy cập.');
+        return $next($request);
     }
 }
