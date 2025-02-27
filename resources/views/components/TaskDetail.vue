@@ -4,41 +4,79 @@
             <!-- Box Comment -->
             <div class="card card-widget">
                 <div class="card-header">
-                    <h3 v-if="!isEditingInfo || !hasPermissionPm" class="card-title"> <span v-if="props.task.type == 1"> {{
-                        props.task.parent.name }} </span> / {{
-                                props.task.name }}</h3>
+                    <h3
+                        v-if="!isEditingInfo || !hasPermissionPm"
+                        class="card-title"
+                        style="
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 5px;
+                        "
+                    >
+                        <PriorityIcon
+                            :priority="priorityMap[props.task.priority]"
+                        />
+                        <span v-if="props.task.type == 1">
+                            {{ props.task.parent.name }} /
+                        </span>
+                        {{ props.task.name }}
+                    </h3>
                     <template v-else>
                         <label>Title</label>
-                        <input type="text" v-model="editTask.name" class="form-control" />
+                        <input
+                            type="text"
+                            v-model="editTask.name"
+                            class="form-control"
+                        />
                     </template>
-                    <span v-if="!isEditingInfo || !hasPermissionPm" :class="statusClass(props.task.status)">{{
-                        props.task.task_status.value1
-                    }}</span>
+
+                    <span
+                        v-if="!isEditingInfo || !hasPermissionPm"
+                        :class="statusClass(props.task.status)"
+                        >{{ props.task.task_status.value1 }}</span
+                    >
                     <!-- /.user-block -->
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <p v-if="!isEditingInfo || !hasPermissionPm" class="text-muted description"> {{ props.task.description }}</p>
+                    <p
+                        v-if="!isEditingInfo || !hasPermissionPm"
+                        class="text-muted description"
+                    >
+                        {{ props.task.description }}
+                    </p>
                     <template v-else>
                         <label>Description</label>
-                        <textarea v-model="editTask.description" rows="10" class="form-control"></textarea>
+                        <textarea
+                            v-model="editTask.description"
+                            rows="10"
+                            class="form-control"
+                        ></textarea>
                     </template>
 
-                    <br>
+                    <br />
                     <div class="text-muted">
-                        <p class="text-sm">Components
-                            <b class="d-block">{{ $props.task.components ?? '-' }}</b>
+                        <p class="text-sm">
+                            Components
+                            <b class="d-block">{{
+                                $props.task.components ?? "-"
+                            }}</b>
                         </p>
                     </div>
 
-                    <br>
+                    <br />
                     <div class="text-muted">
-                        <p v-if="!isEditingInfo" class="text-sm description">Memo
-                            <b class="d-block">{{ $props.task.memo ?? '-' }}</b>
+                        <p v-if="!isEditingInfo" class="text-sm description">
+                            Memo
+                            <b class="d-block">{{ $props.task.memo ?? "-" }}</b>
                         </p>
                         <template v-else>
                             <label>Memo</label>
-                            <textarea rows="3" class="form-control" v-model="editTask.memo"></textarea>
+                            <textarea
+                                rows="3"
+                                class="form-control"
+                                v-model="editTask.memo"
+                            ></textarea>
                         </template>
                     </div>
                 </div>
@@ -56,24 +94,43 @@
                         <!-- <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image">
                         <img src="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}" alt="PMO Assistant Logo"
             class="brand-image img-circle elevation-3"> -->
-                        <span class="username">{{ props.task.creator.name + ' (' + props.task.creator.account + ')'
-                            }}</span>
-                        <span class="description">{{ props.task.created_at }}</span>
+                        <span class="username">{{
+                            props.task.creator.name +
+                            " (" +
+                            props.task.creator.account +
+                            ")"
+                        }}</span>
+                        <span class="description">{{
+                            props.task.created_at
+                        }}</span>
                     </div>
                     <div class="card-tools">
                         <template v-if="!isEditingInfo">
-                            <button @click="edit(editTask)" class="btn btn-info btn-sm mr-2">
+                            <button
+                                @click="edit(editTask)"
+                                class="btn btn-info btn-sm mr-2"
+                            >
                                 Edit
                             </button>
-                            <button v-if="hasPermissionPm" @click="deleteTask(editTask) " class="btn btn-danger btn-sm mr-2">
+                            <button
+                                v-if="hasPermissionPm"
+                                @click="deleteTask(editTask)"
+                                class="btn btn-danger btn-sm mr-2"
+                            >
                                 Delete
                             </button>
                         </template>
                         <template v-else>
-                            <button @click="update(editTask)" class="btn btn-success btn-sm mr-2">
+                            <button
+                                @click="update(editTask)"
+                                class="btn btn-success btn-sm mr-2"
+                            >
                                 Update
                             </button>
-                            <button @click="cancel" class="btn btn-secondary btn-sm mr-2">
+                            <button
+                                @click="cancel"
+                                class="btn btn-secondary btn-sm mr-2"
+                            >
                                 Cancel
                             </button>
                         </template>
@@ -84,49 +141,63 @@
                         <li v-if="isEditingInfo" class="nav-item">
                             <span class="nav-link">
                                 Status
-                                <select class="form-control" v-model="editTask.status" id="selectStatus">
-                                    <option :value="0">
-                                        Open
-                                    </option>
+                                <select
+                                    class="form-control"
+                                    v-model="editTask.status"
+                                    id="selectStatus"
+                                >
+                                    <option :value="0">Open</option>
                                     <option :value="1">In Progress</option>
                                     <option :value="2">Resolved</option>
                                     <option :value="3">Feedback</option>
-                                    <option :value="4">
-                                        Done
-                                    </option>
-                                    <option :value="5">
-                                        Reopen
-                                    </option>
+                                    <option :value="4">Done</option>
+                                    <option :value="5">Reopen</option>
+                                </select>
+                            </span>
+                        </li>
+
+                        <li class="nav-item">
+                            <span class="nav-link flex items-center gap-2">
+                                Priority
+                                <select
+                                    v-if="isEditingInfo && hasPermissionPm"
+                                    class="form-control"
+                                    v-model="editTask.priority"
+                                    id="selectPriority"
+                                >
+                                    <option :value="9">🚧 Blocker</option>
+                                    <option :value="8">🔥 Critical</option>
+                                    <option :value="7">🔴 Highest</option>
+                                    <option :value="6">🟠 Higher</option>
+                                    <option :value="5">🟡 High</option>
+                                    <option :value="4">🟢 Minor</option>
+                                    <option :value="3">🔵 Low</option>
+                                    <option :value="2">⚪ Lower</option>
+                                    <option :value="1">⚫ Lowest</option>
+                                    <option :value="0">🟣 Trivial</option>
                                 </select>
                             </span>
                         </li>
 
                         <li class="nav-item">
                             <span class="nav-link">
-                                Priority <strong v-if="!isEditingInfo || !hasPermissionPm" :class="priorityClass(props.task.priority)">
-                                    {{
-                                        props.task.task_priority.value1
-                                    }}</strong>
-                                <select v-else class="form-control" v-model="editTask.priority" id="selectPriority">
-                                    <option :value="0">
-                                        Pending
-                                    </option>
-                                    <option :value="1">Low</option>
-                                    <option :value="2">Medium</option>
-                                    <option :value="3">High</option>
-                                    <option :value="4">
-                                        Critical
-                                    </option>
-                                </select>
-                            </span>
-                        </li>
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                Assignee <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
-                                    props.task.assignee_user?.account
-                                }} - {{ props.task.assignee_user?.name }}</strong>
-                                <select v-else class="form-control" id="selectAssignee" v-model="editTask.assignee">
-                                    <option v-for="user in listAssignee" :value="user.id">
+                                Assignee
+                                <strong
+                                    v-if="!isEditingInfo || !hasPermissionPm"
+                                    class="float-right"
+                                    >{{ props.task.assignee_user?.account }} -
+                                    {{ props.task.assignee_user?.name }}</strong
+                                >
+                                <select
+                                    v-else
+                                    class="form-control"
+                                    id="selectAssignee"
+                                    v-model="editTask.assignee"
+                                >
+                                    <option
+                                        v-for="user in listAssignee"
+                                        :value="user.id"
+                                    >
                                         {{ user.account }}
                                     </option>
                                 </select>
@@ -135,15 +206,31 @@
                         <li class="nav-item">
                             <span class="nav-link">
                                 Plan Start Date
-                                <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
-                                    props.task.plan_start_date ?? "-"
-                                }}</strong>
+                                <strong
+                                    v-if="!isEditingInfo || !hasPermissionPm"
+                                    class="float-right"
+                                    >{{
+                                        props.task.plan_start_date ?? "-"
+                                    }}</strong
+                                >
 
-                                <div v-else class="input-group date" id="dpPlanStartDate" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="editTask.plan_start_date" data-target="#dpPlanStartDate" />
-                                    <div class="input-group-append" data-target="#dpPlanStartDate"
-                                        data-toggle="datetimepicker">
+                                <div
+                                    v-else
+                                    class="input-group date"
+                                    id="dpPlanStartDate"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="editTask.plan_start_date"
+                                        data-target="#dpPlanStartDate"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target="#dpPlanStartDate"
+                                        data-toggle="datetimepicker"
+                                    >
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -155,15 +242,31 @@
                         <li class="nav-item">
                             <span class="nav-link">
                                 Plan End Date
-                                <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
-                                    props.task.plan_end_date ?? "-"
-                                }}</strong>
+                                <strong
+                                    v-if="!isEditingInfo || !hasPermissionPm"
+                                    class="float-right"
+                                    >{{
+                                        props.task.plan_end_date ?? "-"
+                                    }}</strong
+                                >
 
-                                <div v-else class="input-group date" id="dpPlanEndDate" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="editTask.plan_end_date" data-target="#dpPlanEndDate" />
-                                    <div class="input-group-append" data-target="#dpPlanEndDate"
-                                        data-toggle="datetimepicker">
+                                <div
+                                    v-else
+                                    class="input-group date"
+                                    id="dpPlanEndDate"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="editTask.plan_end_date"
+                                        data-target="#dpPlanEndDate"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target="#dpPlanEndDate"
+                                        data-toggle="datetimepicker"
+                                    >
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -175,15 +278,31 @@
                         <li class="nav-item">
                             <span class="nav-link">
                                 Actual Start Date
-                                <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
-                                    props.task.actual_start_date ?? "-"
-                                }}</strong>
+                                <strong
+                                    v-if="!isEditingInfo || !hasPermissionPm"
+                                    class="float-right"
+                                    >{{
+                                        props.task.actual_start_date ?? "-"
+                                    }}</strong
+                                >
 
-                                <div v-else class="input-group date" id="dpActualStartDate" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="editTask.actual_start_date" data-target="#dpActualStartDate" />
-                                    <div class="input-group-append" data-target="#dpActualStartDate"
-                                        data-toggle="datetimepicker">
+                                <div
+                                    v-else
+                                    class="input-group date"
+                                    id="dpActualStartDate"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="editTask.actual_start_date"
+                                        data-target="#dpActualStartDate"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target="#dpActualStartDate"
+                                        data-toggle="datetimepicker"
+                                    >
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -195,15 +314,31 @@
                         <li class="nav-item">
                             <span class="nav-link">
                                 Actual End Date
-                                <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
-                                    props.task.actual_end_date ?? "-"
-                                }}</strong>
+                                <strong
+                                    v-if="!isEditingInfo || !hasPermissionPm"
+                                    class="float-right"
+                                    >{{
+                                        props.task.actual_end_date ?? "-"
+                                    }}</strong
+                                >
 
-                                <div v-else class="input-group date" id="dpActualEndDate" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input"
-                                        v-model="editTask.actual_end_date" data-target="#dpActualEndDate" />
-                                    <div class="input-group-append" data-target="#dpActualEndDate"
-                                        data-toggle="datetimepicker">
+                                <div
+                                    v-else
+                                    class="input-group date"
+                                    id="dpActualEndDate"
+                                    data-target-input="nearest"
+                                >
+                                    <input
+                                        type="text"
+                                        class="form-control datetimepicker-input"
+                                        v-model="editTask.actual_end_date"
+                                        data-target="#dpActualEndDate"
+                                    />
+                                    <div
+                                        class="input-group-append"
+                                        data-target="#dpActualEndDate"
+                                        data-toggle="datetimepicker"
+                                    >
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -214,20 +349,28 @@
 
                         <li class="nav-item">
                             <span class="nav-link">
-                                Plan Effort <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
-                                    props.task.estimate_effort
-                                }}</strong>
-                                <input v-else type="text" v-model="editTask.estimate_effort" class="form-control" />
+                                Plan Effort
+                                <strong
+                                    v-if="!isEditingInfo || !hasPermissionPm"
+                                    class="float-right"
+                                    >{{ props.task.estimate_effort }}</strong
+                                >
+                                <input
+                                    v-else
+                                    type="text"
+                                    v-model="editTask.estimate_effort"
+                                    class="form-control"
+                                />
                             </span>
                         </li>
                         <li class="nav-item">
                             <span class="nav-link">
-                                Actual Effort <strong class="float-right">{{
+                                Actual Effort
+                                <strong class="float-right">{{
                                     props.task.actual_effort
-                                    }}</strong>
+                                }}</strong>
                             </span>
                         </li>
-
                     </ul>
                 </div>
             </div>
@@ -242,6 +385,20 @@
 import { ref, onMounted, nextTick, computed } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import PriorityIcon from "./PriorityIcon.vue";
+
+const priorityMap = {
+    0: "Trivial",
+    1: "Lowest",
+    2: "Lower",
+    3: "Low",
+    4: "Minor",
+    5: "High",
+    6: "Higher",
+    7: "Highest",
+    8: "Critical",
+    9: "Blocker",
+};
 
 const props = defineProps({
     task: Object,
@@ -272,7 +429,7 @@ const userRoles = computed(() => {
 });
 
 const hasPermissionPm = computed(() => {
-    return userRoles.value.includes("pm");
+    return userRoles.value.includes("client") || userRoles.value.includes("pm");
 });
 
 const editTask = ref(null);
@@ -322,8 +479,8 @@ const initPlugins = (editTask) => {
             let newDate = e.date
                 ? e.date.format("YYYY-MM-DD")
                 : e.target.value
-                    ? e.target.value
-                    : "";
+                ? e.target.value
+                : "";
             editTask.plan_start_date = newDate;
         });
 
@@ -331,8 +488,8 @@ const initPlugins = (editTask) => {
             let newDate = e.date
                 ? e.date.format("YYYY-MM-DD")
                 : e.target.value
-                    ? e.target.value
-                    : "";
+                ? e.target.value
+                : "";
             editTask.plan_end_date = newDate;
         });
 
@@ -340,8 +497,8 @@ const initPlugins = (editTask) => {
             let newDate = e.date
                 ? e.date.format("YYYY-MM-DD")
                 : e.target.value
-                    ? e.target.value
-                    : "";
+                ? e.target.value
+                : "";
             editTask.actual_start_date = newDate;
         });
 
@@ -349,8 +506,8 @@ const initPlugins = (editTask) => {
             let newDate = e.date
                 ? e.date.format("YYYY-MM-DD")
                 : e.target.value
-                    ? e.target.value
-                    : "";
+                ? e.target.value
+                : "";
             editTask.actual_end_date = newDate;
         });
     });
@@ -421,24 +578,6 @@ const statusClass = (status) => {
             return "float-right badge bg-primary"; // Màu đen hoặc tím đậm
         case 5:
             return "float-right badge bg-secondary"; // Màu đen hoặc tím đậm
-        default:
-            return "float-right badge bg-light"; // Màu nhạt cho trạng thái không xác định
-    }
-};
-
-const priorityClass = (priority) => {
-    const value = Number(priority);
-    switch (value) {
-        case 0:
-            return "float-right badge bg-secondary"; // Màu xám - Đang tạm dừng
-        case 1:
-            return "float-right badge bg-primary"; // Màu xanh dương - Thấp
-        case 2:
-            return "float-right badge bg-warning"; // Màu vàng - Trung bình
-        case 3:
-            return "float-right badge bg-danger"; // Màu đỏ - Cao
-        case 4:
-            return "float-right badge bg-dark"; // Màu đen - Cực kỳ quan trọng
         default:
             return "float-right badge bg-light"; // Màu nhạt cho trạng thái không xác định
     }

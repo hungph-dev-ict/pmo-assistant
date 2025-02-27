@@ -28,7 +28,7 @@ class StoreTaskRequest extends FormRequest
             'description' => 'nullable|string',
             'memo' => 'nullable|string|max:512',
             'assignee' => 'nullable|integer|exists:users,id',
-            'priority' => 'required|integer|min:0|max:4',
+            'priority' => 'required|integer|min:0|max:9',
             'estimate_effort' => 'nullable|numeric|min:0',
             'actual_effort' => 'nullable|numeric|min:0',
             'plan_start_date' => 'nullable|date',

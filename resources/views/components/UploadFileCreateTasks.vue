@@ -78,7 +78,8 @@
                             </a>
                         </div>
                         <p style="margin-top: 10px">
-                            Please make sure to convert your Excel file to CSV before importing.
+                            Please make sure to convert your Excel file to CSV
+                            before importing.
                         </p>
                     </div>
                 </div>
@@ -153,7 +154,18 @@ const statusMap = {
     Done: 4,
     Reopen: 5,
 };
-const priorityMap = { "Pending": 0, Low: 1, Medium: 2, High: 3, Critical: 4 };
+const priorityMap = {
+    Trivial: 0,
+    Lowest: 1,
+    Lower: 2,
+    Low: 3,
+    Minor: 4,
+    High: 5,
+    Higher: 6,
+    Highest: 7,
+    Critical: 8,
+    Blocker: 9,
+};
 
 const handleFileChange = (event) => {
     const file = event.target.files[0];
