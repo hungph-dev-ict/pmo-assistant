@@ -8,11 +8,10 @@
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th style="width: 2%">#</th>
                         <th v-if="isColumnVisible('project-name')" style="width: 12%">
                             Project
                         </th>
-                        <th v-if="isColumnVisible('epic_task')" style="width: 35%">
+                        <th v-if="isColumnVisible('epic_task')" style="width: 37%">
                             Epic/Task
                         </th>
                         <th v-if="isColumnVisible('plan-effort')" style="width: 5%">
@@ -38,12 +37,14 @@
                 <tbody>
                     <template v-for="worklog in visibleWorklogs" :key="worklog.id">
                         <tr class="bg-light">
-                            <td>{{ worklog.id }}</td>
                             <td v-if="isColumnVisible('project-name')">
                                 {{ worklog.task.project.name }}
                             </td>
                             <td v-if="isColumnVisible('epic_task')">
-                                {{ worklog.task.name }}
+                                <a :href="`/${worklog.task.project.id}/task/${worklog.task.id}`"
+                                    class="text-blue-500 hover:underline">
+                                    {{ worklog.task.name }}
+                                </a>
                             </td>
                             <td v-if="isColumnVisible('plan-effort')">
                                 {{ worklog.task.estimate_effort }}

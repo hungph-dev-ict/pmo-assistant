@@ -18,14 +18,9 @@ class RedirectTaskRoute
         $taskId = $request->route('task_id');
         $projectId = $request->route('project_id');
 
-        // Lấy URL hiện tại để kiểm tra nếu user đang ở nhầm route
-        $currentPath = $request->path();
-
-        if ($user->hasRole('pm') && str_contains($currentPath, 'staff/')) {
+        if ($user->hasRole('client') || $user->hasRole('pm')) {
             return redirect()->route('pm.task.show', ['project_id' => $projectId, 'task_id' => $taskId]);
-        }
-
-        if ($user->hasRole('staff') && str_contains($currentPath, 'pm/')) {
+        } else if ($user->hasRole('staff')) {
             return redirect()->route('staff.task.show', ['project_id' => $projectId, 'task_id' => $taskId]);
         }
 

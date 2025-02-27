@@ -1,8 +1,30 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    @php
+        function getRoleIcon($role)
+        {
+            $icons = [
+                'Head Account' => 'fas fa-user-tie', // 👔 Người đứng đầu tài khoản
+                'Project Manager' => 'fas fa-briefcase', // 💼 Quản lý dự án
+                'Bridge System Engineer' => 'fas fa-network-wired', // 🌉 Kỹ sư cầu nối hệ thống
+                'Developer' => 'fab fa-stack-overflow', // 👨‍💻 Nhà phát triển phần mềm
+                'Tester' => 'fas fa-user-md', // 🧪 Tester (kiểm thử phần mềm)
+                'Comtor' => 'fas fa-language', // 🌎 Biên dịch viên (Comtor)
+                'Other' => 'fas fa-user', // 👤 Mặc định cho các role khác
+                'PMO Head' => 'fas fa-tasks', // 📋 Người đứng đầu PMO (quản lý dự án)
+                'Auditor' => 'fas fa-search', // 🔍 Kiểm toán viên
+                'Technical Leader' => 'fas fa-microchip', // 🖥️ Technical Leader
+                'Team Leader' => 'fas fa-users-cog', // 👥 Trưởng nhóm
+            ];
+
+            return $icons[$role] ?? 'fas fa-user'; // Mặc định nếu không có trong danh sách
+        }
+    @endphp
+
     <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}" alt="PMO Assistant Logo"
             class="brand-image img-circle elevation-3">
-        <span class="brand-text font-weight-light">PMO Assistant</span>
+        <span
+            class="brand-text font-weight-light">{{ auth()->user()->tenant ? auth()->user()->tenant->name : 'PMO Assistant' }}</span>
     </a>
 
     <div class="sidebar">
@@ -15,6 +37,25 @@
             </div>
             <div class="info">
                 <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+            </div>
+        </div>
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="info">
+                <span class="d-block" style="color: #c2c7d0">
+                    <strong>Main Role:</strong> <i
+                        class="nav-icon {{ getRoleIcon(Auth::user()->jobPosition->value2) }}"></i>
+                    {{ Auth::user()->jobPosition->value2 }}
+                </span>
+                @if (Auth::user()->subRole1)
+                    <span class="d-block" style="color: #c2c7d0"><strong>Sub Role 1:</strong> <i
+                            class="nav-icon {{ getRoleIcon(Auth::user()->subRole1->value2) }}"></i>
+                        {{ Auth::user()->subRole1->value2 }}</span>
+                @endif
+                @if (Auth::user()->subRole2)
+                    <span class="d-block" style="color: #c2c7d0"><strong>Sub Role 2:</strong> <i
+                            class="nav-icon {{ getRoleIcon(Auth::user()->subRole2->value2) }}"></i>
+                        < {{ Auth::user()->subRole2->value2 }} /span>
+                @endif
             </div>
         </div>
 
@@ -219,7 +260,8 @@
                                         <p
                                             style="max-width: 160px; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: inline-block; vertical-align: middle;">
                                             {{ $project->name }}
-                                            <i class="right fas fa-angle-left" style="display: inline-block; vertical-align: middle;"></i>
+                                            <i class="right fas fa-angle-left"
+                                                style="display: inline-block; vertical-align: middle;"></i>
                                         </p>
                                     </a>
                                     <ul class="nav nav-treeview">

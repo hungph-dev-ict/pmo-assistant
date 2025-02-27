@@ -66,8 +66,7 @@
                                 </span>
 
                                 <a v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)"
-                                    :href="props.hasPermissionStaff ? `/staff/${props.projectId}/task/${task.id}` : `/pm/${props.projectId}/task/${task.id}`"
-                                    class="text-blue-500 hover:underline">
+                                    :href="`/${props.projectId}/task/${task.id}`" class="text-blue-500 hover:underline">
                                     {{ task.name }}
                                 </a>
 
@@ -176,7 +175,7 @@
                             <td v-if="isColumnVisible('actual_start_date')">
                                 <span
                                     v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)">{{
-                                    task.actual_start_date }}</span>
+                                        task.actual_start_date }}</span>
                                 <div v-else class="input-group date actual-start-datepicker"
                                     data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
@@ -193,7 +192,7 @@
                             <td v-if="isColumnVisible('actual_end_date')">
                                 <span
                                     v-if="!task.isEditing || (task.isEditing && (!hasPermissionClient && !hasPermissionPm) && hasPermissionStaff)">{{
-                                    task.actual_end_date }}</span>
+                                        task.actual_end_date }}</span>
                                 <div v-else class="input-group date actual-end-datepicker" data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input"
                                         v-model="task.editedActualEndDate" data-target=".actual-end-datepicker" />
@@ -241,9 +240,12 @@
                                         @click="confirmDelete(task)">
                                         <i class="fas fa-trash"></i> Delete
                                     </a>
-                                    <a class="btn btn-primary btn-sm" href="#" @click.prevent="openLogWorkModal(task)">
+                                    <a class="btn btn-primary btn-sm mr-2" href="#" @click.prevent="openLogWorkModal(task)">
                                         <i class="fas fa-clock"></i> Log Work
                                     </a>
+                                    <button class="btn btn-secondary btn-sm" @click="copyTaskLink(task)">
+                                        <i class="fas fa-link"></i> Share
+                                    </button>
                                 </template>
 
                                 <template v-else>
@@ -338,8 +340,7 @@
                         </button>
                         <button class="btn btn-primary" @click="submitLogWork(selectedTask.id)">
                             <span v-if="isLoading">
-                                <i class="fas fa-spinner fa-spin"></i> Đang xử
-                                lý... </span><span v-else> Save </span>
+                                <i class="fas fa-spinner fa-spin"></i> Processing... </span><span v-else> Save </span>
                         </button>
                     </div>
                 </div>
@@ -594,6 +595,15 @@ const cancelEdit = (task) => {
     task.isEditing = false;
     globalIsEditting.value = false;
 };
+
+const copyTaskLink = (task) => {
+    const taskLink = `${window.location.origin}/${props.projectId}/task/${task.id}`;
+    navigator.clipboard.writeText(taskLink).then(() => {
+        toastr.success("Link copied to clipboard!");
+    }).catch(() => {
+        toastr.error("Failed to copy link.");
+    });
+}
 
 const destroySelect2 = () => {
     $(".assignee-select").select2("destroy");

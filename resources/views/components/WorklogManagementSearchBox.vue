@@ -76,7 +76,7 @@
                             data-placeholder="Select Columns" style="width: 100%">
                             <option value="project-name">Project</option>
                             <option value="epic_task">Epic/Task</option>
-                            <option value="assignee">assignee</option>
+                            <option value="assignee">Assignee</option>
                             <option value="plan-effort">Plan Effort</option>
                             <option value="actual-effort">Actual Effort</option>
                             <option value="logged-user">Logged User</option>
@@ -151,12 +151,11 @@ onMounted(() => {
             let defaultColumns = [
                 "project-name",
                 "epic_task",
-                "assignee",
+                // "assignee",
                 "logged-user",
                 "logged-date",
                 "logged-time",
                 "description",
-                // "action"
             ];
             $("#selectDisplayColumns").val(defaultColumns).trigger("change");
 
@@ -194,8 +193,8 @@ const filterWorklogs = () => {
     if (searchQuery.value.trim()) {
         const query = searchQuery.value.toLowerCase();
         filtered = filtered.filter((worklog) =>
-            worklog.task.name.toLowerCase().includes(query) ||
-            worklog.description.toLowerCase().includes(query)
+            worklog.task?.name?.toLowerCase().includes(query) ||
+            worklog.description?.toLowerCase().includes(query)
         );
     }
 

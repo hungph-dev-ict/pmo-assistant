@@ -65,7 +65,7 @@
                         <tr v-for="(worklogs, userId) in totalWorklogByUserAndDate" :key="userId">
                             <td class="fixed-column">{{ getUserAccount(userId) }}</td>
                             <td v-for="date in loggedDates" :key="date"
-                                :class="getCellClass(worklogs[date] ? worklogs[date].toFixed(2) : '0.00')">
+                                :class="getCellClass(worklogs[date] ? worklogs[date].toFixed(2) : '0.00', date)">
                                 {{ worklogs[date] ? worklogs[date].toFixed(2) : "0.00" }}
                             </td>
                         </tr>
@@ -117,15 +117,23 @@
     background-color: #fff3cd !important;
     /* Vàng nhạt */
 }
+
+.bg-warning {
+    background-color: #ffeb3b !important; /* Màu vàng đậm hơn để cảnh báo */
+    color: #333;
+    font-weight: bold;
+}
 </style>
 
 <script setup>
-import {  computed, ref, onMounted, nextTick } from "vue";
+import { computed, ref, onMounted, nextTick } from "vue";
 import Swal from "sweetalert2";
 
 const props = defineProps({
     worklogs: Array,
 });
+
+const currentPath = computed(() => window.location.pathname);
 
 const isPMRoute = computed(() => currentPath.value.includes("/pm/"));
 const isTenantRoute = computed(() => currentPath.value.includes("/tenant/"));
@@ -181,8 +189,20 @@ onMounted(() => {
                 }
             );
         }
+
+        // Cuộn xuống ngày cuối cùng sau khi render xong
+        scrollToLastDate();
     })
 });
+
+const scrollToLastDate = () => {
+    nextTick(() => {
+        const tableContainer = document.querySelector(".table-responsive");
+        if (tableContainer) {
+            tableContainer.scrollLeft = tableContainer.scrollWidth;
+        }
+    });
+};
 
 // Hàm áp dụng bộ lọc khi nhấn "Search"
 const applyFilter = () => {
@@ -201,6 +221,10 @@ const applyFilter = () => {
     filteredWorklogs.value = props.worklogs.filter(
         (worklog) => worklog.log_date >= fromDate.value && worklog.log_date <= toDate.value
     );
+
+    nextTick(() => {
+        scrollToLastDate(); // Cuộn xuống ngày cuối cùng
+    });
 };
 
 const totalWorklogByUserAndDate = computed(() => {
@@ -242,23 +266,6 @@ const generateDateRange = (start, end) => {
 // Danh sách ngày đầy đủ trong khoảng tìm kiếm
 const loggedDates = computed(() => generateDateRange(fromDate.value, toDate.value));
 
-// Định dạng tổng worklog, đảm bảo ngày không có dữ liệu hiển thị "0.00"
-const formattedTotalWorklog = computed(() => {
-    const result = {};
-
-    loggedDates.value.forEach(date => {
-        let total = 0;
-
-        Object.values(totalWorklogByUserAndDate.value).forEach(userWorklogs => {
-            total += userWorklogs[date] || 0;
-        });
-
-        result[date] = total.toFixed(2);
-    });
-
-    return result;
-});
-
 
 const getUserAccount = (userId) => {
     const user = filteredWorklogs.value.find(w => w.user?.id == userId);
@@ -273,10 +280,18 @@ const getDayOnly = (dateString) => {
 // Áp dụng bộ lọc ngay lần đầu tiên khi component mount
 applyFilter();
 
-const getCellClass = (value) => {
+const getCellClass = (value, date) => {
     const numValue = parseFloat(value);
+    const dayOfWeek = new Date(date).getDay(); // Lấy thứ trong tuần (0: Chủ Nhật, 6: Thứ Bảy)
+
+    if ((dayOfWeek === 0 || dayOfWeek === 6) && numValue === 0) {
+        return ""; // Không áp dụng nền đỏ cho Thứ 7, Chủ Nhật
+    }
+
     if (numValue == 0) return "bg-red"; // Nếu worklog = 0, nền đỏ nhạt
     if (numValue > 0 && numValue < 8) return "bg-yellow"; // Nếu worklog < 8, nền vàng nhạt
+    if (numValue > 8) return "bg-warning";
+
     return "";
 };
 </script>

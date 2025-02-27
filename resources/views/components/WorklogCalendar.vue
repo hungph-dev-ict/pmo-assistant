@@ -3,12 +3,7 @@
         <div class="card-header">
             <h3 class="card-title">Worklog Calendar</h3>
             <div class="card-tools">
-                <button
-                    type="button"
-                    class="btn btn-tool"
-                    data-card-widget="collapse"
-                    title="Collapse"
-                >
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                     <i class="fas fa-minus"></i>
                 </button>
             </div>
@@ -22,23 +17,11 @@
                         <label>Filter Logged Date:</label>
                         <div class="d-flex align-items-center">
                             <!-- Plan Start Date (From) -->
-                            <div
-                                class="input-group date mr-2"
-                                id="filterLogDatePickerFrom"
-                                data-target-input="nearest"
-                            >
-                                <input
-                                    type="text"
-                                    id="filterLogDateFrom"
-                                    class="form-control datetimepicker-input"
-                                    data-target="#filterLogDatePickerFrom"
-                                    placeholder="From"
-                                />
-                                <div
-                                    class="input-group-append"
-                                    data-target="#filterLogDatePickerFrom"
-                                    data-toggle="datetimepicker"
-                                >
+                            <div class="input-group date mr-2" id="filterLogDatePickerFrom" data-target-input="nearest">
+                                <input type="text" id="filterLogDateFrom" class="form-control datetimepicker-input"
+                                    data-target="#filterLogDatePickerFrom" placeholder="From" />
+                                <div class="input-group-append" data-target="#filterLogDatePickerFrom"
+                                    data-toggle="datetimepicker">
                                     <div class="input-group-text">
                                         <i class="fa fa-calendar"></i>
                                     </div>
@@ -49,33 +32,19 @@
                             <span class="mx-2">-</span>
 
                             <!-- Plan Start Date (To) -->
-                            <div
-                                class="input-group date ml-2 mr-2"
-                                id="filterLogDatePickerTo"
-                                data-target-input="nearest"
-                            >
-                                <input
-                                    type="text"
-                                    id="filterLogDateTo"
-                                    class="form-control datetimepicker-input"
-                                    data-target="#filterLogDatePickerTo"
-                                    placeholder="To"
-                                />
-                                <div
-                                    class="input-group-append"
-                                    data-target="#filterLogDatePickerTo"
-                                    data-toggle="datetimepicker"
-                                >
+                            <div class="input-group date ml-2 mr-2" id="filterLogDatePickerTo"
+                                data-target-input="nearest">
+                                <input type="text" id="filterLogDateTo" class="form-control datetimepicker-input"
+                                    data-target="#filterLogDatePickerTo" placeholder="To" />
+                                <div class="input-group-append" data-target="#filterLogDatePickerTo"
+                                    data-toggle="datetimepicker">
                                     <div class="input-group-text">
                                         <i class="fa fa-calendar"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <button
-                                @click="applyFilter"
-                                class="btn btn-success ml-2"
-                            >
+                            <button @click="applyFilter" class="btn btn-success ml-2">
                                 🔍
                             </button>
                         </div>
@@ -95,13 +64,8 @@
                     <tbody>
                         <tr>
                             <td class="fixed-column">Total Worklogs</td>
-                            <td
-                                v-for="date in loggedDates"
-                                :key="date"
-                                :class="
-                                    getCellClass(formattedTotalWorklog[date])
-                                "
-                            >
+                            <td v-for="date in loggedDates" :key="date"
+                                :class="getCellClass(formattedTotalWorklog[date], date)">
                                 {{ formattedTotalWorklog[date] }}
                             </td>
                         </tr>
@@ -152,6 +116,13 @@
 .bg-yellow {
     background-color: #fff3cd !important;
     /* Vàng nhạt */
+}
+
+.bg-warning {
+    background-color: #ffeb3b !important;
+    /* Màu vàng đậm hơn để cảnh báo */
+    color: #333;
+    font-weight: bold;
 }
 </style>
 
@@ -230,8 +201,21 @@ onMounted(() => {
                 }
             );
         }
+
+        nextTick(() => {
+            scrollToLastDate(); // Cuộn xuống ngày cuối cùng
+        });
     });
 });
+
+const scrollToLastDate = () => {
+    nextTick(() => {
+        const tableContainer = document.querySelector(".table-responsive");
+        if (tableContainer) {
+            tableContainer.scrollLeft = tableContainer.scrollWidth;
+        }
+    });
+};
 
 // Hàm áp dụng bộ lọc khi nhấn "Search"
 const applyFilter = () => {
@@ -255,6 +239,10 @@ const applyFilter = () => {
             worklog.log_date >= fromDate.value &&
             worklog.log_date <= toDate.value
     );
+
+    nextTick(() => {
+        scrollToLastDate(); // Cuộn xuống ngày cuối cùng
+    });
 };
 
 // Tạo object chứa tổng thời gian log theo ngày
@@ -320,10 +308,18 @@ const getDayOnly = (dateString) => {
 // Áp dụng bộ lọc ngay lần đầu tiên khi component mount
 applyFilter();
 
-const getCellClass = (value) => {
+const getCellClass = (value, date) => {
     const numValue = parseFloat(value);
-    if (numValue === 0) return "bg-red"; // Nếu worklog = 0, nền đỏ nhạt
+    const dayOfWeek = new Date(date).getDay(); // Lấy thứ trong tuần (0: Chủ Nhật, 6: Thứ Bảy)
+
+    if ((dayOfWeek === 0 || dayOfWeek === 6) && numValue === 0) {
+        return ""; // Không áp dụng nền đỏ cho Thứ 7, Chủ Nhật
+    }
+
+    if (numValue == 0) return "bg-red"; // Nếu worklog = 0, nền đỏ nhạt
     if (numValue > 0 && numValue < 8) return "bg-yellow"; // Nếu worklog < 8, nền vàng nhạt
+    if (numValue > 8) return "bg-warning";
+
     return "";
 };
 </script>
