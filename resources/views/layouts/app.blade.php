@@ -6,7 +6,7 @@
 </head>
 
 <body class="hold-transition sidebar-mini">
-    <div class="wrapper">
+    <div class="wrapper" id="app">
         @include('layouts.partials.navbar') <!-- Navbar -->
 
         @include('layouts.partials.sidebar') <!-- Sidebar -->

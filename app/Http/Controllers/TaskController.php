@@ -27,7 +27,7 @@ class TaskController extends Controller
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'memo' => 'nullable|string|max:512',
-                'priority' => 'required|integer|min:0|max:4',
+                'priority' => 'required|integer|min:0|max:9',
                 'assignee' => 'nullable|integer|exists:users,id',
                 'status' => 'required|integer',
                 'plan_start_date' => 'nullable|date',

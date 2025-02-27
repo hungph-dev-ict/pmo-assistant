@@ -40,7 +40,7 @@ class StaffController extends Controller
             // Validate dữ liệu đầu vào
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
-                'priority' => 'required|integer|min:0|max:4',
+                'priority' => 'required|integer|min:0|max:9',
                 'assignee' => 'nullable|integer|exists:users,id',
                 'status' => 'required|integer',
                 'plan_start_date' => 'nullable|date',
