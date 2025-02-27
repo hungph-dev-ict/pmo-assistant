@@ -156,11 +156,13 @@
                             </span>
                         </li>
 
-                        <li class="nav-item">
+                        <li
+                            v-if="isEditingInfo && hasPermissionPm"
+                            class="nav-item"
+                        >
                             <span class="nav-link flex items-center gap-2">
                                 Priority
                                 <select
-                                    v-if="isEditingInfo && hasPermissionPm"
                                     class="form-control"
                                     v-model="editTask.priority"
                                     id="selectPriority"
