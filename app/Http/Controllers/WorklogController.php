@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Worklog;
 use App\Models\Task;
+use App\Models\Project;
 use App\Services\WorklogService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -39,11 +40,25 @@ class WorklogController extends Controller
         return response()->json($myWorklogs, 201);
     }
 
+    public function getProjectWorklogs($project_id)
+    {
+        $projectWorklogs = $this->worklogService->getProjectWorklogs($project_id);
+
+        return response()->json($projectWorklogs, 201);
+    }
+
     public function getTenantWorklogs()
     {
         $tenantWorklogs = $this->worklogService->getTenantWorklogs();
 
         return response()->json($tenantWorklogs, 201);
+    }
+
+    public function viewProjectWorklogs($project_id)
+    {
+        $project = Project::findOrFail($project_id);
+
+        return view('worklog.project-worklog', compact('project'));
     }
 
     public function viewTenantWorklogs()

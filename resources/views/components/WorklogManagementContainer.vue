@@ -1,33 +1,22 @@
 <template>
     <div>
-        <worklog-management-calendar
-            v-if="worklogs.length > 0"
-            :worklogs="worklogs"
-        ></worklog-management-calendar>
+        <worklog-management-calendar v-if="worklogs.length > 0" :worklogs="worklogs"></worklog-management-calendar>
 
-        <worklog-search-box
-            :worklogs="worklogs"
-            @updateFilteredWorklogs="filteredWorklogs = $event"
-            @blankQuery="handleBlankQuery"
-            @updateVisibleColumns="updateVisibleColumns"
-        ></worklog-search-box>
+        <worklog-search-box :worklogs="worklogs" @updateFilteredWorklogs="filteredWorklogs = $event"
+            @blankQuery="handleBlankQuery" @updateVisibleColumns="updateVisibleColumns"></worklog-search-box>
         <div class="relative">
             <div v-if="worklogListIsLoading" class="overlay">
                 <div class="spinner"></div>
                 <p>Loading...</p>
             </div>
-            <worklog-list
-                :filteredWorklogs="filteredWorklogs"
-                :blankQuery="blankQuery"
-                :visibleColumns="visibleColumns"
-                @update-worklog="handleWorklogUpdate"
-            ></worklog-list>
+            <worklog-list :filteredWorklogs="filteredWorklogs" :blankQuery="blankQuery" :visibleColumns="visibleColumns"
+                @update-worklog="handleWorklogUpdate"></worklog-list>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import WorklogSearchBox from "./WorklogManagementSearchBox.vue";
 import WorklogList from "./WorklogManagementList.vue";
@@ -42,12 +31,27 @@ const blankQuery = ref(true); // Mặc định là false
 
 const worklogListIsLoading = ref(false); // Biến kiểm soát trạng thái loading
 
+const currentPath = computed(() => window.location.pathname);
+
+const isPMRoute = computed(() => currentPath.value.includes("pm/"));
+const isTenantRoute = computed(() => currentPath.value.includes("tenant/"));
+
 const fetchWorklogs = async () => {
     worklogListIsLoading.value = true; // Bắt đầu loading
     try {
-        const { data } = await axios.get("/api/tenant-worklog");
+        let data;
+        if (isTenantRoute.value) {
+            const response = await axios.get("/api/tenant-worklog");
+            data = response.data;
+        } else if (isPMRoute.value) {
+            const pathSegments = window.location.pathname.split("/");
+            const projectId = pathSegments[2];
 
-        if (data.original.success) {
+            const response = await axios.get(`/api/project/${projectId}/worklog`);
+            data = response.data;
+        }
+
+        if (data?.original?.success) {
             const oldFilteredWorklogs = new Set(
                 filteredWorklogs.value.map((worklog) => worklog.id)
             ); // Lưu ID của worklogs đã lọc
@@ -136,7 +140,12 @@ onMounted(fetchWorklogs);
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

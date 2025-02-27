@@ -1,44 +1,25 @@
 <template>
     <div>
-        <upload-file-create-tasks
-            v-if="!hasPermissionStaff"
-            :projectId="projectId"
-            :listAssignee="parsedListAssignee"
-            :currentUserId="numberCurrentUserId"
-            @update-task="handleTaskUpdate"
-        ></upload-file-create-tasks>
+        <upload-file-create-tasks v-if="hasPermissionClient || hasPermissionPm" :projectId="projectId" :listAssignee="parsedListAssignee"
+            :currentUserId="numberCurrentUserId" @update-task="handleTaskUpdate"></upload-file-create-tasks>
 
-        <task-add
-            v-if="!hasPermissionStaff"
-            :projectId="projectId"
-            :listAssignee="parsedListAssignee"
-            :currentUserId="numberCurrentUserId"
-            @update-task="handleTaskUpdate"
-        ></task-add>
+        <task-add v-if="hasPermissionClient || hasPermissionPm" :projectId="projectId" :listAssignee="parsedListAssignee"
+            :currentUserId="numberCurrentUserId" @update-task="handleTaskUpdate"></task-add>
 
-        <task-search-box
-            :tasks="tasks"
-            @updateFilteredTasks="filteredTasks = $event"
-            @blankQuery="handleBlankQuery"
-            @updateVisibleColumns="updateVisibleColumns"
-        ></task-search-box>
+        <task-search-box v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff" :tasks="tasks"
+            @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
+            @updateVisibleColumns="updateVisibleColumns"></task-search-box>
 
         <div class="relative" ref="taskListContainer">
             <div v-if="taskListIsLoading" class="overlay">
                 <div class="spinner"></div>
                 <p>Loading...</p>
             </div>
-            <task-list
-                :projectId="projectId"
-                :filteredTasks="filteredTasks"
-                :blankQuery="blankQuery"
-                :visibleColumns="visibleColumns"
+            <task-list v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff" :projectId="projectId"
+                :filteredTasks="filteredTasks" :blankQuery="blankQuery" :visibleColumns="visibleColumns"
                 :listAssignee="parsedListAssignee"
-                :hasPermissionStaff="hasPermissionStaff"
-                :currentUserId="numberCurrentUserId"
-                :currentUserAccount="currentUserAccount"
-                @update-task="handleTaskUpdate"
-            />
+                :hasPermissionClient="hasPermissionClient" :hasPermissionPm="hasPermissionPm" :hasPermissionStaff="hasPermissionStaff" :currentUserId="numberCurrentUserId"
+                :currentUserAccount="currentUserAccount" @update-task="handleTaskUpdate" />
         </div>
     </div>
 </template>
@@ -79,6 +60,14 @@ const userRoles = computed(() => {
     } catch (error) {
         return []; // Trả về mảng rỗng nếu lỗi
     }
+});
+
+const hasPermissionClient = computed(() => {
+    return userRoles.value.includes("client");
+});
+
+const hasPermissionPm = computed(() => {
+    return userRoles.value.includes("pm");
 });
 
 const hasPermissionStaff = computed(() => {
@@ -204,6 +193,7 @@ onMounted(fetchTasks);
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }

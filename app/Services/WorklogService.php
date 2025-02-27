@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class WorklogService {
-    public function createWorklog($data) {
+class WorklogService
+{
+    public function createWorklog($data)
+    {
         // Validate dữ liệu
         $validator = Validator::make($data, [
             'task_id'     => 'required|exists:tasks,id',
@@ -21,8 +23,8 @@ class WorklogService {
         ]);
 
         $task = Task::findOrFail($data['task_id']);
-        
-        $task ->update([
+
+        $task->update([
             'actual_effort' => $task->actual_effort + $data['log_time']
         ]);
 
@@ -40,7 +42,8 @@ class WorklogService {
         ]);
     }
 
-    public function getMyWorklogs() {
+    public function getMyWorklogs()
+    {
         $user = Auth::user();
 
         if (!$user) {
@@ -55,7 +58,31 @@ class WorklogService {
         ]);
     }
 
-    public function getTenantWorklogs() {
+    public function getProjectWorklogs($project_id)
+    {
+        $user = Auth::user();
+
+        if (!$user || (!$user->hasRole('client') && !$user->hasRole('pm'))) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Lấy danh sách task_id thuộc về các project trong projectIds
+        $taskIds = Task::where('project_id', $project_id)->pluck('id');
+
+        // Lấy worklogs có task_id nằm trong danh sách taskIds
+        $worklogs = Worklog::whereIn('task_id', $taskIds)
+            ->with('user', 'task.project', 'task.assigneeUser')
+            ->orderBy('log_date', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $worklogs
+        ]);
+    }
+
+    public function getTenantWorklogs()
+    {
         $user = Auth::user();
 
         if (!$user || !$user->hasRole('client')) {
@@ -72,7 +99,8 @@ class WorklogService {
         ]);
     }
 
-    public function getActualEffortByProject($projectId) {
+    public function getActualEffortByProject($projectId)
+    {
         $user = Auth::user();
 
         if (!$user) {

@@ -107,13 +107,12 @@
                                 <a
                                     v-if="
                                         !task.isEditing ||
-                                        (task.isEditing && hasPermissionStaff)
+                                        (task.isEditing &&
+                                            !hasPermissionClient &&
+                                            !hasPermissionPm &&
+                                            hasPermissionStaff)
                                     "
-                                    :href="
-                                        props.hasPermissionStaff
-                                            ? `/staff/${props.projectId}/task/${task.id}`
-                                            : `/pm/${props.projectId}/task/${task.id}`
-                                    "
+                                    :href="`/${props.projectId}/task/${task.id}`"
                                     class="text-blue-500 hover:underline"
                                 >
                                     {{ task.name }}
@@ -133,7 +132,10 @@
                                 <PriorityIcon
                                     v-if="
                                         !task.isEditing ||
-                                        (task.isEditing && hasPermissionStaff)
+                                        (task.isEditing &&
+                                            !hasPermissionClient &&
+                                            !hasPermissionPm &&
+                                            hasPermissionStaff)
                                     "
                                     :priority="task.priority"
                                 />
@@ -178,7 +180,10 @@
                                 <span
                                     v-if="
                                         !task.isEditing ||
-                                        (task.isEditing && hasPermissionStaff)
+                                        (task.isEditing &&
+                                            !hasPermissionClient &&
+                                            !hasPermissionPm &&
+                                            hasPermissionStaff)
                                     "
                                 >
                                     <strong
@@ -213,7 +218,10 @@
                                 <span
                                     v-if="
                                         !task.isEditing ||
-                                        (task.isEditing && hasPermissionStaff)
+                                        (task.isEditing &&
+                                            !hasPermissionClient &&
+                                            !hasPermissionPm &&
+                                            hasPermissionStaff)
                                     "
                                     ><span
                                         :style="{
@@ -264,7 +272,10 @@
                                 <span
                                     v-if="
                                         !task.isEditing ||
-                                        (task.isEditing && hasPermissionStaff)
+                                        (task.isEditing &&
+                                            !hasPermissionClient &&
+                                            !hasPermissionPm &&
+                                            hasPermissionStaff)
                                     "
                                 >
                                     <span
@@ -316,7 +327,10 @@
                                 <span
                                     v-if="
                                         !task.isEditing ||
-                                        (task.isEditing && hasPermissionStaff)
+                                        (task.isEditing &&
+                                            !hasPermissionClient &&
+                                            !hasPermissionPm &&
+                                            hasPermissionStaff)
                                     "
                                     >{{ task.actual_start_date }}</span
                                 >
@@ -347,7 +361,10 @@
                                 <span
                                     v-if="
                                         !task.isEditing ||
-                                        (task.isEditing && hasPermissionStaff)
+                                        (task.isEditing &&
+                                            !hasPermissionClient &&
+                                            !hasPermissionPm &&
+                                            hasPermissionStaff)
                                     "
                                     >{{ task.actual_end_date }}</span
                                 >
@@ -378,7 +395,10 @@
                                 <span
                                     v-if="
                                         !task.isEditing ||
-                                        (task.isEditing && hasPermissionStaff)
+                                        (task.isEditing &&
+                                            !hasPermissionClient &&
+                                            !hasPermissionPm &&
+                                            hasPermissionStaff)
                                     "
                                     >{{ task.estimate_effort }}</span
                                 >
@@ -443,12 +463,18 @@
                                         <i class="fas fa-trash"></i> Delete
                                     </a>
                                     <a
-                                        class="btn btn-primary btn-sm"
+                                        class="btn btn-primary btn-sm mr-2"
                                         href="#"
                                         @click.prevent="openLogWorkModal(task)"
                                     >
                                         <i class="fas fa-clock"></i> Log Work
                                     </a>
+                                    <button
+                                        class="btn btn-secondary btn-sm"
+                                        @click="copyTaskLink(task)"
+                                    >
+                                        <i class="fas fa-link"></i> Share
+                                    </button>
                                 </template>
 
                                 <template v-else>
@@ -617,8 +643,8 @@
                             @click="submitLogWork(selectedTask.id)"
                         >
                             <span v-if="isLoading">
-                                <i class="fas fa-spinner fa-spin"></i> Đang xử
-                                lý... </span
+                                <i class="fas fa-spinner fa-spin"></i>
+                                Processing... </span
                             ><span v-else> Save </span>
                         </button>
                     </div>
@@ -639,6 +665,8 @@ const props = defineProps({
     blankQuery: Boolean,
     visibleColumns: Array,
     listAssignee: Array,
+    hasPermissionClient: Boolean,
+    hasPermissionPm: Boolean,
     hasPermissionStaff: Boolean,
     currentUserId: Number,
     currentUserAccount: String,
@@ -884,6 +912,18 @@ const cancelEdit = (task) => {
     Object.assign(task, task.originalData); // Khôi phục dữ liệu gốc
     task.isEditing = false;
     globalIsEditting.value = false;
+};
+
+const copyTaskLink = (task) => {
+    const taskLink = `${window.location.origin}/${props.projectId}/task/${task.id}`;
+    navigator.clipboard
+        .writeText(taskLink)
+        .then(() => {
+            toastr.success("Link copied to clipboard!");
+        })
+        .catch(() => {
+            toastr.error("Failed to copy link.");
+        });
 };
 
 const destroySelect2 = () => {

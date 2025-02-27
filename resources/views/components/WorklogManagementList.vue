@@ -1,82 +1,54 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">List Tenant Worklog</h3>
+            <h3 class="card-title" v-if="isTenantRoute">List Tenant Worklog</h3>
+            <h3 class="card-title" v-if="isPMRoute">List Project Worklog</h3>
         </div>
 
         <div class="card-body">
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th style="width: 2%">#</th>
-                        <th
-                            v-if="isColumnVisible('project-name')"
-                            style="width: 12%"
-                        >
+                        <th v-if="isColumnVisible('project-name')" style="width: 12%">
                             Project
                         </th>
-                        <th
-                            v-if="isColumnVisible('epic_task')"
-                            style="width: 30%"
-                        >
+                        <th v-if="isColumnVisible('epic_task')" style="width: 32%">
                             Epic/Task
                         </th>
-                        <th
-                            v-if="isColumnVisible('epic_task')"
-                            style="width: 10%"
-                        >
+                        <th v-if="isColumnVisible('assignee')" style="width: 10%">
                             Assignee
                         </th>
-                        <th
-                            v-if="isColumnVisible('plan-effort')"
-                            style="width: 5%"
-                        >
+                        <th v-if="isColumnVisible('plan-effort')" style="width: 5%">
                             Plan Effort
                         </th>
-                        <th
-                            v-if="isColumnVisible('actual-effort')"
-                            style="width: 5%"
-                        >
+                        <th v-if="isColumnVisible('actual-effort')" style="width: 5%">
                             Actual Effort
                         </th>
-                        <th
-                            v-if="isColumnVisible('logged-user')"
-                            style="width: 10%"
-                        >
+                        <th v-if="isColumnVisible('logged-user')" style="width: 10%">
                             Logged User
                         </th>
-                        <th
-                            v-if="isColumnVisible('logged-date')"
-                            style="width: 8%"
-                        >
+                        <th v-if="isColumnVisible('logged-date')" style="width: 8%">
                             Logged Date
                         </th>
-                        <th
-                            v-if="isColumnVisible('logged-time')"
-                            style="width: 5%"
-                        >
+                        <th v-if="isColumnVisible('logged-time')" style="width: 5%">
                             Logged Time
                         </th>
-                        <th
-                            v-if="isColumnVisible('description')"
-                            style="width: 13%"
-                        >
+                        <th v-if="isColumnVisible('description')" style="width: 13%">
                             Description
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <template
-                        v-for="worklog in visibleWorklogs"
-                        :key="worklog.id"
-                    >
+                    <template v-for="worklog in visibleWorklogs" :key="worklog.id">
                         <tr class="bg-light">
-                            <td>{{ worklog.id }}</td>
                             <td v-if="isColumnVisible('project-name')">
                                 {{ worklog.task.project.name }}
                             </td>
                             <td v-if="isColumnVisible('epic_task')">
-                                {{ worklog.task.name }}
+                                <a :href="`/${worklog.task.project.id}/task/${worklog.task.id}`"
+                                    class="text-blue-500 hover:underline">
+                                    {{ worklog.task.name }}
+                                </a>
                             </td>
                             <td v-if="isColumnVisible('assignee')">
                                 {{ worklog.task?.assignee_user?.account }}
@@ -93,23 +65,12 @@
                             <td v-if="isColumnVisible('logged-date')">
                                 <span v-if="!worklog.isEditing">{{
                                     worklog.log_date
-                                }}</span>
-                                <div
-                                    v-else
-                                    class="input-group date log-date-datepicker"
-                                    data-target-input="nearest"
-                                >
-                                    <input
-                                        type="text"
-                                        class="form-control datetimepicker-input"
-                                        v-model="worklog.editedLogDate"
-                                        data-target=".log-date-datepicker"
-                                    />
-                                    <div
-                                        class="input-group-append"
-                                        data-target=".log-date-datepicker"
-                                        data-toggle="datetimepicker"
-                                    >
+                                    }}</span>
+                                <div v-else class="input-group date log-date-datepicker" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                        v-model="worklog.editedLogDate" data-target=".log-date-datepicker" />
+                                    <div class="input-group-append" data-target=".log-date-datepicker"
+                                        data-toggle="datetimepicker">
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -119,60 +80,32 @@
                             <td v-if="isColumnVisible('logged-time')">
                                 <span v-if="!worklog.isEditing">{{
                                     worklog.log_time
-                                }}</span>
-                                <input
-                                    v-else
-                                    type="number"
-                                    v-model="worklog.editedLogTime"
-                                    class="form-control"
-                                />
+                                    }}</span>
+                                <input v-else type="number" v-model="worklog.editedLogTime" class="form-control" />
                             </td>
                             <td v-if="isColumnVisible('description')">
                                 <span v-if="!worklog.isEditing">{{
                                     worklog.description
-                                }}</span>
-                                <textarea
-                                    v-else
-                                    type="text"
-                                    v-model="worklog.editedDescription"
-                                    class="form-control form-control"
-                                    rows="3"
-                                ></textarea>
+                                    }}</span>
+                                <textarea v-else type="text" v-model="worklog.editedDescription"
+                                    class="form-control form-control" rows="3"></textarea>
                             </td>
-                            <td
-                                v-if="isColumnVisible('action')"
-                                class="text-center"
-                            >
+                            <td v-if="isColumnVisible('action')" class="text-center">
                                 <template v-if="!worklog.isEditing">
-                                    <a
-                                        class="btn btn-info btn-sm mr-2"
-                                        href="#"
-                                        @click.prevent="editWorklog(worklog)"
-                                    >
+                                    <a class="btn btn-info btn-sm mr-2" href="#" @click.prevent="editWorklog(worklog)">
                                         <i class="fas fa-pencil-alt"></i> Edit
                                     </a>
-                                    <a
-                                        class="btn btn-danger btn-sm mr-2"
-                                        href="#"
-                                        @click="confirmDelete(worklog)"
-                                    >
+                                    <a class="btn btn-danger btn-sm mr-2" href="#" @click="confirmDelete(worklog)">
                                         <i class="fas fa-trash"></i> Delete
                                     </a>
                                 </template>
 
                                 <template v-else>
-                                    <a
-                                        class="btn btn-success btn-sm mr-2"
-                                        href="#"
-                                        @click.prevent="updateWorklog(worklog)"
-                                    >
+                                    <a class="btn btn-success btn-sm mr-2" href="#"
+                                        @click.prevent="updateWorklog(worklog)">
                                         <i class="fas fa-save"></i> Update
                                     </a>
-                                    <a
-                                        class="btn btn-secondary btn-sm"
-                                        href="#"
-                                        @click.prevent="cancelEdit(worklog)"
-                                    >
+                                    <a class="btn btn-secondary btn-sm" href="#" @click.prevent="cancelEdit(worklog)">
                                         <i class="fas fa-times"></i> Cancel
                                     </a>
                                 </template>
@@ -201,11 +134,12 @@ const props = defineProps({
 // Tạo danh sách task dưới dạng ref để có thể cập nhật giá trị
 const worklogs = ref([]);
 
-const selectedTask = ref(null);
 const globalIsEditting = ref(false);
-const logDate = ref("");
-const logTime = ref("");
-const logDescription = ref("");
+
+const currentPath = computed(() => window.location.pathname);
+
+const isPMRoute = computed(() => currentPath.value.includes("/pm/"));
+const isTenantRoute = computed(() => currentPath.value.includes("/tenant/"));
 
 onMounted(() => {
     worklogs.value = props.filteredWorklogs.map((worklog) => ({
@@ -259,8 +193,8 @@ const initPlugins = (worklog) => {
             let newPlanStartDate = e.date
                 ? e.date.format("YYYY-MM-DD")
                 : e.target.value
-                ? e.target.value
-                : "";
+                    ? e.target.value
+                    : "";
             worklog.editedLogDate = newPlanStartDate;
         });
     });
