@@ -5,8 +5,9 @@
             :hasPermissionClient="hasPermissionClient" :hasPermissionPm="hasPermissionPm"
             :hasPermissionStaff="hasPermissionStaff" @update-task="handleTaskUpdate"></task-add>
 
-        <task-search-box class="task-search-box" v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff"
-            :tasks="tasks" @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
+        <task-search-box @filter-changed="updateFiltersQuery" class="task-search-box"
+            v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff" :tasks="tasks"
+            @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
             @updateVisibleColumns="updateVisibleColumns">
         </task-search-box>
 
@@ -15,7 +16,7 @@
                 <div class="spinner"></div>
                 <p>Loading...</p>
             </div>
-            <task-list v-if="
+            <task-list :filtersQuery="filtersQuery" v-if="
                 hasPermissionClient || hasPermissionPm || hasPermissionStaff
             " :projectId="projectId" :filteredTasks="filteredTasks" :blankQuery="blankQuery"
                 :visibleColumns="visibleColumns" :listAssignee="parsedListAssignee"
@@ -27,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, nextTick } from "vue";
+import { ref, onMounted, computed, nextTick, watch } from "vue";
 import axios from "axios";
 import TaskAdd from "./TaskAdd.vue";
 import TaskSearchBox from "./TaskSearchBox.vue";
@@ -156,7 +157,48 @@ const handleTaskUpdate = (loadNew = false) => {
     fetchTasks(loadNew);
 };
 
-onMounted(fetchTasks);
+// onMounted(fetchTasks);
+
+const filtersQuery = ref({
+    statusId: [],
+    search: "",
+});
+
+const updateURL = () => {
+    const queryParams = new URLSearchParams(filtersQuery.value).toString();
+    window.history.pushState({}, "", `?${queryParams}`);
+};
+
+// Khi filters thay đổi, cập nhật URL
+watch(filtersQuery, () => {
+    updateURL();
+}, { deep: true });
+
+// Khi trang load, lấy query từ URL
+onMounted(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    for (const [key, value] of urlParams.entries()) {
+        if (key === "statusId") {
+            filtersQuery.value[key] = value.split(",").map(Number); // Convert thành array number
+        } else {
+            filtersQuery.value[key] = value; // Gán trực tiếp nếu không phải statusId
+        }
+    }
+
+    // 🔹 Nếu không có filter nào -> Lấy toàn bộ records
+    const isFiltersEmpty = computed(() => {
+        return JSON.stringify(filtersQuery.value) === JSON.stringify({ statusId: [], search: "" });
+    });
+    console.log(isFiltersEmpty.value);
+    if (isFiltersEmpty.value) {
+        fetchTasks(true);
+    }
+});
+
+// Nhận filters từ TaskSearch
+const updateFiltersQuery = (newFiltersQuery) => {
+    filtersQuery.value = { ...newFiltersQuery };
+};
 </script>
 
 <style scoped>

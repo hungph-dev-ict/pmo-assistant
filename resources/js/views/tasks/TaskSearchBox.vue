@@ -21,11 +21,7 @@
                     <div class="form-group">
                         <label>Task Title Search:</label>
                         <div class="position-relative">
-                            <input
-                                v-model="searchQuery"
-                                type="text"
-                                class="form-control"
-                                placeholder="Enter Search Text Here..."
+                            <input v-model="filtersQuery.search" type="text" class="form-control" placeholder="Enter name"
                                 @input="
                                     filterTasks();
                                     emit('updateSearchQuery', searchQuery);
@@ -73,18 +69,9 @@
                 <div class="col-2">
                     <div class="form-group">
                         <label>Search Status:</label>
-                        <select
-                            ref="statusSelect"
-                            class="form-control select2"
-                            multiple="multiple"
-                            data-placeholder="Select Status"
-                            style="width: 100%"
-                        >
-                            <option
-                                v-for="status in uniqueStatuses"
-                                :key="status"
-                                :value="status"
-                            >
+                        <select ref="statusSelect" v-model="filtersQuery.statusId" class="form-control select2" multiple="multiple"
+                            data-placeholder="Select Status" style="width: 100%">
+                            <option v-for="status in uniqueStatuses" :key="status" :value="status">
                                 {{ status }}
                             </option>
                         </select>
@@ -364,7 +351,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from "vue";
+import { ref, computed, onMounted, nextTick, watch } from "vue";
+import { useDebounceFn } from "@vueuse/core";
 
 const assigneeSelect = ref(null);
 const statusSelect = ref(null);
@@ -382,7 +370,17 @@ const actualStartDateTo = ref("");
 const actualEndDateFrom = ref("");
 const actualEndDateTo = ref("");
 
-const selectColumns = ref(null);
+const filtersQuery = ref({
+    statusId: [],
+    search: "",
+});
+
+// Gửi filters lên Vue Cha sau 300ms (debounce)
+const updateFiltersQuery = useDebounceFn(() => {
+    emit("filter-changed", filtersQuery.value);
+}, 300);
+
+watch(filtersQuery, updateFiltersQuery, { deep: true });
 
 onMounted(() => {
     nextTick(() => {
@@ -416,9 +414,12 @@ onMounted(() => {
                     allowClear: true,
                 })
                 .on("change", (e) => {
+                    const value = $(e.target).val() || [];
+                    
                     selectedStatuses.value = $(e.target).val() || [];
+                    filtersQuery.value.statusId = value;
                     filterTasks();
-                    emit("updateSelectedStatuses", selectedStatuses.value);
+                    // emit("updateSelectedStatuses", selectedStatuses.value);
                 })
                 .on("select2:open", () => {
                     setTimeout(() => {
@@ -718,6 +719,8 @@ const emit = defineEmits([
     "blankQuery",
     "updateVisibleColumns",
     "updateSearchQuery",
+    "updateSelectedStatuses",
+    "filter-changed"
 ]);
 
 const uniqueAssignees = computed(() => {
