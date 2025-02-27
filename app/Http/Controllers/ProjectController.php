@@ -33,19 +33,13 @@ class ProjectController extends Controller
 
         if ($userId) {
             // Kiểm tra role của user
-            if (Auth::user()->hasRole('pm')) {
-                // Nếu người dùng là PM, lấy các dự án mà họ là project manager
-                $projects = Project::withTrashed()
-                    ->where('project_manager', $userId)
-                    ->paginate(10);
-            } elseif (Auth::user()->hasRole('client')) {
+            if (Auth::user()->hasRole('client')) {
                 $projects = Project::withTrashed()
                     ->whereIn('id', function ($query) use ($userId) {
                         $query->select('projects.id')
                             ->from('projects')
                             ->join('users as pm', 'pm.id', '=', 'projects.project_manager') // Kết nối với bảng users để lấy thông tin project manager (PM)
                             ->join('users as head_user', 'head_user.tenant_id', '=', 'pm.tenant_id') // Kết nối bảng users để xác định head user
-                            ->where('head_user.id', $userId) // Lọc theo userId là head user
                             ->where('head_user.head_account_flg', true); // Chỉ lấy head user
                     })
                     ->paginate(10);
