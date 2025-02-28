@@ -8,6 +8,7 @@ use App\Http\Controllers\PmController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WorklogController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
@@ -18,13 +19,13 @@ Route::get('/forgot-password', function () {
 })->middleware('guest')->name('password.request');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('dashboard');
-    });
+    // Route::get('/', function () {
+    //     return view('dashboard');
+    // });
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-    //     Route::resource('projects', ProjectController::class);
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])->name('password.change');
     Route::put('/change-password', [ChangePasswordController::class, 'updatePassword'])->name('password.custom-update');

@@ -5,22 +5,22 @@
       <circle cx="12" cy="13" r="8" stroke="gray" stroke-width="2" fill="none" />
     </svg>
 
-    <!-- Lowest - Ba mũi tên xuống màu xanh -->
+    <!-- Lowest - Ba mũi tên xuống màu xanh (Nâng lên 3px) -->
     <svg v-else-if="priority === 'Lowest'" width="20" height="20" viewBox="0 0 24 24">
-      <polyline points="5,6 12,13 19,6" stroke="blue" stroke-width="2" fill="none" />
-      <polyline points="5,11 12,18 19,11" stroke="blue" stroke-width="2" fill="none" />
-      <polyline points="5,16 12,23 19,16" stroke="blue" stroke-width="2" fill="none" />
-    </svg>
-
-    <!-- Lower - Hai mũi tên xuống màu xanh -->
-    <svg v-else-if="priority === 'Lower'" width="20" height="20" viewBox="0 0 24 24">
-      <polyline points="5,8 12,15 19,8" stroke="blue" stroke-width="2" fill="none" />
+      <polyline points="5,4 12,11 19,4" stroke="blue" stroke-width="2" fill="none" />
+      <polyline points="5,9 12,16 19,9" stroke="blue" stroke-width="2" fill="none" />
       <polyline points="5,14 12,21 19,14" stroke="blue" stroke-width="2" fill="none" />
     </svg>
 
-    <!-- Low - Một mũi tên xuống màu xanh -->
+    <!-- Lower - Hai mũi tên xuống màu xanh (Nâng lên 2px) -->
+    <svg v-else-if="priority === 'Lower'" width="20" height="20" viewBox="0 0 24 24">
+      <polyline points="5,6 12,13 19,6" stroke="blue" stroke-width="2" fill="none" />
+      <polyline points="5,12 12,19 19,12" stroke="blue" stroke-width="2" fill="none" />
+    </svg>
+
+    <!-- Low - Một mũi tên xuống màu xanh (Nâng lên 1px) -->
     <svg v-else-if="priority === 'Low'" width="20" height="20" viewBox="0 0 24 24">
-      <polyline points="5,13 12,20 19,13" stroke="blue" stroke-width="2" fill="none" />
+      <polyline points="5,11 12,18 19,11" stroke="blue" stroke-width="2" fill="none" />
     </svg>
 
     <!-- Minor - Hai dấu '=' màu vàng -->
@@ -29,18 +29,18 @@
       <line x1="5" y1="15" x2="19" y2="15" stroke="goldenrod" stroke-width="2" />
     </svg>
 
-    <!-- High - Một mũi tên lên màu đỏ (Lùi xuống 1px) -->
+    <!-- High - Một mũi tên lên màu đỏ -->
     <svg v-else-if="priority === 'High'" width="20" height="20" viewBox="0 0 24 24">
       <polyline points="5,18 12,11 19,18" stroke="red" stroke-width="2" fill="none" />
     </svg>
 
-    <!-- Higher - Hai mũi tên lên màu đỏ (Lùi xuống 2px) -->
+    <!-- Higher - Hai mũi tên lên màu đỏ -->
     <svg v-else-if="priority === 'Higher'" width="20" height="20" viewBox="0 0 24 24">
       <polyline points="5,18 12,11 19,18" stroke="red" stroke-width="2" fill="none" />
       <polyline points="5,12 12,5 19,12" stroke="red" stroke-width="2" fill="none" />
     </svg>
 
-    <!-- Highest - Ba mũi tên lên màu đỏ (Lùi xuống 3px) -->
+    <!-- Highest - Ba mũi tên lên màu đỏ -->
     <svg v-else-if="priority === 'Highest'" width="20" height="20" viewBox="0 0 24 24">
       <polyline points="5,19 12,12 19,19" stroke="red" stroke-width="2" fill="none" />
       <polyline points="5,13 12,6 19,13" stroke="red" stroke-width="2" fill="none" />

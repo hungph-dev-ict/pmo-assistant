@@ -24,7 +24,7 @@
                         <th style="width: 2%">#</th>
                         <th
                             v-if="isColumnVisible('epic_task')"
-                            style="width: 26%"
+                            style="width: 22%"
                         >
                             Epic/Task
                         </th>
@@ -83,7 +83,7 @@
                         <th
                             class="text-center"
                             v-if="isColumnVisible('action')"
-                            style="width: 16%"
+                            style="width: 20%"
                         >
                             Action
                         </th>
@@ -1094,5 +1094,21 @@ const exportTasks = () => {
 .no-spinner::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+</style>
+
+<style scoped>
+table tbody tr {
+    height: 12px !important;
+}
+
+table tbody tr td {
+    padding: 1px 1px !important;
+    vertical-align: middle;
+}
+
+table tbody tr:hover {
+    background-color: #b3e0f5 !important;
+    transition: background-color 0.2s ease-in-out !important;
 }
 </style>
