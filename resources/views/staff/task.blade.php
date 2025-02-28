@@ -19,7 +19,7 @@
 
 @section('content')
     <div data-vue-app="task-container" data-project-id="{{ $project_id }}" data-list-assignee="{{ $listAssignee }}"
-        data-current-userid="{{ auth()->user()->id }}" data-current-user-account="{{ auth()->user()->account }}"
+        data-current-user-id="{{ auth()->user()->id }}" data-current-user-account="{{ auth()->user()->account }}"
         data-user-role="{{ auth()->user()->getRoleNames() }}"></div>
 @endsection
 
