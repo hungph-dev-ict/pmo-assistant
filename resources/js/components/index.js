@@ -12,4 +12,5 @@ export default {
     "worklog-container": WorklogContainer,
     "bulk-insert-users": BulkInsertUsers,
     "upload-file-create-users": UploadFileCreateUsers,
+    "worklog-management-container": WorklogContainer,
 };

@@ -657,7 +657,6 @@
 <script setup>
 import { computed, ref, nextTick, onMounted, reactive } from "vue";
 import Swal from "sweetalert2";
-import PriorityIcon from "@/js/common/PriorityIcon.vue";
 
 const props = defineProps({
     projectId: String,
