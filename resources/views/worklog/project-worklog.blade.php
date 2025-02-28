@@ -18,9 +18,7 @@
 @endsection
 
 @section('content')
-    <div id="worklog-management-list">
-        <worklog-management-container></worklog-management-container>
-    </div>
+    <div data-vue-app="worklog-management-container"></div>
 @endsection
 
 @section('inline_js')
