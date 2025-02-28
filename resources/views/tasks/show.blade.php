@@ -30,8 +30,8 @@
 @endsection
 
 @section('content')
-    <div data-vue-app="task-detail" data-task="@json($task)" data-list-assignee="{{ $listAssignee }}"
-        data-user-role="{{ auth()->user()->getRoleNames() }}"></div>
+    <div data-vue-app="task-detail" data-task='@json($task)'
+        data-list-assignee='@json($listAssignee)' data-user-role="{{ auth()->user()->getRoleNames() }}"></div>
 @endsection
 
 @section('inline_js')

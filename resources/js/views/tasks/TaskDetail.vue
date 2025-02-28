@@ -13,13 +13,11 @@
                             gap: 5px;
                         "
                     >
-                        <PriorityIcon
-                            :priority="priorityMap[props.task.priority]"
-                        />
-                        <span v-if="props.task.type == 1">
-                            {{ props.task.parent.name }} /
+                        <PriorityIcon :priority="priorityMap[task.priority]" />
+                        <span v-if="task.type == 1">
+                            {{ task.parent.name }} /
                         </span>
-                        {{ props.task.name }}
+                        {{ task.name }}
                     </h3>
                     <template v-else>
                         <label>Title</label>
@@ -27,13 +25,14 @@
                             type="text"
                             v-model="editTask.name"
                             class="form-control"
+                            :disabled="isLoading"
                         />
                     </template>
 
                     <span
                         v-if="!isEditingInfo || !hasPermissionPm"
-                        :class="statusClass(props.task.status)"
-                        >{{ props.task.task_status.value1 }}</span
+                        :class="statusClass(task.status)"
+                        >{{ task.task_status?.value1 }}</span
                     >
                     <!-- /.user-block -->
                 </div>
@@ -43,7 +42,7 @@
                         v-if="!isEditingInfo || !hasPermissionPm"
                         class="text-muted description"
                     >
-                        {{ props.task.description }}
+                        {{ task.description }}
                     </p>
                     <template v-else>
                         <label>Description</label>
@@ -51,6 +50,7 @@
                             v-model="editTask.description"
                             rows="10"
                             class="form-control"
+                            :disabled="isLoading"
                         ></textarea>
                     </template>
 
@@ -58,9 +58,7 @@
                     <div class="text-muted">
                         <p class="text-sm">
                             Components
-                            <b class="d-block">{{
-                                $props.task.components ?? "-"
-                            }}</b>
+                            <b class="d-block">{{ task.components ?? "-" }}</b>
                         </p>
                     </div>
 
@@ -68,7 +66,7 @@
                     <div class="text-muted">
                         <p v-if="!isEditingInfo" class="text-sm description">
                             Memo
-                            <b class="d-block">{{ $props.task.memo ?? "-" }}</b>
+                            <b class="d-block">{{ task.memo ?? "-" }}</b>
                         </p>
                         <template v-else>
                             <label>Memo</label>
@@ -76,6 +74,7 @@
                                 rows="3"
                                 class="form-control"
                                 v-model="editTask.memo"
+                                :disabled="isLoading"
                             ></textarea>
                         </template>
                     </div>
@@ -95,14 +94,12 @@
                         <img src="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}" alt="PMO Assistant Logo"
             class="brand-image img-circle elevation-3"> -->
                         <span class="username">{{
-                            props.task.creator.name +
+                            task?.creator?.name +
                             " (" +
-                            props.task.creator.account +
+                            task?.creator?.account +
                             ")"
                         }}</span>
-                        <span class="description">{{
-                            props.task.created_at
-                        }}</span>
+                        <span class="description">{{ task.created_at }}</span>
                     </div>
                     <div class="card-tools">
                         <template v-if="!isEditingInfo">
@@ -125,7 +122,11 @@
                                 @click="update(editTask)"
                                 class="btn btn-success btn-sm mr-2"
                             >
-                                Update
+                                <span v-if="isLoading">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    Updating...
+                                </span>
+                                <span v-else> Update</span>
                             </button>
                             <button
                                 @click="cancel"
@@ -145,6 +146,7 @@
                                     class="form-control"
                                     v-model="editTask.status"
                                     id="selectStatus"
+                                    :disabled="isLoading"
                                 >
                                     <option :value="0">Open</option>
                                     <option :value="1">In Progress</option>
@@ -166,6 +168,7 @@
                                     class="form-control"
                                     v-model="editTask.priority"
                                     id="selectPriority"
+                                    :disabled="isLoading"
                                 >
                                     <option :value="9">🚧 Blocker</option>
                                     <option :value="8">🔥 Critical</option>
@@ -187,14 +190,15 @@
                                 <strong
                                     v-if="!isEditingInfo || !hasPermissionPm"
                                     class="float-right"
-                                    >{{ props.task.assignee_user?.account }} -
-                                    {{ props.task.assignee_user?.name }}</strong
+                                    >{{ task.assignee_user?.account }} -
+                                    {{ task.assignee_user?.name }}</strong
                                 >
                                 <select
                                     v-else
                                     class="form-control"
                                     id="selectAssignee"
                                     v-model="editTask.assignee"
+                                    :disabled="isLoading"
                                 >
                                     <option
                                         v-for="user in listAssignee"
@@ -211,9 +215,7 @@
                                 <strong
                                     v-if="!isEditingInfo || !hasPermissionPm"
                                     class="float-right"
-                                    >{{
-                                        props.task.plan_start_date ?? "-"
-                                    }}</strong
+                                    >{{ task.plan_start_date ?? "-" }}</strong
                                 >
 
                                 <div
@@ -227,6 +229,7 @@
                                         class="form-control datetimepicker-input"
                                         v-model="editTask.plan_start_date"
                                         data-target="#dpPlanStartDate"
+                                        :disabled="isLoading"
                                     />
                                     <div
                                         class="input-group-append"
@@ -247,9 +250,7 @@
                                 <strong
                                     v-if="!isEditingInfo || !hasPermissionPm"
                                     class="float-right"
-                                    >{{
-                                        props.task.plan_end_date ?? "-"
-                                    }}</strong
+                                    >{{ task.plan_end_date ?? "-" }}</strong
                                 >
 
                                 <div
@@ -263,6 +264,7 @@
                                         class="form-control datetimepicker-input"
                                         v-model="editTask.plan_end_date"
                                         data-target="#dpPlanEndDate"
+                                        :disabled="isLoading"
                                     />
                                     <div
                                         class="input-group-append"
@@ -283,9 +285,7 @@
                                 <strong
                                     v-if="!isEditingInfo || !hasPermissionPm"
                                     class="float-right"
-                                    >{{
-                                        props.task.actual_start_date ?? "-"
-                                    }}</strong
+                                    >{{ task.actual_start_date ?? "-" }}</strong
                                 >
 
                                 <div
@@ -299,6 +299,7 @@
                                         class="form-control datetimepicker-input"
                                         v-model="editTask.actual_start_date"
                                         data-target="#dpActualStartDate"
+                                        :disabled="isLoading"
                                     />
                                     <div
                                         class="input-group-append"
@@ -319,9 +320,7 @@
                                 <strong
                                     v-if="!isEditingInfo || !hasPermissionPm"
                                     class="float-right"
-                                    >{{
-                                        props.task.actual_end_date ?? "-"
-                                    }}</strong
+                                    >{{ task.actual_end_date ?? "-" }}</strong
                                 >
 
                                 <div
@@ -335,6 +334,7 @@
                                         class="form-control datetimepicker-input"
                                         v-model="editTask.actual_end_date"
                                         data-target="#dpActualEndDate"
+                                        :disabled="isLoading"
                                     />
                                     <div
                                         class="input-group-append"
@@ -355,13 +355,14 @@
                                 <strong
                                     v-if="!isEditingInfo || !hasPermissionPm"
                                     class="float-right"
-                                    >{{ props.task.estimate_effort }}</strong
+                                    >{{ task.estimate_effort }}</strong
                                 >
                                 <input
                                     v-else
                                     type="text"
                                     v-model="editTask.estimate_effort"
                                     class="form-control"
+                                    :disabled="isLoading"
                                 />
                             </span>
                         </li>
@@ -369,7 +370,7 @@
                             <span class="nav-link">
                                 Actual Effort
                                 <strong class="float-right">{{
-                                    props.task.actual_effort
+                                    task.actual_effort
                                 }}</strong>
                             </span>
                         </li>
@@ -384,7 +385,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, computed } from "vue";
+import { ref, onMounted, nextTick, computed, watch } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -402,7 +403,10 @@ const priorityMap = {
 };
 
 const props = defineProps({
-    task: Object,
+    task: {
+        type: [Array, String], // Có thể là Array hoặc String
+        default: () => [],
+    },
     listAssignee: {
         type: [Array, String], // Có thể là Array hoặc String
         default: () => [],
@@ -421,6 +425,30 @@ const props = defineProps({
     },
 });
 
+const editTask = ref(null);
+const isEditingInfo = ref(false);
+const isLoading = ref(false); // Trạng thái loading
+
+const task = ref({}); // Dùng ref để có thể cập nhật sau này
+
+onMounted(() => {
+    try {
+        task.value = JSON.parse(props.task); // Gán dữ liệu khi mount
+        editTask.value = task.value;
+    } catch (error) {
+        console.error("Lỗi parse JSON:", error);
+        task.value = {}; // Tránh lỗi nếu JSON không hợp lệ
+    }
+});
+
+const listAssignee = computed(() => {
+    try {
+        return JSON.parse(props.listAssignee); // Chuyển chuỗi JSON thành object
+    } catch (error) {
+        return {}; // Trả về object rỗng nếu có lỗi
+    }
+});
+
 const userRoles = computed(() => {
     try {
         return JSON.parse(props.userRole); // Chuyển chuỗi JSON thành mảng
@@ -433,13 +461,10 @@ const hasPermissionPm = computed(() => {
     return userRoles.value.includes("client") || userRoles.value.includes("pm");
 });
 
-const editTask = ref(null);
-const isEditingInfo = ref(false);
-
 const cancel = () => {
     isEditingInfo.value = false;
     destroySelect2();
-    editTask.value = { ...props.task }; // Gán lại bản sao mới thay vì tham chiếu
+    editTask.value = { ...task.value }; // Gán lại bản sao mới thay vì tham chiếu
 };
 
 const edit = (editTask) => {
@@ -535,14 +560,15 @@ const update = async (editTask) => {
     };
 
     try {
+        isLoading.value = true; // Bật trạng thái loading
         // Gọi API cập nhật dữ liệu
-        const url = `/api/tasks/${props.task.id}/update`;
+        const url = `/api/tasks/${task.value.id}/update`;
         const response = await axios.put(url, updateData);
 
         toastr.success(response?.data?.message);
 
         // Cập nhật trực tiếp vào props.task để phản ánh trên giao diện
-        Object.assign(props.task, response?.data?.task);
+        task.value = response?.data?.task;
 
         // Cập nhật lại editTask để giữ đồng bộ
         editTask.value = { ...response?.data?.task };
@@ -554,8 +580,10 @@ const update = async (editTask) => {
 
         // Hiển thị toastr lỗi với cả message và error detail
         toastr.error(`${errorMessage}: ${errorDetail}`);
+    } finally {
+        isLoading.value = false; // Tắt loading dù có lỗi hay không
+        isEditingInfo.value = false;
     }
-    isEditingInfo.value = false;
 };
 
 const destroySelect2 = () => {
@@ -587,7 +615,7 @@ const statusClass = (status) => {
 const deleteTask = async (task) => {
     let warningMessage = "Bạn có chắc chắn muốn xoá task này?";
 
-    if (task.type === "epic") {
+    if (task.value.type === "epic") {
         warningMessage =
             "⚠️ Task này là một Epic! Nếu bạn xoá nó, tất cả task con cũng sẽ bị xoá. Bạn có chắc chắn muốn tiếp tục?";
     }
@@ -603,7 +631,7 @@ const deleteTask = async (task) => {
     });
 
     if (result.isConfirmed) {
-        softDelete(task.id);
+        softDelete(task.value.id);
     }
 };
 
@@ -622,10 +650,6 @@ const softDelete = async (taskId) => {
         toastr.error(`${errorMessage}: ${errorDetail}`);
     }
 };
-
-onMounted(() => {
-    editTask.value = { ...props.task };
-});
 </script>
 
 <style>
