@@ -54,7 +54,7 @@
                 @if (Auth::user()->subRole2)
                     <span class="d-block" style="color: #c2c7d0"><strong>Sub Role 2:</strong> <i
                             class="nav-icon {{ getRoleIcon(Auth::user()->subRole2->value2) }}"></i>
-                        < {{ Auth::user()->subRole2->value2 }} /span>
+                        {{ Auth::user()->subRole2->value2 }} </span>
                 @endif
             </div>
         </div>

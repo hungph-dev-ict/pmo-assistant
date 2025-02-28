@@ -18,6 +18,9 @@ Route::get('/forgot-password', function () {
 })->middleware('guest')->name('password.request');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    });
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
