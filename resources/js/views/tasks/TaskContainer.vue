@@ -30,7 +30,7 @@ import axios from "axios";
 import TaskAdd from "./TaskAdd.vue";
 import TaskSearchBox from "./TaskSearchBox.vue";
 import TaskList from "./TaskList.vue";
-import UploadFileCreateTasks from "./UploadFileCreateTasks.vue";
+import UploadFileCreateTasks from "../upload/UploadFileCreateTasks.vue";
 
 const props = defineProps({
     projectId: String,

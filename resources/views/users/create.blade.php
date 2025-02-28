@@ -147,15 +147,11 @@
             <!-- /.card -->
         </div>
 
-        <div class="col-md-6" id="upfile-create-users-element">
-            <upfile-create-users
-                submit-url="{{ route('client.users.store', ['tenant_id' => auth()->user()->tenant_id]) }}"></upfile-create-users>
-        </div>
+        <div class="col-md-6" data-vue-app="upload-file-create-users"
+            data-submit-url="{{ route('client.users.store', ['tenant_id' => auth()->user()->tenant_id]) }}"></div>
 
-        <div class="col-md-12" id="bulk-insert-element">
-            <bulk-insert-users
-                submit-url="{{ route('client.users.store', ['tenant_id' => auth()->user()->tenant_id]) }}"></bulk-insert-users>
-        </div>
+        <div class="col-md-12" data-vue-app="bulk-insert-users"
+            data-submit-url="{{ route('client.users.store', ['tenant_id' => auth()->user()->tenant_id]) }}"></div>
     </div>
     <!-- /.content -->
 @endsection

@@ -387,7 +387,6 @@
 import { ref, onMounted, nextTick, computed } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
-import PriorityIcon from "./PriorityIcon.vue";
 
 const priorityMap = {
     0: "Trivial",

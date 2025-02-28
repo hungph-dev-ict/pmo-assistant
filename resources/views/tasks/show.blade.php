@@ -5,14 +5,14 @@
 @endsection
 
 @section('custom_meta')
-<meta property="og:title" content="Chi tiết công việc - {{ $task->name }}">
-<meta property="og:description" content="{{ Str::limit(strip_tags($task->description), 100) }}">
-<meta property="og:image" content="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}">
-<meta property="og:url" content="{{ url()->current() }}">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Chi tiết công việc - {{ $task->name }}">
-<meta name="twitter:description" content="{{ Str::limit(strip_tags($task->description), 100) }}">
-<meta name="twitter:image" content="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}">
+    <meta property="og:title" content="Chi tiết công việc - {{ $task->name }}">
+    <meta property="og:description" content="{{ Str::limit(strip_tags($task->description), 100) }}">
+    <meta property="og:image" content="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Chi tiết công việc - {{ $task->name }}">
+    <meta name="twitter:description" content="{{ Str::limit(strip_tags($task->description), 100) }}">
+    <meta name="twitter:image" content="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}">
 @endsection
 
 @section('breadcrumb')
@@ -30,9 +30,8 @@
 @endsection
 
 @section('content')
-    <div id="task-detail">
-        <task-detail task='@json($task)' list-assignee="{{ $listAssignee }}" user-role="{{ auth()->user()->getRoleNames() }}"></task-detail>
-    </div>
+    <div data-vue-app="task-detail" data-task="@json($task)" data-list-assignee="{{ $listAssignee }}"
+        data-user-role="{{ auth()->user()->getRoleNames() }}"></div>
 @endsection
 
 @section('inline_js')

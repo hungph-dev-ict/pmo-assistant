@@ -18,10 +18,9 @@
 @endsection
 
 @section('content')
-    <div id="task-list">
-        <task-container project-id="{{ $project_id }}" list-assignee="{{ $listAssignee }}"
-            current-userid="{{ auth()->user()->id }}" current-user-account="{{ auth()->user()->account }}" user-role="{{ auth()->user()->getRoleNames() }}"></task-container>
-    </div>
+    <div data-vue-app="task-container" data-project-id="{{ $project_id }}" data-list-assignee="{{ $listAssignee }}"
+        data-current-userid="{{ auth()->user()->id }}" data-current-user-account="{{ auth()->user()->account }}"
+        data-user-role="{{ auth()->user()->getRoleNames() }}"></div>
 @endsection
 
 @section('inline_js')
