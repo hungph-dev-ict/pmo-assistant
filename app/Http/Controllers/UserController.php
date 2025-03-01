@@ -13,6 +13,7 @@ use App\Mail\TenantUserRegisteredMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -151,7 +152,7 @@ class UserController extends Controller
         $createNewUser = $this->userService->createUserByForm($newUserInfo);
 
         if ($createNewUser) {
-            return redirect()->route('client.users.list', auth()->user()->tenant_id)
+            return redirect()->route('client.users.list', Auth::user()->tenant_id)
                 ->with('success', 'User created successfully.');
         }
 
@@ -201,7 +202,7 @@ class UserController extends Controller
         $updateUser = $this->userService->updateUser($idUser, $updateUserInfo);
 
         if ($updateUser) {
-            return redirect()->route('client.users.list', auth()->user()->tenant_id)
+            return redirect()->route('client.users.list', Auth::user()->tenant_id)
                 ->with('success', 'User update successfully.');
         }
 

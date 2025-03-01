@@ -28,19 +28,37 @@ class DashboardController extends Controller
         // Lấy tất cả task chưa "Done" của user đang đăng nhập
         $incompleteTasks = Task::where('assignee', $userId)
             ->where('status', '!=', 'Done')
-            ->get();
+            ->paginate(10, ['*'], 'it_page')->through(function ($task) {
+                if ($task->plan_end_date < now()) {
+                    $task->overdue = true;
+                }
 
-        $criticalTasks = Task::where(function ($query) {
-            $query->whereDate('plan_end_date', '<', now()) // Overdue
+                if ($task->plan_start_date < now()->subDays(1) && $task->status != 4) {
+                    $task->delayed = true;
+                }
+
+                if ($task->actual_effort > $task->estimate_effort) {
+                    $task->overcost = true;
+                };
+                return $task;
+            });
+
+        $criticalTasks = Task::where(function ($query) use ($userId) {
+            $query->where('assignee', $userId)
+                ->whereDate('plan_end_date', '<', now()) // Overdue
                 ->orWhereDate('plan_start_date', '<', now()->subDays(1)) // Start late
                 ->orWhereColumn('actual_effort', '>', 'estimate_effort'); // Overcost
-        })->get()->map(function ($task) {
+        })->with('taskStatus', 'taskPriority')->paginate(10, ['*'], 'ct_page')->through(function ($task) {
             if ($task->plan_end_date < now()) {
-                $task->alert_type = 'Overdue';
-            } elseif ($task->plan_start_date < now()->subDays(1)) {
-                $task->alert_type = 'DelayedStart';
-            } elseif ($task->actual_effort > $task->estimate_effort) {
-                $task->alert_type = 'Overcost';
+                $task->overdue = true;
+            }
+
+            if ($task->plan_start_date < now()->subDays(1) && $task->status != 4) {
+                $task->delayed = true;
+            }
+
+            if ($task->actual_effort > $task->estimate_effort) {
+                $task->overcost = true;
             }
             return $task;
         });

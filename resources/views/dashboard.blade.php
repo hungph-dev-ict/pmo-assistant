@@ -76,7 +76,7 @@
     <div class="row">
         <div class="col-6">
             <div class="card">
-                <div class="card-header border-0">
+                <div class="card-header">
                     <h3 class="card-title">Your Incomplete Tasks</h3>
                     {{-- <div class="card-tools">
                         <a href="#" class="btn btn-tool btn-sm">
@@ -88,12 +88,14 @@
                     </div> --}}
                 </div>
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-striped table-valign-middle">
+                    <table class="table table-sm table-hover table-valign-middle">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Priority</th>
-                                <th>Status</th>
+                                <th style="width: 40%">Title</th>
+                                <th style="width: 10%" class="text-center">Priority</th>
+                                <th style="width: 10%">Status</th>
+                                <th style="width: 20%">Plan Start Date</th>
+                                <th style="width: 20%">Actual Start Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -102,41 +104,60 @@
                                     <td>
                                         {{ $task->name }}
                                     </td>
-                                    <td>{{ $task->priority }}</td>
-                                    <td>
-                                        {{ $task->status }}
+                                    <td class="text-center"><x-priority-icon :priority="$task->taskPriority->value1" /></td>
+                                    <td><span
+                                            class="{{ getStatusClass($task->status) }}">{{ $task->taskStatus->value1 }}</span>
+                                    </td>
+                                    <td class="text-nowrap">
+                                        {{ $task->plan_start_date }}
+                                        @if ($task->delayed)
+                                            🔥
+                                        @endif
+                                    </td>
+                                    <td class="text-nowrap">
+                                        {{ $task->plan_end_date }}
+                                        @if ($task->overdue)
+                                            🔥
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
+                <div class="card-footer clearfix">
+                    <div class="pagination pagination-sm float-right" style="height: 30px">
+                        {{ $incompleteTasks->appends(['it_page' => request('it_page')])->links('vendor.pagination.bootstrap-4') }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-6">
             <div class="card">
-                <div class="card-header border-0">
+                <div class="card-header">
                     <h3 class="card-title">Your Critical Tasks</h3>
-                    {{-- <div class="card-tools">
-                        <a href="#" class="btn btn-tool btn-sm">
-                            <i class="fas fa-download"></i>
-                        </a>
-                        <a href="#" class="btn btn-tool btn-sm">
-                            <i class="fas fa-bars"></i>
-                        </a>
-                    </div> --}}
+                    <div class="card-tools">
+                        {{-- <ul class="pagination pagination-sm float-right">
+                            <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                        </ul> --}}
+
+                    </div>
                 </div>
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-striped table-valign-middle">
+                    <table class="table table-sm table-hover table-valign-middle">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                                <th>Plan Start Date</th>
-                                <th>Actual Start Date</th>
-                                <th>Plan Effort</th>
-                                <th>Actual Effort</th>
+                                <th style="width: 40%">Title</th>
+                                <th style="width: 5%" class="text-center">Priority</th>
+                                <th style="width: 5%">Status</th>
+                                <th style="width: 15%">Plan Start</th>
+                                <th style="width: 15%">Actual Start</th>
+                                <th style="width: 10%">Plan(H)</th>
+                                <th style="width: 10%">Actual(H)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -145,17 +166,19 @@
                                     <td>
                                         {{ $task->name }}
                                     </td>
-                                    <td>{{ $task->priority }}</td>
-                                    <td>{{ $task->status }}</td>
-                                    <td>
+                                    <td class="text-center"><x-priority-icon :priority="$task->taskPriority->value1" /></td>
+                                    <td><span
+                                            class="{{ getStatusClass($task->status) }}">{{ $task->taskStatus->value1 }}</span>
+                                    </td>
+                                    <td class="text-nowrap">
                                         {{ $task->plan_start_date }}
-                                        @if ($task->alert_type == 'DelayedStart')
+                                        @if ($task->delayed)
                                             🔥
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-nowrap">
                                         {{ $task->plan_end_date }}
-                                        @if ($task->alert_type == 'Overdue')
+                                        @if ($task->overdue)
                                             🔥
                                         @endif
                                     </td>
@@ -163,16 +186,21 @@
                                         {{ $task->estimate_effort }}
                                     </td>
                                     <td>
-                                        @if ($task->alert_type == 'Overcost')
+                                        {{ $task->actual_effort }}
+                                        @if ($task->overcost)
                                             <i class="fas fa-exclamation-triangle text-danger ml-2"
                                                 title="Actual effort exceeds plan effort"></i>
                                         @endif
-                                        {{ $task->actual_effort }}
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div class="card-footer clearfix">
+                    <div class="pagination pagination-sm float-right" style="height: 30px">
+                        {{ $criticalTasks->appends(['ct_page' => request('ct_page')])->links('vendor.pagination.bootstrap-4') }}
+                    </div>
                 </div>
             </div>
         </div>
