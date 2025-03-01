@@ -17,7 +17,13 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('pm.task', $task->project->id) }}">{{ $task->project->name }}</a></li>
+    <li class="breadcrumb-item">
+        @if (auth()->user()->hasRole(['pm', 'client']))
+            <a href="{{ route('pm.task', $task->project->id) }}">{{ $task->project->name }}</a>
+        @else
+            <a href="{{ route('staff.task', $task->project->id) }}">{{ $task->project->name }}</a>
+        @endif
+    </li>
     <li class="breadcrumb-item active">{{ $task->name }}</li>
 @endsection
 

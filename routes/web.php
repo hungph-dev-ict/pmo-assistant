@@ -22,9 +22,7 @@ Route::middleware('auth')->group(function () {
     // Route::get('/', function () {
     //     return view('dashboard');
     // });
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])->name('password.change');
