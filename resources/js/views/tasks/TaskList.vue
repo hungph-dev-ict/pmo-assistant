@@ -24,7 +24,7 @@
                         <th style="width: 2%">#</th>
                         <th
                             v-if="isColumnVisible('epic_task')"
-                            style="width: 26%"
+                            style="width: 22%"
                         >
                             Epic/Task
                         </th>
@@ -83,7 +83,7 @@
                         <th
                             class="text-center"
                             v-if="isColumnVisible('action')"
-                            style="width: 16%"
+                            style="width: 20%"
                         >
                             Action
                         </th>
@@ -500,163 +500,19 @@
             </table>
         </div>
     </div>
-    <template v-if="showLogWorkModal">
-        <div
-            class="modal fade show d-block"
-            tabindex="-1"
-            :aria-hidden="!showLogWorkModal"
-        >
-            <div class="modal-dialog modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Log Work</h5>
-                        <button
-                            type="button"
-                            class="close"
-                            @click="showLogWorkModal = false"
-                        >
-                            &times;
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Title -->
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                :value="selectedTask.name"
-                                disabled
-                            />
-                        </div>
-
-                        <!-- Assignee -->
-                        <div class="form-group">
-                            <label>Assignee</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                :value="selectedTask.assignee?.account || 'N/A'"
-                                disabled
-                            />
-                        </div>
-
-                        <!-- Estimate Effort -->
-                        <div class="form-group">
-                            <label>Plan Effort</label>
-                            <input
-                                type="number"
-                                class="form-control"
-                                :value="selectedTask.estimate_effort"
-                                disabled
-                            />
-                        </div>
-
-                        <!-- Actual Effort -->
-                        <div class="form-group position-relative">
-                            <label>Actual Effort</label
-                            ><i
-                                v-if="
-                                    selectedTask.actual_effort >
-                                    selectedTask.estimate_effort
-                                "
-                                class="fas fa-exclamation-triangle text-danger ml-2"
-                                title="Actual effort exceeds plan effort"
-                            ></i>
-                            <div class="d-flex align-items-center">
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    :value="selectedTask.actual_effort"
-                                    disabled
-                                />
-                            </div>
-                        </div>
-
-                        <!-- Log Date (Datepicker) -->
-                        <div class="form-group">
-                            <label for="logDate"
-                                >Log Date<span style="color: red"
-                                    >*</span
-                                ></label
-                            >
-                            <div
-                                class="input-group date"
-                                id="logDatePicker"
-                                data-target-input="nearest"
-                            >
-                                <input
-                                    type="text"
-                                    id="logTime"
-                                    v-model="logDate"
-                                    class="form-control datetimepicker-input"
-                                    data-target="#logDatePicker"
-                                />
-                                <div
-                                    class="input-group-append"
-                                    data-target="#logDatePicker"
-                                    data-toggle="datetimepicker"
-                                >
-                                    <div class="input-group-text">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Log Time -->
-                        <div class="form-group">
-                            <label
-                                >Log Time (Hours)<span style="color: red"
-                                    >*</span
-                                ></label
-                            >
-                            <input
-                                type="number"
-                                class="form-control"
-                                v-model="logTime"
-                                step="0.1"
-                                min="0"
-                            />
-                        </div>
-
-                        <!-- Description -->
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea
-                                class="form-control"
-                                v-model="logDescription"
-                                rows="3"
-                            ></textarea>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button
-                            class="btn btn-secondary"
-                            @click="showLogWorkModal = false"
-                        >
-                            Close
-                        </button>
-                        <button
-                            class="btn btn-primary"
-                            @click="submitLogWork(selectedTask.id)"
-                        >
-                            <span v-if="isLoading">
-                                <i class="fas fa-spinner fa-spin"></i>
-                                Processing... </span
-                            ><span v-else> Save </span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template>
+    <LogWorkModal
+        :showModal="showLogWorkModal"
+        :task="selectedTask"
+        :projectId="projectId"
+        @close="showLogWorkModal = false"
+        @update-task="handleTaskUpdate"
+    />
 </template>
 
 <script setup>
 import { computed, ref, nextTick, onMounted, reactive } from "vue";
 import Swal from "sweetalert2";
+import LogWorkModal from "../../components/LogWorkModal.vue";
 
 const props = defineProps({
     projectId: String,
@@ -684,11 +540,7 @@ const statusList = ref([
 
 const selectedTask = ref(null);
 const showLogWorkModal = ref(false);
-const logDate = ref("");
-const logTime = ref("");
-const logDescription = ref("");
 const globalIsEditting = ref(false);
-const isLoading = ref(false);
 
 onMounted(() => {
     tasks.value = props.filteredTasks.map((task) => ({
@@ -975,83 +827,9 @@ const softDelete = async (taskId) => {
 const openLogWorkModal = (task) => {
     selectedTask.value = task;
     showLogWorkModal.value = true;
-    logTime.value = "";
-    logDate.value = "";
-    logDescription.value = "";
+}
 
-    nextTick(() => {
-        $("#logDatePicker").datetimepicker({
-            format: "YYYY-MM-DD",
-            useCurrent: false,
-            allowInputToggle: true,
-        });
-
-        $("#logDatePicker").on("change.datetimepicker", (e) => {
-            logDate.value = e.date
-                ? e.date.format("YYYY-MM-DD")
-                : e.target.value
-                ? e.target.value
-                : "";
-        });
-    });
-};
-
-const submitLogWork = async (taskId) => {
-    if (isLoading.value) return;
-    isLoading.value = true;
-    if (!logDate.value) {
-        toastr.error("Please enter a valid log date.");
-        isLoading.value = false;
-        return;
-    }
-
-    if (!logTime.value || logTime.value <= 0) {
-        toastr.error("Please enter a valid log time.");
-        isLoading.value = false;
-        return;
-    }
-
-    try {
-        const payload = {
-            task_id: taskId,
-            log_date: logDate.value,
-            log_time: logTime.value,
-            description: logDescription.value,
-        };
-
-        await axios.post(
-            `/api/${props.projectId}/tasks/${taskId}/worklog`,
-            payload
-        );
-        toastr.success("Work logged successfully!");
-
-        // Chỉ reset nếu request thành công
-        logTime.value = "";
-        logDate.value = "";
-        logDescription.value = "";
-
-        // Đóng modal
-        showLogWorkModal.value = false;
-        isLoading.value = false;
-    } catch (error) {
-        console.log(error);
-        // Lấy thông tin lỗi từ response
-        const errorMessage =
-            error.response?.data?.message || "Failed to create task!";
-        const errorDetail = error.response?.data?.error || "Unknown error";
-
-        // Hiển thị toastr lỗi với cả message và error detail
-        toastr.error(`${errorMessage}: ${errorDetail}`);
-        isLoading.value = false;
-    }
-
-    // Đóng modal
-    showLogWorkModal.value = false;
-    logTime.value = "";
-    logDate.value = "";
-    logDescription.value = "";
-    isLoading.value = false;
-
+const handleTaskUpdate = () => {
     emit("update-task");
 };
 
@@ -1094,5 +872,21 @@ const exportTasks = () => {
 .no-spinner::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+</style>
+
+<style scoped>
+table tbody tr {
+    height: 12px !important;
+}
+
+table tbody tr td {
+    padding: 1px 1px !important;
+    vertical-align: middle;
+}
+
+table tbody tr:hover {
+    background-color: #b3e0f5 !important;
+    transition: background-color 0.2s ease-in-out !important;
 }
 </style>

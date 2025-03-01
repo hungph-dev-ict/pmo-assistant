@@ -41,6 +41,11 @@ class Task extends Model
         return $this->hasMany(Task::class, 'parent_id');
     }
 
+    public function worklogs()
+    {
+        return $this->hasMany(Worklog::class, 'task_id');
+    }
+
     // Relationship to parent task
     public function parent()
     {

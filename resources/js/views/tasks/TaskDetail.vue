@@ -1,393 +1,337 @@
 <template>
-    <div class="row">
-        <div class="col-md-8">
-            <!-- Box Comment -->
-            <div class="card card-widget">
-                <div class="card-header">
-                    <h3
-                        v-if="!isEditingInfo || !hasPermissionPm"
-                        class="card-title"
-                        style="
+    <div>
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Box Comment -->
+                <div class="card card-widget">
+                    <div class="card-header">
+                        <h3 v-if="!isEditingInfo || !hasPermissionPm" class="card-title" style="
                             display: inline-flex;
                             align-items: center;
                             gap: 5px;
-                        "
-                    >
-                        <PriorityIcon :priority="priorityMap[task.priority]" />
-                        <span v-if="task.type == 1">
-                            {{ task.parent.name }} /
-                        </span>
-                        {{ task.name }}
-                    </h3>
-                    <template v-else>
-                        <label>Title</label>
-                        <input
-                            type="text"
-                            v-model="editTask.name"
-                            class="form-control"
-                            :disabled="isLoading"
-                        />
-                    </template>
+                        ">
+                            <PriorityIcon :priority="priorityMap[task.priority]" />
+                            <span v-if="task.type == 1">
+                                {{ task.parent.name }} /
+                            </span>
+                            {{ task.name }}
+                        </h3>
+                        <template v-else>
+                            <label>Title</label>
+                            <input type="text" v-model="editTask.name" class="form-control" :disabled="isLoading" />
+                        </template>
 
-                    <span
-                        v-if="!isEditingInfo || !hasPermissionPm"
-                        :class="statusClass(task.status)"
-                        >{{ task.task_status?.value1 }}</span
-                    >
-                    <!-- /.user-block -->
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <p
-                        v-if="!isEditingInfo || !hasPermissionPm"
-                        class="text-muted description"
-                    >
-                        {{ task.description }}
-                    </p>
-                    <template v-else>
-                        <label>Description</label>
-                        <textarea
-                            v-model="editTask.description"
-                            rows="10"
-                            class="form-control"
-                            :disabled="isLoading"
-                        ></textarea>
-                    </template>
-
-                    <br />
-                    <div class="text-muted">
-                        <p class="text-sm">
-                            Components
-                            <b class="d-block">{{ task.components ?? "-" }}</b>
-                        </p>
+                        <span v-if="!isEditingInfo || !hasPermissionPm" :class="statusClass(task.status)">{{
+                            task.task_status?.value1 }}</span>
+                        <!-- /.user-block -->
                     </div>
-
-                    <br />
-                    <div class="text-muted">
-                        <p v-if="!isEditingInfo" class="text-sm description">
-                            Memo
-                            <b class="d-block">{{ task.memo ?? "-" }}</b>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <p v-if="!isEditingInfo || !hasPermissionPm" class="text-muted description">
+                            {{ task.description }}
                         </p>
                         <template v-else>
-                            <label>Memo</label>
-                            <textarea
-                                rows="3"
-                                class="form-control"
-                                v-model="editTask.memo"
-                                :disabled="isLoading"
-                            ></textarea>
+                            <label>Description</label>
+                            <textarea v-model="editTask.description" rows="10" class="form-control"
+                                :disabled="isLoading"></textarea>
                         </template>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-        </div>
-        <!-- /.col -->
 
-        <div class="col-md-4">
-            <!-- Widget: user widget style 2 -->
-            <div class="card card-widget widget-user-2 shadow-sm">
-                <div class="card-header">
-                    <div class="user-block">
-                        <!-- <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image">
+                        <br />
+                        <div class="text-muted">
+                            <p class="text-sm">
+                                Components
+                                <b class="d-block">{{ task.components ?? "-" }}</b>
+                            </p>
+                        </div>
+
+                        <br />
+                        <div class="text-muted">
+                            <p v-if="!isEditingInfo" class="text-sm description">
+                                Memo
+                                <b class="d-block">{{ task.memo ?? "-" }}</b>
+                            </p>
+                            <template v-else>
+                                <label>Memo</label>
+                                <textarea rows="3" class="form-control" v-model="editTask.memo"
+                                    :disabled="isLoading"></textarea>
+                            </template>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+
+            <div class="col-md-4">
+                <!-- Widget: user widget style 2 -->
+                <div class="card card-widget widget-user-2 shadow-sm">
+                    <div class="card-header">
+                        <div class="user-block">
+                            <!-- <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image">
                         <img src="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}" alt="PMO Assistant Logo"
             class="brand-image img-circle elevation-3"> -->
-                        <span class="username">{{
-                            task?.creator?.name +
-                            " (" +
-                            task?.creator?.account +
-                            ")"
-                        }}</span>
-                        <span class="description">{{ task.created_at }}</span>
+                            <span class="username">{{
+                                task?.creator?.name +
+                                " (" +
+                                task?.creator?.account +
+                                ")"
+                                }}</span>
+                            <span class="description">{{ task.created_at }}</span>
+                        </div>
+                        <div class="card-tools">
+                            <template v-if="!isEditingInfo">
+                                <button @click="edit(editTask)" class="btn btn-info btn-sm mr-2">
+                                    Edit
+                                </button>
+                                <button v-if="hasPermissionPm" @click="deleteTask(editTask)"
+                                    class="btn btn-danger btn-sm mr-2">
+                                    Delete
+                                </button>
+                            </template>
+                            <template v-else>
+                                <button @click="update(editTask)" class="btn btn-success btn-sm mr-2">
+                                    <span v-if="isLoading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        Updating...
+                                    </span>
+                                    <span v-else> Update</span>
+                                </button>
+                                <button @click="cancel" class="btn btn-secondary btn-sm mr-2">
+                                    Cancel
+                                </button>
+                            </template>
+                        </div>
                     </div>
-                    <div class="card-tools">
-                        <template v-if="!isEditingInfo">
-                            <button
-                                @click="edit(editTask)"
-                                class="btn btn-info btn-sm mr-2"
-                            >
-                                Edit
-                            </button>
-                            <button
-                                v-if="hasPermissionPm"
-                                @click="deleteTask(editTask)"
-                                class="btn btn-danger btn-sm mr-2"
-                            >
-                                Delete
-                            </button>
-                        </template>
-                        <template v-else>
-                            <button
-                                @click="update(editTask)"
-                                class="btn btn-success btn-sm mr-2"
-                            >
-                                <span v-if="isLoading">
-                                    <i class="fas fa-spinner fa-spin"></i>
-                                    Updating...
+                    <div class="card-footer p-0">
+                        <ul class="nav flex-column">
+                            <li v-if="isEditingInfo" class="nav-item">
+                                <span class="nav-link">
+                                    Status
+                                    <select class="form-control" v-model="editTask.status" id="selectStatus"
+                                        :disabled="isLoading">
+                                        <option :value="0">Open</option>
+                                        <option :value="1">In Progress</option>
+                                        <option :value="2">Resolved</option>
+                                        <option :value="3">Feedback</option>
+                                        <option :value="4">Done</option>
+                                        <option :value="5">Reopen</option>
+                                    </select>
                                 </span>
-                                <span v-else> Update</span>
-                            </button>
-                            <button
-                                @click="cancel"
-                                class="btn btn-secondary btn-sm mr-2"
-                            >
-                                Cancel
-                            </button>
-                        </template>
+                            </li>
+
+                            <li v-if="isEditingInfo && hasPermissionPm" class="nav-item">
+                                <span class="nav-link flex items-center gap-2">
+                                    Priority
+                                    <select class="form-control" v-model="editTask.priority" id="selectPriority"
+                                        :disabled="isLoading">
+                                        <option :value="9">🚧 Blocker</option>
+                                        <option :value="8">🔥 Critical</option>
+                                        <option :value="7">🔴 Highest</option>
+                                        <option :value="6">🟠 Higher</option>
+                                        <option :value="5">🟡 High</option>
+                                        <option :value="4">🟢 Minor</option>
+                                        <option :value="3">🔵 Low</option>
+                                        <option :value="2">⚪ Lower</option>
+                                        <option :value="1">⚫ Lowest</option>
+                                        <option :value="0">🟣 Trivial</option>
+                                    </select>
+                                </span>
+                            </li>
+
+                            <li class="nav-item">
+                                <span class="nav-link">
+                                    Assignee
+                                    <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
+                                        task.assignee_user?.account }} -
+                                        {{ task.assignee_user?.name }}</strong>
+                                    <select v-else class="form-control" id="selectAssignee" v-model="editTask.assignee"
+                                        :disabled="isLoading">
+                                        <option v-for="user in listAssignee" :value="user.id">
+                                            {{ user.account }}
+                                        </option>
+                                    </select>
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link">
+                                    Plan Start Date
+                                    <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
+                                        task.plan_start_date ??
+                                        "-" }}</strong>
+
+                                    <div v-else class="input-group date" id="dpPlanStartDate"
+                                        data-target-input="nearest">
+                                        <input type="text" class="form-control datetimepicker-input"
+                                            v-model="editTask.plan_start_date" data-target="#dpPlanStartDate"
+                                            :disabled="isLoading" />
+                                        <div class="input-group-append" data-target="#dpPlanStartDate"
+                                            data-toggle="datetimepicker">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+
+                            <li class="nav-item">
+                                <span class="nav-link">
+                                    Plan End Date
+                                    <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
+                                        task.plan_end_date ??
+                                        "-" }}</strong>
+
+                                    <div v-else class="input-group date" id="dpPlanEndDate" data-target-input="nearest">
+                                        <input type="text" class="form-control datetimepicker-input"
+                                            v-model="editTask.plan_end_date" data-target="#dpPlanEndDate"
+                                            :disabled="isLoading" />
+                                        <div class="input-group-append" data-target="#dpPlanEndDate"
+                                            data-toggle="datetimepicker">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+
+                            <li class="nav-item">
+                                <span class="nav-link">
+                                    Actual Start Date
+                                    <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
+                                        task.actual_start_date
+                                        ?? "-" }}</strong>
+
+                                    <div v-else class="input-group date" id="dpActualStartDate"
+                                        data-target-input="nearest">
+                                        <input type="text" class="form-control datetimepicker-input"
+                                            v-model="editTask.actual_start_date" data-target="#dpActualStartDate"
+                                            :disabled="isLoading" />
+                                        <div class="input-group-append" data-target="#dpActualStartDate"
+                                            data-toggle="datetimepicker">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+
+                            <li class="nav-item">
+                                <span class="nav-link">
+                                    Actual End Date
+                                    <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
+                                        task.actual_end_date ??
+                                        "-" }}</strong>
+
+                                    <div v-else class="input-group date" id="dpActualEndDate"
+                                        data-target-input="nearest">
+                                        <input type="text" class="form-control datetimepicker-input"
+                                            v-model="editTask.actual_end_date" data-target="#dpActualEndDate"
+                                            :disabled="isLoading" />
+                                        <div class="input-group-append" data-target="#dpActualEndDate"
+                                            data-toggle="datetimepicker">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+
+                            <li class="nav-item">
+                                <span class="nav-link">
+                                    Plan Effort
+                                    <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
+                                        task.estimate_effort
+                                        }}</strong>
+                                    <input v-else type="text" v-model="editTask.estimate_effort" class="form-control"
+                                        :disabled="isLoading" />
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link">
+                                    Actual Effort
+                                    <strong class="float-right">{{
+                                        task.actual_effort
+                                        }}</strong>
+                                </span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <div class="card-footer p-0">
-                    <ul class="nav flex-column">
-                        <li v-if="isEditingInfo" class="nav-item">
-                            <span class="nav-link">
-                                Status
-                                <select
-                                    class="form-control"
-                                    v-model="editTask.status"
-                                    id="selectStatus"
-                                    :disabled="isLoading"
-                                >
-                                    <option :value="0">Open</option>
-                                    <option :value="1">In Progress</option>
-                                    <option :value="2">Resolved</option>
-                                    <option :value="3">Feedback</option>
-                                    <option :value="4">Done</option>
-                                    <option :value="5">Reopen</option>
-                                </select>
-                            </span>
-                        </li>
-
-                        <li
-                            v-if="isEditingInfo && hasPermissionPm"
-                            class="nav-item"
-                        >
-                            <span class="nav-link flex items-center gap-2">
-                                Priority
-                                <select
-                                    class="form-control"
-                                    v-model="editTask.priority"
-                                    id="selectPriority"
-                                    :disabled="isLoading"
-                                >
-                                    <option :value="9">🚧 Blocker</option>
-                                    <option :value="8">🔥 Critical</option>
-                                    <option :value="7">🔴 Highest</option>
-                                    <option :value="6">🟠 Higher</option>
-                                    <option :value="5">🟡 High</option>
-                                    <option :value="4">🟢 Minor</option>
-                                    <option :value="3">🔵 Low</option>
-                                    <option :value="2">⚪ Lower</option>
-                                    <option :value="1">⚫ Lowest</option>
-                                    <option :value="0">🟣 Trivial</option>
-                                </select>
-                            </span>
-                        </li>
-
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                Assignee
-                                <strong
-                                    v-if="!isEditingInfo || !hasPermissionPm"
-                                    class="float-right"
-                                    >{{ task.assignee_user?.account }} -
-                                    {{ task.assignee_user?.name }}</strong
-                                >
-                                <select
-                                    v-else
-                                    class="form-control"
-                                    id="selectAssignee"
-                                    v-model="editTask.assignee"
-                                    :disabled="isLoading"
-                                >
-                                    <option
-                                        v-for="user in listAssignee"
-                                        :value="user.id"
-                                    >
-                                        {{ user.account }}
-                                    </option>
-                                </select>
-                            </span>
-                        </li>
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                Plan Start Date
-                                <strong
-                                    v-if="!isEditingInfo || !hasPermissionPm"
-                                    class="float-right"
-                                    >{{ task.plan_start_date ?? "-" }}</strong
-                                >
-
-                                <div
-                                    v-else
-                                    class="input-group date"
-                                    id="dpPlanStartDate"
-                                    data-target-input="nearest"
-                                >
-                                    <input
-                                        type="text"
-                                        class="form-control datetimepicker-input"
-                                        v-model="editTask.plan_start_date"
-                                        data-target="#dpPlanStartDate"
-                                        :disabled="isLoading"
-                                    />
-                                    <div
-                                        class="input-group-append"
-                                        data-target="#dpPlanStartDate"
-                                        data-toggle="datetimepicker"
-                                    >
-                                        <div class="input-group-text">
-                                            <i class="fa fa-calendar"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </span>
-                        </li>
-
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                Plan End Date
-                                <strong
-                                    v-if="!isEditingInfo || !hasPermissionPm"
-                                    class="float-right"
-                                    >{{ task.plan_end_date ?? "-" }}</strong
-                                >
-
-                                <div
-                                    v-else
-                                    class="input-group date"
-                                    id="dpPlanEndDate"
-                                    data-target-input="nearest"
-                                >
-                                    <input
-                                        type="text"
-                                        class="form-control datetimepicker-input"
-                                        v-model="editTask.plan_end_date"
-                                        data-target="#dpPlanEndDate"
-                                        :disabled="isLoading"
-                                    />
-                                    <div
-                                        class="input-group-append"
-                                        data-target="#dpPlanEndDate"
-                                        data-toggle="datetimepicker"
-                                    >
-                                        <div class="input-group-text">
-                                            <i class="fa fa-calendar"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </span>
-                        </li>
-
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                Actual Start Date
-                                <strong
-                                    v-if="!isEditingInfo || !hasPermissionPm"
-                                    class="float-right"
-                                    >{{ task.actual_start_date ?? "-" }}</strong
-                                >
-
-                                <div
-                                    v-else
-                                    class="input-group date"
-                                    id="dpActualStartDate"
-                                    data-target-input="nearest"
-                                >
-                                    <input
-                                        type="text"
-                                        class="form-control datetimepicker-input"
-                                        v-model="editTask.actual_start_date"
-                                        data-target="#dpActualStartDate"
-                                        :disabled="isLoading"
-                                    />
-                                    <div
-                                        class="input-group-append"
-                                        data-target="#dpActualStartDate"
-                                        data-toggle="datetimepicker"
-                                    >
-                                        <div class="input-group-text">
-                                            <i class="fa fa-calendar"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </span>
-                        </li>
-
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                Actual End Date
-                                <strong
-                                    v-if="!isEditingInfo || !hasPermissionPm"
-                                    class="float-right"
-                                    >{{ task.actual_end_date ?? "-" }}</strong
-                                >
-
-                                <div
-                                    v-else
-                                    class="input-group date"
-                                    id="dpActualEndDate"
-                                    data-target-input="nearest"
-                                >
-                                    <input
-                                        type="text"
-                                        class="form-control datetimepicker-input"
-                                        v-model="editTask.actual_end_date"
-                                        data-target="#dpActualEndDate"
-                                        :disabled="isLoading"
-                                    />
-                                    <div
-                                        class="input-group-append"
-                                        data-target="#dpActualEndDate"
-                                        data-toggle="datetimepicker"
-                                    >
-                                        <div class="input-group-text">
-                                            <i class="fa fa-calendar"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </span>
-                        </li>
-
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                Plan Effort
-                                <strong
-                                    v-if="!isEditingInfo || !hasPermissionPm"
-                                    class="float-right"
-                                    >{{ task.estimate_effort }}</strong
-                                >
-                                <input
-                                    v-else
-                                    type="text"
-                                    v-model="editTask.estimate_effort"
-                                    class="form-control"
-                                    :disabled="isLoading"
-                                />
-                            </span>
-                        </li>
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                Actual Effort
-                                <strong class="float-right">{{
-                                    task.actual_effort
-                                }}</strong>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
+                <!-- /.widget-user -->
             </div>
-            <!-- /.widget-user -->
+            <!-- /.col -->
         </div>
-        <!-- /.col -->
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Box Comment -->
+                <div class="card card-widget">
+                    <div class="card-header">
+                        <h3>
+                            Recent Activity
+                        </h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        Coming Soon...
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+
+            <div class="col-md-4">
+                <!-- Widget: user widget style 2 -->
+                <div class="card card-widget widget-user-2 shadow-sm">
+                    <div class="card-header">
+                        <h5 class="card-title">Worklog List</h5>
+                        <!-- <div class="card-tools">
+                            <button @click.prevent="openLogWorkModal(task)" class="btn btn-primary btn-sm mr-2">
+                                Log Work
+                            </button>
+                        </div> -->
+                    </div>
+                    <div class="relative">
+                        <div v-if="worklogListIsLoading" class="overlay">
+                            <div class="spinner"></div>
+                            <p>Loading...</p>
+                        </div>
+                        <div class="card-footer p-0">
+                            <ul class="nav flex-column">
+                                <li class="nav-item" v-for="worklog in task.worklogs" :key="worklog.id">
+                                    <span class="nav-link">
+                                        <strong>{{ worklog.user.name }} ({{ worklog.user.account }})</strong> logged
+                                        <strong>{{ worklog.log_time }} {{ worklog.log_time === 1 ? 'hour' : 'hours'
+                                            }}</strong>
+                                        at <strong>{{ formatTime(worklog.created_at) }}</strong>.
+                                        {{ worklog.description ? 'Worklog details: ' + worklog.description + '.' : '' }}
+
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.widget-user -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <LogWorkModal :showModal="showLogWorkModal" :task="task" :projectId="props.projectId"
+            @close="showLogWorkModal = false" @update-worklog="handleWorklogUpdate" />
     </div>
-    <!-- /.row -->
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, computed, watch } from "vue";
+import { ref, onMounted, nextTick, computed } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import LogWorkModal from "../../components/LogWorkModal.vue";
 
 const priorityMap = {
     0: "Trivial",
@@ -505,8 +449,8 @@ const initPlugins = (editTask) => {
             let newDate = e.date
                 ? e.date.format("YYYY-MM-DD")
                 : e.target.value
-                ? e.target.value
-                : "";
+                    ? e.target.value
+                    : "";
             editTask.plan_start_date = newDate;
         });
 
@@ -514,8 +458,8 @@ const initPlugins = (editTask) => {
             let newDate = e.date
                 ? e.date.format("YYYY-MM-DD")
                 : e.target.value
-                ? e.target.value
-                : "";
+                    ? e.target.value
+                    : "";
             editTask.plan_end_date = newDate;
         });
 
@@ -523,8 +467,8 @@ const initPlugins = (editTask) => {
             let newDate = e.date
                 ? e.date.format("YYYY-MM-DD")
                 : e.target.value
-                ? e.target.value
-                : "";
+                    ? e.target.value
+                    : "";
             editTask.actual_start_date = newDate;
         });
 
@@ -532,8 +476,8 @@ const initPlugins = (editTask) => {
             let newDate = e.date
                 ? e.date.format("YYYY-MM-DD")
                 : e.target.value
-                ? e.target.value
-                : "";
+                    ? e.target.value
+                    : "";
             editTask.actual_end_date = newDate;
         });
     });
@@ -650,6 +594,25 @@ const softDelete = async (taskId) => {
         toastr.error(`${errorMessage}: ${errorDetail}`);
     }
 };
+
+const showLogWorkModal = ref(false);
+const worklogListIsLoading = ref(false);
+
+const openLogWorkModal = (task) => {
+    showLogWorkModal.value = true;
+}
+
+const handleWorklogUpdate = () => {
+    worklogListIsLoading.value = true;
+};
+
+// Hàm định dạng thời gian
+import dayjs from 'dayjs';
+
+const formatTime = (time) => {
+    return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
+};
+
 </script>
 
 <style>
