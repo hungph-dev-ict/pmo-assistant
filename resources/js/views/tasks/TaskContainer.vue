@@ -19,7 +19,7 @@
                 :filteredTasks="filteredTasks" :blankQuery="blankQuery" :visibleColumns="visibleColumns"
                 :listAssignee="parsedListAssignee"
                 :hasPermissionClient="hasPermissionClient" :hasPermissionPm="hasPermissionPm" :hasPermissionStaff="hasPermissionStaff" :currentUserId="numberCurrentUserId"
-                :currentUserAccount="currentUserAccount" @update-task="handleTaskUpdate" />
+                :currentUserAccount="currentUserAccount" @update-data="handleTaskUpdate" />
         </div>
     </div>
 </template>

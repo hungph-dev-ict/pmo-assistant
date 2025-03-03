@@ -8,6 +8,10 @@
     <li class="breadcrumb-item">Dashboard</li>
 @endsection
 
+@php
+    use Illuminate\Support\Str;
+@endphp
+
 @section('content')
     <!-- Small boxes (Stat box) -->
     <div class="row">
@@ -81,8 +85,9 @@
                         <table class="table table-sm table-hover table-valign-middle">
                             <thead>
                                 <tr>
-                                    <th style="width: 40%">Title</th>
-                                    <th style="width: 10%" class="text-center">Priority</th>
+                                    <th style="width: 12%">Project</th>
+                                    <th style="width: 30%">Title</th>
+                                    <th style="width: 8%" class="text-center">Priority</th>
                                     <th style="width: 10%">Status</th>
                                     <th style="width: 20%">Plan Start Date</th>
                                     <th style="width: 20%">Actual Start Date</th>
@@ -92,8 +97,14 @@
                                 @foreach ($incompleteTasks as $task)
                                     <tr>
                                         <td>
+                                            <a
+                                                href="{{ auth()->user()->hasRole('pm') ? route('pm.task', [$task->project->id]) : route('staff.task', [$task->project->id]) }}">
+                                                {{ Str::limit($task->project->name, 12, '...') }}
+                                            </a>
+                                        </td>
+                                        <td>
                                             <a href="{{ route('task.redirect', [$task->project->id, $task->id]) }}">
-                                                {{ $task->name }}
+                                                {{ Str::limit($task->name, 47, '...') }}
                                             </a>
                                         </td>
                                         <td class="text-center">
@@ -150,11 +161,12 @@
                         <table class="table table-sm table-hover table-valign-middle">
                             <thead>
                                 <tr>
-                                    <th style="width: 40%">Title</th>
+                                    <th style="width: 12%">Project</th>
+                                    <th style="width: 30%">Title</th>
                                     <th style="width: 5%" class="text-center">Priority</th>
                                     <th style="width: 5%">Status</th>
-                                    <th style="width: 15%">Plan Start</th>
-                                    <th style="width: 15%">Actual Start</th>
+                                    <th style="width: 14%">Plan Start</th>
+                                    <th style="width: 14%">Actual Start</th>
                                     <th style="width: 10%">Plan(H)</th>
                                     <th style="width: 10%">Actual(H)</th>
                                 </tr>
@@ -162,7 +174,17 @@
                             <tbody>
                                 @foreach ($criticalTasks as $task)
                                     <tr>
-                                        <td>{{ $task->name }}</td>
+                                        <td>
+                                            <a
+                                                href="{{ auth()->user()->hasRole('pm') ? route('pm.task', [$task->project->id]) : route('staff.task', [$task->project->id]) }}">
+                                                {{ Str::limit($task->project->name, 12, '...') }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('task.redirect', [$task->project->id, $task->id]) }}">
+                                                {{ Str::limit($task->name, 47, '...') }}
+                                            </a>
+                                        </td>
                                         <td class="text-center">
                                             <x-priority-icon :priority="$task->taskPriority->value1" />
                                         </td>

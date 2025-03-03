@@ -272,7 +272,7 @@
                 <!-- Box Comment -->
                 <div class="card card-widget">
                     <div class="card-header">
-                        <h3>
+                        <h3 class="card-title">
                             Recent Activity
                         </h3>
                     </div>
@@ -290,9 +290,9 @@
                 <!-- Widget: user widget style 2 -->
                 <div class="card card-widget widget-user-2 shadow-sm">
                     <div class="card-header">
-                        <h5 class="card-title">Worklog List</h5>
+                        <h3 class="card-title">Worklog List</h3>
                         <!-- <div class="card-tools">
-                            <button @click.prevent="openLogWorkModal(task)" class="btn btn-primary btn-sm mr-2">
+                            <button @click.prevent="openLogWorkModal(task)" class="btn btn-primary btn-sm">
                                 Log Work
                             </button>
                         </div> -->
@@ -300,7 +300,7 @@
                     <div class="relative">
                         <div v-if="worklogListIsLoading" class="overlay">
                             <div class="spinner"></div>
-                            <p>Loading...</p>
+                            <p>Reloading...</p>
                         </div>
                         <div class="card-footer p-0">
                             <ul class="nav flex-column">
@@ -323,7 +323,7 @@
             <!-- /.col -->
         </div>
         <LogWorkModal :showModal="showLogWorkModal" :task="task" :projectId="props.projectId"
-            @close="showLogWorkModal = false" @update-worklog="handleWorklogUpdate" />
+            @close="showLogWorkModal = false" @update-data="handleWorklogUpdate" />
     </div>
 </template>
 
@@ -615,9 +615,49 @@ const formatTime = (time) => {
 
 </script>
 
-<style>
+<style scoped>
 .description {
     white-space: pre-line;
     /* Giữ nguyên xuống dòng */
+}
+
+.relative {
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    z-index: 10;
+    border-radius: 8px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>
