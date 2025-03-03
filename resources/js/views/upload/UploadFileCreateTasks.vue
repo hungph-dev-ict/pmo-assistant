@@ -59,7 +59,7 @@
                                 <ul>
                                     <li>
                                         Open, In Progress, Resolved, Feedback,
-                                        Done, Reopen
+                                        Done, Reopen, Pending, Canceled
                                     </li>
                                 </ul>
                                 <li>
@@ -205,6 +205,8 @@ const statusMap = {
     Feedback: 3,
     Done: 4,
     Reopen: 5,
+    Pending: 6,
+    Canceled: 7,
 };
 const priorityMap = {
     Trivial: 0,

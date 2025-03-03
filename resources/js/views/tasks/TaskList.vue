@@ -530,12 +530,14 @@ const props = defineProps({
 // Tạo danh sách task dưới dạng ref để có thể cập nhật giá trị
 const tasks = ref([]);
 const statusList = ref([
-    "Not Started",
+    "Open",
     "In Progress",
     "Resolved",
     "Feedback",
     "Done",
     "Reopen",
+    "Pending",
+    "Canceled"
 ]);
 
 const selectedTask = ref(null);
@@ -688,12 +690,14 @@ const updateTask = async (task) => {
     };
 
     const statusMapping = {
-        "Not Started": 0,
+        Open: 0,
         "In Progress": 1,
         Resolved: 2,
         Feedback: 3,
         Done: 4,
         Reopen: 5,
+        Pending: 6,
+        Canceled: 7,
     };
 
     try {
@@ -737,7 +741,7 @@ const isOverdue = (planEndDate, status) => {
     if (!planEndDate || !status) return false;
 
     const overdueStatuses = [
-        "Not Started",
+        "Open",
         "In Progress",
         "Feedback",
         "Reopen",
@@ -750,7 +754,7 @@ const isOverdue = (planEndDate, status) => {
 const isDelayedStart = (planStartDate, status) => {
     if (!planStartDate || !status) return false;
 
-    const notStartedStatus = "Not Started";
+    const notStartedStatus = "Open";
     const today = new Date().toISOString().split("T")[0];
 
     return status === notStartedStatus && today > planStartDate;
@@ -835,7 +839,7 @@ const handleTaskUpdate = () => {
 
 const statusClass = (status) => {
     switch (status) {
-        case "Not Started":
+        case "Open":
             return "badge badge-secondary"; // Màu xám
         case "In Progress":
             return "badge badge-primary"; // Màu xanh dương
@@ -843,6 +847,10 @@ const statusClass = (status) => {
             return "badge badge-success"; // Màu xanh lá
         case "Feedback":
             return "badge badge-warning"; // Màu vàng
+        case "Pending":
+            return "badge badge-warning"; // Màu cam
+        case "Canceled":
+            return "badge badge-danger"; // Màu đỏ
         case "Done":
             return "badge badge-dark"; // Màu đen hoặc tím đậm
         case "Reopen":
