@@ -414,8 +414,8 @@
                                 {{ task.actual_effort
                                 }}<i
                                     v-if="
-                                        task.actual_effort >
-                                        task.plan_effort
+                                        Number(task.actual_effort) >
+                                        Number(task.plan_effort)
                                     "
                                     class="fas fa-exclamation-triangle text-danger ml-2"
                                     title="Actual effort exceeds plan effort"
@@ -537,7 +537,7 @@ const statusList = ref([
     "Done",
     "Reopen",
     "Pending",
-    "Canceled"
+    "Canceled",
 ]);
 
 const selectedTask = ref(null);
@@ -715,7 +715,9 @@ const updateTask = async (task) => {
             plan_end_date: updatedTask.plan_end_date,
             actual_start_date: updatedTask.actual_start_date,
             actual_end_date: updatedTask.actual_end_date,
-            ...(updatedTask.plan_effort !== null && { plan_effort: updatedTask.plan_effort })
+            ...(updatedTask.plan_effort !== null && {
+                plan_effort: updatedTask.plan_effort,
+            }),
         });
 
         toastr.success("Updated successfully!");
@@ -740,12 +742,7 @@ const updateTask = async (task) => {
 const isOverdue = (planEndDate, status) => {
     if (!planEndDate || !status) return false;
 
-    const overdueStatuses = [
-        "Open",
-        "In Progress",
-        "Feedback",
-        "Reopen",
-    ];
+    const overdueStatuses = ["Open", "In Progress", "Feedback", "Reopen"];
     const today = new Date().toISOString().split("T")[0];
 
     return overdueStatuses.includes(status) && today > planEndDate;
@@ -831,7 +828,7 @@ const softDelete = async (taskId) => {
 const openLogWorkModal = (task) => {
     selectedTask.value = task;
     showLogWorkModal.value = true;
-}
+};
 
 const handleTaskUpdate = () => {
     emit("update-data");

@@ -54,31 +54,29 @@ class DashboardController extends Controller
                 if ($task->plan_start_date < now()->subDays(1) && $task->status != 4) {
                     $task->delayed = true;
                 }
-
-                if ($task->actual_effort > $task->plan_effort) {
-                    $task->overcost = true;
-                };
                 return $task;
             });
 
-        $criticalTasks = Task::where('assignee', $userId)->with('project:id,name')->where(function ($query) use ($userId) {
-            $query->whereDate('plan_end_date', '<', now()) // Overdue
-                ->orWhereDate('plan_start_date', '<', now()->subDays(1)) // Start late
-                ->orWhereColumn('actual_effort', '>', 'plan_effort'); // Overcost
-        })->with('taskStatus', 'taskPriority')->orderBy('priority', 'desc')->paginate(10, ['*'], 'ct_page')->through(function ($task) {
-            if ($task->plan_end_date < now() && $task->status != 4) {
-                $task->overdue = true;
-            }
+        $criticalTasks = Task::where('assignee', $userId)
+            ->with(['project:id,name', 'taskStatus', 'taskPriority'])
+            ->where(function ($query) {
+                $query->whereDate('plan_end_date', '<', now()) // Overdue
+                    ->orWhereDate('plan_start_date', '<', now()->subDays(1)); // Start late
+            })
+            ->orWhere(function ($query) {
+                $query->whereColumn('actual_effort', '>', 'plan_effort'); // Overcost
+            })
+            ->orderBy('priority', 'desc')
+            ->paginate(10, ['*'], 'ct_page')
+            ->through(function ($task) {
+                // ✅ Gán thêm thuộc tính mà không cần lặp lại điều kiện lọc
+                $task->overdue = $task->plan_end_date < now() && $task->status != 4;
+                $task->delayed = $task->plan_start_date < now()->subDays(1) && $task->status == 0;
+                $task->overcost = floatval($task->actual_effort) > floatval($task->plan_effort);
 
-            if ($task->plan_start_date < now()->subDays(1) && $task->status == 0) {
-                $task->delayed = true;
-            }
+                return $task;
+            });
 
-            if ($task->actual_effort > $task->plan_effort) {
-                $task->overcost = true;
-            }
-            return $task;
-        });
 
         return view('dashboard', compact('user_count', 'project_count', 'incompleteTasks', 'criticalTasks', 'task_done_count', 'contribution_rate'));
     }

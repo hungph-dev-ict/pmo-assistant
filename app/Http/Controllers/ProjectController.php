@@ -29,22 +29,21 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = collect(); // Mặc định là collection rỗng
-        $userId = Auth::id();
+        $user = Auth::user();
 
-        if ($userId) {
+        if ($user) {
+            $tenantId = $user->tenant_id; // Lấy tenant_id của user
+
             // Kiểm tra role của user
-            if (Auth::user()->hasRole('client')) {
+            if ($user->hasRole('client')) {
                 $projects = Project::withTrashed()
-                    ->whereIn('id', function ($query) use ($userId) {
+                    ->whereIn('id', function ($query) use ($tenantId) {
                         $query->select('projects.id')
                             ->from('projects')
-                            ->join('users as pm', 'pm.id', '=', 'projects.project_manager') // Kết nối với bảng users để lấy thông tin project manager (PM)
-                            ->join('users as head_user', 'head_user.tenant_id', '=', 'pm.tenant_id') // Kết nối bảng users để xác định head user
-                            ->where('head_user.head_account_flg', true); // Chỉ lấy head user
+                            ->join('users as pm', 'pm.id', '=', 'projects.project_manager') // Lấy thông tin PM
+                            ->where('pm.tenant_id', $tenantId); // Lọc theo tenant của PM
                     })
                     ->paginate(10);
-            } elseif (Auth::user()->hasRole('staff')) {
-                $projects = Auth::user()->projects()->withTrashed()->paginate(10);
             }
 
             // Gán tổng actual effort cho từng project
