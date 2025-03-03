@@ -310,7 +310,7 @@
                                         <strong>{{ worklog.log_time }} {{ worklog.log_time === 1 ? 'hour' : 'hours'
                                             }}</strong>
                                         at <strong>{{ formatTime(worklog.created_at) }}</strong>.
-                                        {{ worklog.description ? 'Worklog details: ' + worklog.description + '.' : '' }}
+                                        <strong>{{ worklog.description ? 'Worklog details: ' + worklog.description + '.' : '' }}</strong>
 
                                     </span>
                                 </li>
