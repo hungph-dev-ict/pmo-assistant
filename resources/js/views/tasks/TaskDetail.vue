@@ -17,9 +17,9 @@
                             <PriorityIcon
                                 :priority="priorityMap[task.priority]"
                             />
-                            <span v-if="task.type == 1">
-                                {{ task.parent.name }} /
-                            </span>
+                            <strong v-if="task.type == 1">
+                                {{ task.parent.name }}
+                            </strong>
                             {{ task.name }}
                         </h3>
                         <template v-else>
@@ -98,9 +98,7 @@
                 <div class="card card-widget widget-user-2 shadow-sm">
                     <div class="card-header">
                         <div class="user-block">
-                            <!-- <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image">
-                        <img src="{{ Vite::asset('resources/images/adminlte/pmo-a_main.png') }}" alt="PMO Assistant Logo"
-            class="brand-image img-circle elevation-3"> -->
+                            <!-- <img src="/images/adminlte/avatar5.png" alt="User Image" class="brand-image img-circle elevation-3" /> -->
                             <span class="username">{{
                                 task?.creator?.name +
                                 " (" +
@@ -471,13 +469,13 @@
                                             formatTime(worklog.created_at)
                                         }}</strong
                                         >.
-                                        <strong>{{
-                                            worklog.description
-                                                ? "Worklog details: " +
-                                                  worklog.description +
-                                                  "."
-                                                : ""
-                                        }}</strong>
+                                        <span v-if="worklog.description">
+                                            Worklog details:
+                                            <strong>{{
+                                                worklog.description
+                                            }}</strong
+                                            >.
+                                        </span>
                                     </span>
                                 </li>
                             </ul>
