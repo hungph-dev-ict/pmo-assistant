@@ -44,7 +44,7 @@ class DashboardController extends Controller
         // Lấy tất cả task chưa "Done" của user đang đăng nhập
         $incompleteTasks = Task::where('assignee', $userId)
             ->with('project:id,name')
-            ->where('status', '!=', 4)
+            ->whereNotIn('status', [4, 7])
             ->orderBy('priority', 'desc')
             ->paginate(10, ['*'], 'it_page')->through(function ($task) {
                 if ($task->plan_end_date < now()) {
@@ -59,15 +59,19 @@ class DashboardController extends Controller
 
         $criticalTasks = Task::where('assignee', $userId)
             ->where(function ($query) {
-                $query->whereDate('plan_end_date', '<', now()) // Overdue
-                    ->orWhereDate('plan_start_date', '<', now()->subDays(1)) // Start late
-                    ->orWhereColumn('actual_effort', '>', 'plan_effort'); // Overcost
+                $query->where(function ($q) {
+                    $q->whereDate('plan_end_date', '<', now()) // Overdue
+                        ->whereNotIn('status', [4, 7]);
+                })->orWhere(function ($q) {
+                    $q->whereDate('plan_start_date', '<', now()->subDays(1)) // Start late
+                        ->where('status', 0);
+                })->orWhereColumn('actual_effort', '>', 'plan_effort'); // Overcost
             })
             ->with(['project:id,name', 'taskStatus', 'taskPriority'])
             ->orderBy('priority', 'desc')
             ->paginate(10, ['*'], 'ct_page')
             ->through(function ($task) {
-                $task->overdue = $task->plan_end_date < now() && $task->status != 4;
+                $task->overdue = $task->plan_end_date < now() && !in_array($task->status, [4, 7]);
                 $task->delayed = $task->plan_start_date < now()->subDays(1) && $task->status == 0;
                 $task->overcost = floatval($task->actual_effort) > floatval($task->plan_effort);
 
