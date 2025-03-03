@@ -10,7 +10,17 @@ class TaskController extends Controller
 {
     public function show($project_id, $task_id)
     {
-        $task = Task::with('assigneeUser:id,account,name', 'taskPriority', 'taskStatus', 'parent:id,name', 'creator:id,account,name', 'worklogs.user:id,account,name')->findOrFail($task_id);
+        $task = Task::with([
+            'assigneeUser:id,account,name',
+            'taskPriority',
+            'taskStatus',
+            'parent:id,name',
+            'creator:id,account,name',
+            'worklogs' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'worklogs.user:id,account,name'
+        ])->findOrFail($task_id);
         $listAssignee = Project::with('users:id,account')->find($task->project->id)->users;
 
         return view('tasks.show', compact('task', 'listAssignee'));
