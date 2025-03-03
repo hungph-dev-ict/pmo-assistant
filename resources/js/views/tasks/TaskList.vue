@@ -711,7 +711,7 @@ const updateTask = async (task) => {
             plan_end_date: updatedTask.plan_end_date,
             actual_start_date: updatedTask.actual_start_date,
             actual_end_date: updatedTask.actual_end_date,
-            estimate_effort: updatedTask.estimate_effort,
+            ...(updatedTask.estimate_effort !== null && { estimate_effort: updatedTask.estimate_effort })
         });
 
         toastr.success("Updated successfully!");
