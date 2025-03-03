@@ -66,11 +66,11 @@ class DashboardController extends Controller
                 ->orWhereDate('plan_start_date', '<', now()->subDays(1)) // Start late
                 ->orWhereColumn('actual_effort', '>', 'estimate_effort'); // Overcost
         })->with('taskStatus', 'taskPriority')->orderBy('priority', 'desc')->paginate(10, ['*'], 'ct_page')->through(function ($task) {
-            if ($task->plan_end_date < now()) {
+            if ($task->plan_end_date < now() && $task->status != 4) {
                 $task->overdue = true;
             }
 
-            if ($task->plan_start_date < now()->subDays(1) && $task->status != 4) {
+            if ($task->plan_start_date < now()->subDays(1) && $task->status == 0) {
                 $task->delayed = true;
             }
 

@@ -90,7 +90,7 @@
                                     <th style="width: 8%" class="text-center">Priority</th>
                                     <th style="width: 10%">Status</th>
                                     <th style="width: 20%">Plan Start Date</th>
-                                    <th style="width: 20%">Actual Start Date</th>
+                                    <th style="width: 20%">Plan End Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,7 +166,7 @@
                                     <th style="width: 5%" class="text-center">Priority</th>
                                     <th style="width: 5%">Status</th>
                                     <th style="width: 14%">Plan Start</th>
-                                    <th style="width: 14%">Actual Start</th>
+                                    <th style="width: 14%">Plan End</th>
                                     <th style="width: 10%">Plan(H)</th>
                                     <th style="width: 10%">Actual(H)</th>
                                 </tr>
