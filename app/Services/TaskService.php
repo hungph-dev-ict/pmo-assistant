@@ -44,7 +44,7 @@ class TaskService
                     'actual_start_date' => $epic->plan_start_date,
                     'actual_end_date' => $epic->plan_end_date,
                     'plan_effort' => $epic->plan_effort,
-                    'actual_effort' => $epic->plan_effort,
+                    'actual_effort' => $epic->actual_effort,
                     'children' => $epic->children->map(function ($task) {
                         return [
                             'id' => $task->id,
