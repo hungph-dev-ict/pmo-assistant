@@ -204,7 +204,7 @@
                                                 🔥
                                             @endif
                                         </td>
-                                        <td>{{ $task->estimate_effort }}</td>
+                                        <td>{{ $task->plan_effort }}</td>
                                         <td>
                                             {{ $task->actual_effort }}
                                             @if ($task->overcost)

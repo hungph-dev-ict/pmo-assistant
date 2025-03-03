@@ -24,7 +24,7 @@ class Task extends Model
         'plan_end_date',
         'actual_start_date',
         'actual_end_date',
-        'estimate_effort',
+        'plan_effort',
         'actual_effort',
         'progress',
         'priority',

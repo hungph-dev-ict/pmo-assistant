@@ -43,8 +43,8 @@ class TaskService
                     'plan_end_date' => $epic->plan_end_date,
                     'actual_start_date' => $epic->plan_start_date,
                     'actual_end_date' => $epic->plan_end_date,
-                    'estimate_effort' => $epic->estimate_effort,
-                    'actual_effort' => $epic->estimate_effort,
+                    'plan_effort' => $epic->plan_effort,
+                    'actual_effort' => $epic->plan_effort,
                     'children' => $epic->children->map(function ($task) {
                         return [
                             'id' => $task->id,
@@ -57,8 +57,8 @@ class TaskService
                             'plan_end_date' => $task->plan_end_date,
                             'actual_start_date' => $task->plan_start_date,
                             'actual_end_date' => $task->plan_end_date,
-                            'estimate_effort' => $task->estimate_effort,
-                            'actual_effort' => $task->estimate_effort,
+                            'plan_effort' => $task->plan_effort,
+                            'actual_effort' => $task->plan_effort,
                         ];
                     }),
                 ];
@@ -93,7 +93,7 @@ class TaskService
                     'plan_end_date' => $task->plan_end_date,
                     'actual_start_date' => $task->actual_start_date,
                     'actual_end_date' => $task->actual_end_date,
-                    'estimate_effort' => $task->estimate_effort,
+                    'plan_effort' => $task->plan_effort,
                     'actual_effort' => $task->actual_effort,
                     'display_order' => $index + 1
                 ];
@@ -127,7 +127,7 @@ class TaskService
                     'plan_end_date' => $task->plan_end_date,
                     'actual_start_date' => $task->actual_start_date,
                     'actual_end_date' => $task->actual_end_date,
-                    'estimate_effort' => $task->estimate_effort,
+                    'plan_effort' => $task->plan_effort,
                     'actual_effort' => $task->actual_effort,
                     'display_order' => $index + 1 // Thêm cột display_order bắt đầu từ 1
                 ];
