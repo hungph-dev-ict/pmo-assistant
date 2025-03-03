@@ -400,7 +400,7 @@
                                             !hasPermissionPm &&
                                             hasPermissionStaff)
                                     "
-                                    >{{ task.estimate_effort }}</span
+                                    >{{ task.plan_effort }}</span
                                 >
                                 <input
                                     v-else
@@ -415,7 +415,7 @@
                                 }}<i
                                     v-if="
                                         task.actual_effort >
-                                        task.estimate_effort
+                                        task.plan_effort
                                     "
                                     class="fas fa-exclamation-triangle text-danger ml-2"
                                     title="Actual effort exceeds plan effort"
@@ -581,7 +581,7 @@ const editTask = (task) => {
     task.editedPlanEndDate = task.plan_end_date;
     task.editedActualStartDate = task.actual_start_date;
     task.editedActualEndDate = task.actual_end_date;
-    task.editedPlanEffort = task.estimate_effort;
+    task.editedPlanEffort = task.plan_effort;
 
     nextTick(initPlugins(task));
 };
@@ -670,7 +670,7 @@ const updateTask = async (task) => {
         plan_end_date: task.editedPlanEndDate,
         actual_start_date: task.editedActualStartDate,
         actual_end_date: task.editedlanActualEndDate,
-        estimate_effort: task.editedPlanEffort,
+        plan_effort: task.editedPlanEffort,
         isEditing: false,
     };
 
@@ -711,7 +711,7 @@ const updateTask = async (task) => {
             plan_end_date: updatedTask.plan_end_date,
             actual_start_date: updatedTask.actual_start_date,
             actual_end_date: updatedTask.actual_end_date,
-            ...(updatedTask.estimate_effort !== null && { estimate_effort: updatedTask.estimate_effort })
+            ...(updatedTask.plan_effort !== null && { plan_effort: updatedTask.plan_effort })
         });
 
         toastr.success("Updated successfully!");

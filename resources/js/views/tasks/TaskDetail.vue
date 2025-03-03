@@ -244,9 +244,9 @@
                                 <span class="nav-link">
                                     Plan Effort
                                     <strong v-if="!isEditingInfo || !hasPermissionPm" class="float-right">{{
-                                        task.estimate_effort
+                                        task.plan_effort
                                         }}</strong>
-                                    <input v-else type="text" v-model="editTask.estimate_effort" class="form-control"
+                                    <input v-else type="text" v-model="editTask.plan_effort" class="form-control"
                                         :disabled="isLoading" />
                                 </span>
                             </li>
@@ -500,7 +500,7 @@ const update = async (editTask) => {
         plan_end_date: editTask.plan_end_date,
         actual_start_date: editTask.actual_start_date,
         actual_end_date: editTask.actual_end_date,
-        estimate_effort: editTask.estimate_effort,
+        plan_effort: editTask.plan_effort,
     };
 
     try {

@@ -432,7 +432,7 @@ const handleSubmit = async () => {
                 selectedTaskType.value === "task" ? selectedEpic.value : null, // Epic ID nếu là task
             assignee: selectedAssignee.value, // Người được giao
             priority: selectedPriority.value, // Mức độ ưu tiên
-            estimate_effort: estimateEffort.value, // Kế hoạch effort
+            plan_effort: estimateEffort.value, // Kế hoạch effort
             description: taskDescription.value,
             memo: taskMemo.value,
             plan_start_date: planStartDate.value, // Ngày bắt đầu dự kiến

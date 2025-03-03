@@ -82,7 +82,7 @@ class PmController extends Controller
                 'plan_end_date' => 'nullable|date|after_or_equal:plan_start_date',
                 'actual_start_date' => 'nullable|date',
                 'actual_end_date' => 'nullable|date|after_or_equal:actual_start_date',
-                'estimate_effort' => 'nullable|numeric|min:0',
+                'plan_effort' => 'nullable|numeric|min:0',
             ]);
 
             // Cập nhật thông tin task

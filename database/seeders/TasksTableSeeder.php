@@ -29,7 +29,7 @@ class TasksTableSeeder extends Seeder
                     'plan_end_date' => now()->addDays(rand(10, 20)),   // Random end date
                     'actual_start_date' => now()->subDays(rand(5, 10)),
                     'actual_end_date' => now()->addDays(rand(10, 15)),
-                    'estimate_effort' => rand(20, 50), // Random MD
+                    'plan_effort' => rand(20, 50), // Random MD
                     'actual_effort' => rand(20, 50),  // Random MD
                     'progress' => rand(0, 100), // Random progress
                     'priority' => rand(0, 4), // 1: High, 2: Medium, 3: Low
@@ -57,7 +57,7 @@ class TasksTableSeeder extends Seeder
                     'plan_end_date' => now()->addDays(rand(1, 10)),   // Random end date
                     'actual_start_date' => now()->subDays(rand(1, 5)),
                     'actual_end_date' => now()->addDays(rand(5, 15)),
-                    'estimate_effort' => rand(1, 10), // Random MD
+                    'plan_effort' => rand(1, 10), // Random MD
                     'actual_effort' => rand(1, 10),  // Random MD
                     'progress' => rand(0, 100), // Random progress
                     'priority' => rand(1, 3), // 1: High, 2: Medium, 3: Low

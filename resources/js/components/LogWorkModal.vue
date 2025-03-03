@@ -22,13 +22,13 @@
                     <!-- Plan Effort -->
                     <div class="form-group">
                         <label>Plan Effort</label>
-                        <input type="number" class="form-control" :value="task?.estimate_effort || 0" disabled />
+                        <input type="number" class="form-control" :value="task?.plan_effort || 0" disabled />
                     </div>
 
                     <!-- Actual Effort -->
                     <div class="form-group position-relative">
                         <label>Actual Effort</label>
-                        <i v-if="task?.actual_effort > task?.estimate_effort" class="fas fa-exclamation-triangle text-danger ml-2" title="Actual effort exceeds plan effort"></i>
+                        <i v-if="task?.actual_effort > task?.actual_effort" class="fas fa-exclamation-triangle text-danger ml-2" title="Actual effort exceeds plan effort"></i>
                         <input type="number" class="form-control" :value="task?.actual_effort || 0" disabled />
                     </div>
 

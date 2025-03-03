@@ -55,7 +55,7 @@ class DashboardController extends Controller
                     $task->delayed = true;
                 }
 
-                if ($task->actual_effort > $task->estimate_effort) {
+                if ($task->actual_effort > $task->plan_effort) {
                     $task->overcost = true;
                 };
                 return $task;
@@ -64,7 +64,7 @@ class DashboardController extends Controller
         $criticalTasks = Task::where('assignee', $userId)->with('project:id,name')->where(function ($query) use ($userId) {
             $query->whereDate('plan_end_date', '<', now()) // Overdue
                 ->orWhereDate('plan_start_date', '<', now()->subDays(1)) // Start late
-                ->orWhereColumn('actual_effort', '>', 'estimate_effort'); // Overcost
+                ->orWhereColumn('actual_effort', '>', 'plan_effort'); // Overcost
         })->with('taskStatus', 'taskPriority')->orderBy('priority', 'desc')->paginate(10, ['*'], 'ct_page')->through(function ($task) {
             if ($task->plan_end_date < now() && $task->status != 4) {
                 $task->overdue = true;
@@ -74,7 +74,7 @@ class DashboardController extends Controller
                 $task->delayed = true;
             }
 
-            if ($task->actual_effort > $task->estimate_effort) {
+            if ($task->actual_effort > $task->plan_effort) {
                 $task->overcost = true;
             }
             return $task;
