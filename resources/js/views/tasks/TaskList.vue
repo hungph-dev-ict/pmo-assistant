@@ -505,7 +505,7 @@
         :task="selectedTask"
         :projectId="projectId"
         @close="showLogWorkModal = false"
-        @update-task="handleTaskUpdate"
+        @update-data="handleTaskUpdate"
     />
 </template>
 
@@ -653,7 +653,7 @@ const initPlugins = (task) => {
 };
 
 // Emit sự kiện update để thông báo lên component cha
-const emit = defineEmits(["update-task"]);
+const emit = defineEmits(["update-data"]);
 
 const updateTask = async (task) => {
     // Hủy Select2 trước khi cập nhật giao diện
@@ -730,7 +730,7 @@ const updateTask = async (task) => {
     task.isEditing = false;
     globalIsEditting.value = false;
     // Emit để component cha xử lý
-    emit("update-task");
+    emit("update-data");
 };
 
 const isOverdue = (planEndDate, status) => {
@@ -812,7 +812,7 @@ const softDelete = async (taskId) => {
         await axios.delete(url);
         toastr.success("Task deleted successfully!");
         // Emit để component cha xử lý
-        emit("update-task");
+        emit("update-data");
     } catch (error) {
         // Lấy thông tin lỗi từ response
         const errorMessage =
@@ -830,7 +830,7 @@ const openLogWorkModal = (task) => {
 }
 
 const handleTaskUpdate = () => {
-    emit("update-task");
+    emit("update-data");
 };
 
 const statusClass = (status) => {

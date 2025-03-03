@@ -43,6 +43,7 @@ class DashboardController extends Controller
 
         // Lấy tất cả task chưa "Done" của user đang đăng nhập
         $incompleteTasks = Task::where('assignee', $userId)
+            ->with('project:id,name')
             ->where('status', '!=', 4)
             ->orderBy('priority', 'desc')
             ->paginate(10, ['*'], 'it_page')->through(function ($task) {
@@ -60,7 +61,7 @@ class DashboardController extends Controller
                 return $task;
             });
 
-        $criticalTasks = Task::where('assignee', $userId)->where(function ($query) use ($userId) {
+        $criticalTasks = Task::where('assignee', $userId)->with('project:id,name')->where(function ($query) use ($userId) {
             $query->whereDate('plan_end_date', '<', now()) // Overdue
                 ->orWhereDate('plan_start_date', '<', now()->subDays(1)) // Start late
                 ->orWhereColumn('actual_effort', '>', 'estimate_effort'); // Overcost

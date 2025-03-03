@@ -78,7 +78,7 @@ const props = defineProps({
     projectId: [Number, String],
 });
 
-const emit = defineEmits(["close", "submit", "update-task", "update-worklog"]);
+const emit = defineEmits(["close", "submit", "update-data"]);
 
 const logDate = ref("");
 const logTime = ref("");
@@ -150,8 +150,7 @@ const submitLogWork = async (taskId) => {
 
         // Đóng modal
         emit("close");
-        emit("update-task");
-        emit("update-worklog");
+        emit("update-data");
     } catch (error) {
         console.log(error);
         const errorMessage = error.response?.data?.message || "Failed to create task!";
