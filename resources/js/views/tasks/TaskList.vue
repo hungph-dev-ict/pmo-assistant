@@ -24,7 +24,7 @@
                         <th style="width: 2%">#</th>
                         <th
                             v-if="isColumnVisible('epic_task')"
-                            style="width: 22%"
+                            style="width: 32%"
                         >
                             Epic/Task
                         </th>
@@ -83,7 +83,7 @@
                         <th
                             class="text-center"
                             v-if="isColumnVisible('action')"
-                            style="width: 20%"
+                            style="width: 10%"
                         >
                             Action
                         </th>
@@ -448,49 +448,55 @@
                             >
                                 <template v-if="!task.isEditing">
                                     <a
+                                        href="#"
                                         class="btn btn-info btn-sm mr-2"
-                                        href="#"
                                         @click.prevent="editTask(task)"
+                                        v-tooltip="'Edit'"
                                     >
-                                        <i class="fas fa-pencil-alt"></i> Edit
+                                        <i class="fas fa-pencil-alt"></i>
                                     </a>
                                     <a
-                                        v-if="!hasPermissionStaff"
+                                        v-if="hasPermissionClient || hasPermissionPm"
+                                        href="#"
                                         class="btn btn-danger btn-sm mr-2"
-                                        href="#"
                                         @click="confirmDelete(task)"
+                                        v-tooltip="'Delete'"
                                     >
-                                        <i class="fas fa-trash"></i> Delete
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                     <a
-                                        class="btn btn-primary btn-sm mr-2"
                                         href="#"
+                                        class="btn btn-primary btn-sm mr-2"
                                         @click.prevent="openLogWorkModal(task)"
+                                        v-tooltip="'Log Work'"
                                     >
-                                        <i class="fas fa-clock"></i> Log Work
+                                        <i class="fas fa-clock"></i>
                                     </a>
                                     <button
                                         class="btn btn-secondary btn-sm"
                                         @click="copyTaskLink(task)"
+                                        v-tooltip="'Share'"
                                     >
-                                        <i class="fas fa-link"></i> Share
+                                        <i class="fas fa-link"></i>
                                     </button>
                                 </template>
 
                                 <template v-else>
                                     <a
-                                        class="btn btn-success btn-sm mr-2"
                                         href="#"
+                                        class="btn btn-success btn-sm mr-2"
                                         @click.prevent="updateTask(task)"
+                                        v-tooltip="'Update'"
                                     >
-                                        <i class="fas fa-save"></i> Update
+                                        <i class="fas fa-save"></i>
                                     </a>
                                     <a
-                                        class="btn btn-secondary btn-sm"
                                         href="#"
+                                        class="btn btn-secondary btn-sm"
                                         @click.prevent="cancelEdit(task)"
+                                        v-tooltip="'Discard'"
                                     >
-                                        <i class="fas fa-times"></i> Cancel
+                                        <i class="fas fa-times"></i>
                                     </a>
                                 </template>
                             </td>
@@ -865,6 +871,19 @@ const filters = reactive({
 const exportTasks = () => {
     const params = new URLSearchParams(filters).toString();
     window.location.href = `/export-tasks?${params}`;
+};
+
+import tippy from "tippy.js";
+// Directive tùy chỉnh để dùng Tippy.js
+const vTooltip = {
+  mounted(el, binding) {
+    tippy(el, {
+      content: binding.value,
+      placement: "top",
+      animation: "scale",
+      theme: "light-border",
+    });
+  },
 };
 </script>
 

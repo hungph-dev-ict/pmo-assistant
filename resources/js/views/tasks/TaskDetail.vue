@@ -119,43 +119,50 @@
                         </div>
                         <div class="card-tools">
                             <template v-if="!isEditingInfo">
-                                <button
-                                    @click="edit(editTask)"
+                                <a
+                                    href="#"
                                     class="btn btn-info btn-sm mr-2"
+                                    @click.prevent="edit(editTask)"
+                                    v-tooltip="'Edit'"
                                 >
-                                    Edit
-                                </button>
-                                <button
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a
                                     v-if="hasPermissionPm"
-                                    @click="deleteTask(editTask)"
+                                    href="#"
                                     class="btn btn-danger btn-sm mr-2"
+                                    @click.prevent="deleteTask(editTask)"
+                                    v-tooltip="'Delete'"
                                 >
-                                    Delete
-                                </button>
-                                <button
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                <a
+                                    href="#"
                                     class="btn btn-secondary btn-sm"
-                                    @click="copyTaskLink(task)"
+                                    @click.prevent="copyTaskLink(task)"
+                                    v-tooltip="'Share'"
                                 >
-                                    <i class="fas fa-link"></i> Share
-                                </button>
+                                    <i class="fas fa-link"></i>
+                                </a>
                             </template>
+
                             <template v-else>
-                                <button
-                                    @click="update(editTask)"
+                                <a
+                                    href="#"
                                     class="btn btn-success btn-sm mr-2"
+                                    @click.prevent="update(editTask)"
+                                    v-tooltip="'Update'"
                                 >
-                                    <span v-if="isLoading">
-                                        <i class="fas fa-spinner fa-spin"></i>
-                                        Updating...
-                                    </span>
-                                    <span v-else> Update</span>
-                                </button>
-                                <button
-                                    @click="cancel"
+                                    <i class="fas fa-save"></i>
+                                </a>
+                                <a
+                                    href="#"
                                     class="btn btn-secondary btn-sm mr-2"
+                                    @click.prevent="cancel"
+                                    v-tooltip="'Cancel'"
                                 >
-                                    Cancel
-                                </button>
+                                    <i class="fas fa-times"></i>
+                                </a>
                             </template>
                         </div>
                     </div>
@@ -424,12 +431,13 @@
                     <div class="card-header">
                         <h3 class="card-title">Worklog List</h3>
                         <div class="card-tools">
-                            <button
+                            <a
                                 @click.prevent="openLogWorkModal(task)"
                                 class="btn btn-primary btn-sm"
+                                v-tooltip="'Log Work'"
                             >
-                                Log Work
-                            </button>
+                                <i class="fas fa-clock"></i>
+                            </a>
                         </div>
                     </div>
                     <div class="relative">
@@ -839,6 +847,19 @@ import dayjs from "dayjs";
 
 const formatTime = (time) => {
     return dayjs(time).format("YYYY-MM-DD HH:mm:ss");
+};
+
+import tippy from "tippy.js";
+// Directive tùy chỉnh để dùng Tippy.js
+const vTooltip = {
+    mounted(el, binding) {
+        tippy(el, {
+            content: binding.value,
+            placement: "top",
+            animation: "scale",
+            theme: "light-border",
+        });
+    },
 };
 </script>
 

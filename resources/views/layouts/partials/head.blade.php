@@ -12,4 +12,26 @@
 <script src="https://code.jscharting.com/latest/jscharting.js"></script>
 <!-- Inline CSS -->
 @yield('inline_css')
+<style>
+    /* Tuỳ chỉnh theme cho Tippy */
+    .tippy-box {
+        font-size: 14px;
+        /* Chữ to hơn */
+        background-color: rgba(0, 0, 0, 0.9);
+        /* Đậm hơn */
+        color: white;
+        /* Chữ trắng nổi bật */
+        padding: 8px 12px;
+        /* Tăng kích thước */
+        border-radius: 6px;
+        /* Bo góc */
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        /* Đổ bóng */
+    }
+
+    .tippy-arrow {
+        color: rgba(0, 0, 0, 0.9);
+        /* Màu mũi tên */
+    }
+</style>
 @vite(['resources/css/app.css'])
