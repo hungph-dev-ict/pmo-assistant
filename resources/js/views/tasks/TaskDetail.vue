@@ -90,6 +90,14 @@
                     <!-- /.card-body -->
                 </div>
                 <!-- /.card -->
+                <div class="card card-widget">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Activity</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">Coming Soon...</div>
+                    <!-- /.card-body -->
+                </div>
             </div>
             <!-- /.col -->
 
@@ -111,37 +119,50 @@
                         </div>
                         <div class="card-tools">
                             <template v-if="!isEditingInfo">
-                                <button
-                                    @click="edit(editTask)"
+                                <a
+                                    href="#"
                                     class="btn btn-info btn-sm mr-2"
+                                    @click.prevent="edit(editTask)"
+                                    v-tooltip="'Edit'"
                                 >
-                                    Edit
-                                </button>
-                                <button
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a
                                     v-if="hasPermissionPm"
-                                    @click="deleteTask(editTask)"
+                                    href="#"
                                     class="btn btn-danger btn-sm mr-2"
+                                    @click.prevent="deleteTask(editTask)"
+                                    v-tooltip="'Delete'"
                                 >
-                                    Delete
-                                </button>
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                <a
+                                    href="#"
+                                    class="btn btn-secondary btn-sm"
+                                    @click.prevent="copyTaskLink(task)"
+                                    v-tooltip="'Share'"
+                                >
+                                    <i class="fas fa-link"></i>
+                                </a>
                             </template>
+
                             <template v-else>
-                                <button
-                                    @click="update(editTask)"
+                                <a
+                                    href="#"
                                     class="btn btn-success btn-sm mr-2"
+                                    @click.prevent="update(editTask)"
+                                    v-tooltip="'Update'"
                                 >
-                                    <span v-if="isLoading">
-                                        <i class="fas fa-spinner fa-spin"></i>
-                                        Updating...
-                                    </span>
-                                    <span v-else> Update</span>
-                                </button>
-                                <button
-                                    @click="cancel"
+                                    <i class="fas fa-save"></i>
+                                </a>
+                                <a
+                                    href="#"
                                     class="btn btn-secondary btn-sm mr-2"
+                                    @click.prevent="cancel"
+                                    v-tooltip="'Cancel'"
                                 >
-                                    Cancel
-                                </button>
+                                    <i class="fas fa-times"></i>
+                                </a>
                             </template>
                         </div>
                     </div>
@@ -406,36 +427,18 @@
                     </div>
                 </div>
                 <!-- /.widget-user -->
-            </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
-
-        <div class="row">
-            <div class="col-md-8">
-                <!-- Box Comment -->
-                <div class="card card-widget">
-                    <div class="card-header">
-                        <h3 class="card-title">Recent Activity</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">Coming Soon...</div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col -->
-
-            <div class="col-md-4">
-                <!-- Widget: user widget style 2 -->
                 <div class="card card-widget widget-user-2 shadow-sm">
                     <div class="card-header">
                         <h3 class="card-title">Worklog List</h3>
-                        <!-- <div class="card-tools">
-                            <button @click.prevent="openLogWorkModal(task)" class="btn btn-primary btn-sm">
-                                Log Work
-                            </button>
-                        </div> -->
+                        <div class="card-tools">
+                            <a
+                                @click.prevent="openLogWorkModal(task)"
+                                class="btn btn-primary btn-sm"
+                                v-tooltip="'Log Work'"
+                            >
+                                <i class="fas fa-clock"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="relative">
                         <div v-if="worklogListIsLoading" class="overlay">
@@ -446,7 +449,7 @@
                             <ul class="nav flex-column">
                                 <li
                                     class="nav-item"
-                                    v-for="worklog in task.worklogs"
+                                    v-for="worklog in worklogs"
                                     :key="worklog.id"
                                 >
                                     <span class="nav-link">
@@ -482,10 +485,11 @@
                         </div>
                     </div>
                 </div>
-                <!-- /.widget-user -->
             </div>
             <!-- /.col -->
         </div>
+        <!-- /.row -->
+
         <LogWorkModal
             :showModal="showLogWorkModal"
             :task="task"
@@ -543,11 +547,13 @@ const isEditingInfo = ref(false);
 const isLoading = ref(false); // Trạng thái loading
 
 const task = ref({}); // Dùng ref để có thể cập nhật sau này
+const worklogs = ref([]);
 
 onMounted(() => {
     try {
         task.value = JSON.parse(props.task); // Gán dữ liệu khi mount
         editTask.value = task.value;
+        worklogs.value = task.value.worklogs;
     } catch (error) {
         console.error("Lỗi parse JSON:", error);
         task.value = {}; // Tránh lỗi nếu JSON không hợp lệ
@@ -775,8 +781,65 @@ const openLogWorkModal = (task) => {
     showLogWorkModal.value = true;
 };
 
-const handleWorklogUpdate = () => {
+const handleWorklogUpdate = async () => {
     worklogListIsLoading.value = true;
+    try {
+        let url = null;
+        const currentUrl = window.location.pathname; // Lấy đường dẫn (VD: "/pm/5/task/70")
+        const urlParts = currentUrl.split("/"); // Tách thành mảng: ["", "pm", "5", "task", "70"]
+
+        // Tìm vị trí của projectId (số đầu tiên trong URL sau "pm" hoặc "staff")
+        const projectIdIndex = urlParts.findIndex((part) => /^\d+$/.test(part));
+
+        if (projectIdIndex !== -1) {
+            const baseUrl = window.location.origin; // Lấy domain (http://localhost:8080)
+            // Cắt bỏ "pm" hoặc "staff" và giữ lại "/5/task/70/worklog"
+            const newPath = `/api/${urlParts
+                .slice(projectIdIndex)
+                .join("/")}/worklog`;
+            url = `${baseUrl}${newPath}`;
+        }
+
+        if (!url) throw new Error("Invalid URL format!");
+
+        const response = await axios.get(url);
+        worklogs.value = response.data.worklog; // Sửa lỗi lấy dữ liệu
+    } catch (error) {
+        // Lấy thông tin lỗi từ response
+        const errorMessage =
+            error.response?.data?.message || "Failed to update worklog!";
+        const errorDetail = error.response?.data?.error || "Unknown error";
+
+        // Hiển thị toastr lỗi với cả message và error detail
+        toastr.error(`${errorMessage}: ${errorDetail}`);
+    } finally {
+        worklogListIsLoading.value = false;
+    }
+};
+
+const copyTaskLink = (task) => {
+    let taskLink = null;
+    const currentUrl = window.location.pathname; // Lấy đường dẫn (VD: "/pm/5/task/70")
+    const urlParts = currentUrl.split("/"); // Tách thành mảng: ["", "pm", "5", "task", "70"]
+
+    // Tìm vị trí của projectId (số đầu tiên trong URL sau "pm" hoặc "staff")
+    const projectIdIndex = urlParts.findIndex((part) => /^\d+$/.test(part));
+
+    if (projectIdIndex !== -1) {
+        const baseUrl = window.location.origin; // Lấy domain (http://localhost:8080)
+        // Cắt bỏ phần "pm" hoặc "staff" và tạo URL mới
+        const newPath = `/${urlParts.slice(projectIdIndex).join("/")}`;
+        taskLink = `${baseUrl}${newPath}`;
+    }
+
+    navigator.clipboard
+        .writeText(taskLink)
+        .then(() => {
+            toastr.success("Link copied to clipboard!");
+        })
+        .catch(() => {
+            toastr.error("Failed to copy link.");
+        });
 };
 
 // Hàm định dạng thời gian
@@ -784,6 +847,19 @@ import dayjs from "dayjs";
 
 const formatTime = (time) => {
     return dayjs(time).format("YYYY-MM-DD HH:mm:ss");
+};
+
+import tippy from "tippy.js";
+// Directive tùy chỉnh để dùng Tippy.js
+const vTooltip = {
+    mounted(el, binding) {
+        tippy(el, {
+            content: binding.value,
+            placement: "top",
+            animation: "scale",
+            theme: "light-border",
+        });
+    },
 };
 </script>
 

@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/my-worklog', [WorklogController::class, 'getMyWorklogs']);
     Route::put('/api/worklog/{worklog_id}/update', [WorklogController::class, 'updateWorklog']);
     Route::delete('/api/worklog/{worklog_id}/destroy', [WorklogController::class, 'softDeleteWorklog']);
+    Route::get('/api/{project_id}/task/{task_id}/worklog', [WorklogController::class, 'get']);
     Route::post('/api/{project_id}/tasks/{task_id}/worklog', [WorklogController::class, 'store']);
 });
 
