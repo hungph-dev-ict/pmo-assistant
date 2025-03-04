@@ -12,6 +12,17 @@ use Illuminate\Validation\ValidationException;
 
 class WorklogService
 {
+    public function getWorklogByTaskId($taskId)
+    {
+        return Worklog::where('task_id', $taskId)
+            ->with(['user' => function ($query) {
+                $query->select('id', 'name', 'account'); // ✅ Chỉ lấy các cột cần thiết
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+
     public function createWorklog($data)
     {
         // Validate dữ liệu

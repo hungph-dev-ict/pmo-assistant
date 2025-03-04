@@ -18,6 +18,16 @@ class WorklogController extends Controller
         $this->worklogService = $worklogService;
     }
 
+    public function get($project_id, $task_id): JsonResponse
+    {
+        try {
+            $worklog = $this->worklogService->getWorklogByTaskId($task_id);
+            return response()->json(['message' => 'Worklog get successfully!', 'worklog' => $worklog], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to get worklog'], 500);
+        }
+    }
+
     public function store(Request $request): JsonResponse
     {
         try {
