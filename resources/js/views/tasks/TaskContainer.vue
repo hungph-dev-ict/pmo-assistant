@@ -1,25 +1,58 @@
 <template>
     <div>
-        <upload-file-create-tasks v-if="hasPermissionClient || hasPermissionPm" :projectId="projectId" :listAssignee="parsedListAssignee"
-            :currentUserId="numberCurrentUserId" @update-task="handleTaskUpdate"></upload-file-create-tasks>
+        <upload-file-create-tasks
+            v-if="hasPermissionClient || hasPermissionPm"
+            :projectId="projectId"
+            :listAssignee="parsedListAssignee"
+            :currentUserId="numberCurrentUserId"
+            @update-task="handleTaskUpdate"
+        ></upload-file-create-tasks>
 
-        <task-add v-if="hasPermissionClient || hasPermissionPm" :projectId="projectId" :listAssignee="parsedListAssignee"
-            :currentUserId="numberCurrentUserId" @update-task="handleTaskUpdate"></task-add>
+        <task-add
+            v-if="hasPermissionClient || hasPermissionPm"
+            :projectId="projectId"
+            :listAssignee="parsedListAssignee"
+            :currentUserId="numberCurrentUserId"
+            @update-task="handleTaskUpdate"
+        ></task-add>
 
-        <task-search-box v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff" :tasks="tasks"
-            @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
-            @updateVisibleColumns="updateVisibleColumns"></task-search-box>
+        <div>
+            <task-search-box
+                class="task-search-box"
+                v-if="
+                    hasPermissionClient || hasPermissionPm || hasPermissionStaff
+                "
+                :tasks="tasks"
+                @updateFilteredTasks="filteredTasks = $event"
+                @blankQuery="handleBlankQuery"
+                @updateVisibleColumns="updateVisibleColumns"
+            >
+            </task-search-box>
 
-        <div class="relative" ref="taskListContainer">
-            <div v-if="taskListIsLoading" class="overlay">
-                <div class="spinner"></div>
-                <p>Loading...</p>
+            <div class="task-list-container relative" ref="taskListContainer">
+                <div v-if="taskListIsLoading" class="overlay">
+                    <div class="spinner"></div>
+                    <p>Loading...</p>
+                </div>
+                <task-list
+                    v-if="
+                        hasPermissionClient ||
+                        hasPermissionPm ||
+                        hasPermissionStaff
+                    "
+                    :projectId="projectId"
+                    :filteredTasks="filteredTasks"
+                    :blankQuery="blankQuery"
+                    :visibleColumns="visibleColumns"
+                    :listAssignee="parsedListAssignee"
+                    :hasPermissionClient="hasPermissionClient"
+                    :hasPermissionPm="hasPermissionPm"
+                    :hasPermissionStaff="hasPermissionStaff"
+                    :currentUserId="numberCurrentUserId"
+                    :currentUserAccount="currentUserAccount"
+                    @update-data="handleTaskUpdate"
+                />
             </div>
-            <task-list v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff" :projectId="projectId"
-                :filteredTasks="filteredTasks" :blankQuery="blankQuery" :visibleColumns="visibleColumns"
-                :listAssignee="parsedListAssignee"
-                :hasPermissionClient="hasPermissionClient" :hasPermissionPm="hasPermissionPm" :hasPermissionStaff="hasPermissionStaff" :currentUserId="numberCurrentUserId"
-                :currentUserAccount="currentUserAccount" @update-data="handleTaskUpdate" />
         </div>
     </div>
 </template>
@@ -197,5 +230,21 @@ onMounted(fetchTasks);
     100% {
         transform: rotate(360deg);
     }
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full màn hình */
+}
+
+.task-search-box {
+    max-height: 20vh; /* Tối đa 20% màn hình */
+    overflow-y: auto; /* Thanh cuộn nếu quá dài */
+}
+
+.task-list-container {
+    flex: 1; /* Chiếm phần còn lại */
+    overflow-y: auto; /* Thanh cuộn */
 }
 </style>

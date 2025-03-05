@@ -1,10 +1,15 @@
 <template>
-    <div class="card card-primary collapsed-card">
+    <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">Search Box</h3>
             <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                    <i class="fas fa-plus"></i>
+                <button
+                    type="button"
+                    class="btn btn-tool"
+                    data-card-widget="collapse"
+                    title="Collapse"
+                >
+                    <i class="fas fa-minus"></i>
                 </button>
             </div>
         </div>
@@ -12,21 +17,30 @@
         <div class="card-body">
             <div class="row">
                 <!-- Tìm kiếm chung -->
-                <div class="col-4">
+                <div class="col-2">
                     <div class="form-group">
-                        <label>Search:</label>
+                        <label>Task Title Search:</label>
                         <div class="position-relative">
-                            <input v-model="searchQuery" type="text" class="form-control" placeholder="Enter name"
+                            <input
+                                v-model="searchQuery"
+                                type="text"
+                                class="form-control"
+                                placeholder="Enter Search Text Here..."
                                 @input="
                                     filterTasks();
-                                emit('updateSearchQuery', searchQuery);
-                                " />
-                            <button v-if="searchQuery" @click="resetSearchTitle"
-                                class="btn btn-sm btn-light position-absolute" style="
+                                    emit('updateSearchQuery', searchQuery);
+                                "
+                            />
+                            <button
+                                v-if="searchQuery"
+                                @click="resetSearchTitle"
+                                class="btn btn-sm btn-light position-absolute"
+                                style="
                                     right: 10px;
                                     top: 50%;
                                     transform: translateY(-50%);
-                                ">
+                                "
+                            >
                                 ✖
                             </button>
                         </div>
@@ -34,12 +48,21 @@
                 </div>
 
                 <!-- Tìm kiếm Assignee -->
-                <div class="col-4">
+                <div class="col-2">
                     <div class="form-group">
                         <label>Search Assignee:</label>
-                        <select ref="assigneeSelect" class="form-control select2" style="width: 100%">
+                        <select
+                            ref="assigneeSelect"
+                            class="form-control select2"
+                            data-placeholder="Select Assignee"
+                            style="width: 100%"
+                        >
                             <option value="" selected disabled></option>
-                            <option v-for="assignee in uniqueAssignees" :key="assignee" :value="assignee">
+                            <option
+                                v-for="assignee in uniqueAssignees"
+                                :key="assignee"
+                                :value="assignee"
+                            >
                                 {{ assignee }}
                             </option>
                         </select>
@@ -47,12 +70,21 @@
                 </div>
 
                 <!-- Tìm kiếm theo Status (Multiple) -->
-                <div class="col-4">
+                <div class="col-2">
                     <div class="form-group">
                         <label>Search Status:</label>
-                        <select ref="statusSelect" class="form-control select2" multiple="multiple"
-                            data-placeholder="Select Status" style="width: 100%">
-                            <option v-for="status in uniqueStatuses" :key="status" :value="status">
+                        <select
+                            ref="statusSelect"
+                            class="form-control select2"
+                            multiple="multiple"
+                            data-placeholder="Select Status"
+                            style="width: 100%"
+                        >
+                            <option
+                                v-for="status in uniqueStatuses"
+                                :key="status"
+                                :value="status"
+                            >
                                 {{ status }}
                             </option>
                         </select>
@@ -60,16 +92,28 @@
                 </div>
 
                 <!-- Tìm kiếm theo Plan Start Date -->
-                <div class="col-6">
+                <div class="col-3">
                     <div class="form-group">
                         <label>Filter Plan Start Date:</label>
                         <div class="d-flex align-items-center">
                             <!-- Plan Start Date (From) -->
-                            <div class="input-group date mr-2" id="planStartDatePickerFrom" data-target-input="nearest">
-                                <input type="text" id="planStartDateFrom" class="form-control datetimepicker-input"
-                                    data-target="#planStartDatePickerFrom" placeholder="From" />
-                                <div class="input-group-append" data-target="#planStartDatePickerFrom"
-                                    data-toggle="datetimepicker">
+                            <div
+                                class="input-group date mr-2"
+                                id="planStartDatePickerFrom"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="planStartDateFrom"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#planStartDatePickerFrom"
+                                    placeholder="From"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#planStartDatePickerFrom"
+                                    data-toggle="datetimepicker"
+                                >
                                     <div class="input-group-text">
                                         <i class="fa fa-calendar"></i>
                                     </div>
@@ -80,11 +124,23 @@
                             <span class="mx-2">-</span>
 
                             <!-- Plan Start Date (To) -->
-                            <div class="input-group date ml-2" id="planStartDatePickerTo" data-target-input="nearest">
-                                <input type="text" id="planStartDateTo" class="form-control datetimepicker-input"
-                                    data-target="#planStartDatePickerTo" placeholder="To" />
-                                <div class="input-group-append" data-target="#planStartDatePickerTo"
-                                    data-toggle="datetimepicker">
+                            <div
+                                class="input-group date ml-2"
+                                id="planStartDatePickerTo"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="planStartDateTo"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#planStartDatePickerTo"
+                                    placeholder="To"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#planStartDatePickerTo"
+                                    data-toggle="datetimepicker"
+                                >
                                     <div class="input-group-text">
                                         <i class="fa fa-calendar"></i>
                                     </div>
@@ -95,16 +151,28 @@
                 </div>
 
                 <!-- Tìm kiếm theo Plan End Date -->
-                <div class="col-6">
+                <div class="col-3">
                     <div class="form-group">
                         <label>Filter Plan End Date:</label>
                         <div class="d-flex align-items-center">
                             <!-- Plan End Date (From) -->
-                            <div class="input-group date mr-2" id="planEndDatePickerFrom" data-target-input="nearest">
-                                <input type="text" id="planEndDateFrom" class="form-control datetimepicker-input"
-                                    data-target="#planEndDatePickerFrom" placeholder="From" />
-                                <div class="input-group-append" data-target="#planEndDatePickerFrom"
-                                    data-toggle="datetimepicker">
+                            <div
+                                class="input-group date mr-2"
+                                id="planEndDatePickerFrom"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="planEndDateFrom"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#planEndDatePickerFrom"
+                                    placeholder="From"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#planEndDatePickerFrom"
+                                    data-toggle="datetimepicker"
+                                >
                                     <div class="input-group-text">
                                         <i class="fa fa-calendar"></i>
                                     </div>
@@ -115,11 +183,23 @@
                             <span class="mx-2">-</span>
 
                             <!-- Plan End Date (To) -->
-                            <div class="input-group date ml-2" id="planEndDatePickerTo" data-target-input="nearest">
-                                <input type="text" id="planEndDateTo" class="form-control datetimepicker-input"
-                                    data-target="#planEndDatePickerTo" placeholder="To" />
-                                <div class="input-group-append" data-target="#planEndDatePickerTo"
-                                    data-toggle="datetimepicker">
+                            <div
+                                class="input-group date ml-2"
+                                id="planEndDatePickerTo"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="planEndDateTo"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#planEndDatePickerTo"
+                                    placeholder="To"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#planEndDatePickerTo"
+                                    data-toggle="datetimepicker"
+                                >
                                     <div class="input-group-text">
                                         <i class="fa fa-calendar"></i>
                                     </div>
@@ -129,83 +209,17 @@
                     </div>
                 </div>
 
-                <!-- Tìm kiếm theo Actual Start Date -->
                 <div class="col-6">
-                    <div class="form-group">
-                        <label>Filter Actual Start Date:</label>
-                        <div class="d-flex align-items-center">
-                            <!-- Actual Start Date (From) -->
-                            <div class="input-group date mr-2" id="actualStartDatePickerFrom"
-                                data-target-input="nearest">
-                                <input type="text" id="actualStartDateFrom" class="form-control datetimepicker-input"
-                                    data-target="#actualStartDatePickerFrom" placeholder="From" />
-                                <div class="input-group-append" data-target="#actualStartDatePickerFrom"
-                                    data-toggle="datetimepicker">
-                                    <div class="input-group-text">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Dấu "-" -->
-                            <span class="mx-2">-</span>
-
-                            <!-- Actual Start Date (To) -->
-                            <div class="input-group date ml-2" id="actualStartDatePickerTo" data-target-input="nearest">
-                                <input type="text" id="actualStartDateTo" class="form-control datetimepicker-input"
-                                    data-target="#actualStartDatePickerTo" placeholder="To" />
-                                <div class="input-group-append" data-target="#actualStartDatePickerTo"
-                                    data-toggle="datetimepicker">
-                                    <div class="input-group-text">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tìm kiếm theo Actual End Date -->
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Filter Actual End Date:</label>
-                        <div class="d-flex align-items-center">
-                            <!-- Actual End Date (From) -->
-                            <div class="input-group date mr-2" id="actualEndDatePickerFrom" data-target-input="nearest">
-                                <input type="text" id="actualEndDateFrom" class="form-control datetimepicker-input"
-                                    data-target="#actualEndDatePickerFrom" placeholder="From" />
-                                <div class="input-group-append" data-target="#actualEndDatePickerFrom"
-                                    data-toggle="datetimepicker">
-                                    <div class="input-group-text">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Dấu "-" -->
-                            <span class="mx-2">-</span>
-
-                            <!-- Actual End Date (To) -->
-                            <div class="input-group date ml-2" id="actualEndDatePickerTo" data-target-input="nearest">
-                                <input type="text" id="actualEndDateTo" class="form-control datetimepicker-input"
-                                    data-target="#actualEndDatePickerTo" placeholder="To" />
-                                <div class="input-group-append" data-target="#actualEndDatePickerTo"
-                                    data-toggle="datetimepicker">
-                                    <div class="input-group-text">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6">
                     <!-- Select multiple-->
                     <div class="form-group">
                         <label>Select Display Column</label>
-                        <select id="selectDisplayColumns" class="select2" multiple="multiple"
-                            data-placeholder="Select Columns" style="width: 100%">
+                        <select
+                            id="selectDisplayColumns"
+                            class="select2"
+                            multiple="multiple"
+                            data-placeholder="Select Columns"
+                            style="width: 100%"
+                        >
                             <option value="epic_task">Epic/Task</option>
                             <option value="priority">Priority</option>
                             <option value="assignee">Assignee</option>
@@ -219,15 +233,129 @@
                             <option value="actual_end_date">
                                 Actual End Date
                             </option>
-                            <option value="plan-effort">
-                                Plan Effort
-                            </option>
-                            <option value="actual-effort">
-                                Actual Effort
-                            </option>
+                            <option value="plan-effort">Plan Effort</option>
+                            <option value="actual-effort">Actual Effort</option>
                             <option value="status">Status</option>
                             <option value="action">Action</option>
                         </select>
+                    </div>
+                </div>
+
+                <!-- Tìm kiếm theo Actual Start Date -->
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Filter Actual Start Date:</label>
+                        <div class="d-flex align-items-center">
+                            <!-- Actual Start Date (From) -->
+                            <div
+                                class="input-group date mr-2"
+                                id="actualStartDatePickerFrom"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="actualStartDateFrom"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#actualStartDatePickerFrom"
+                                    placeholder="From"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#actualStartDatePickerFrom"
+                                    data-toggle="datetimepicker"
+                                >
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dấu "-" -->
+                            <span class="mx-2">-</span>
+
+                            <!-- Actual Start Date (To) -->
+                            <div
+                                class="input-group date ml-2"
+                                id="actualStartDatePickerTo"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="actualStartDateTo"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#actualStartDatePickerTo"
+                                    placeholder="To"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#actualStartDatePickerTo"
+                                    data-toggle="datetimepicker"
+                                >
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tìm kiếm theo Actual End Date -->
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Filter Actual End Date:</label>
+                        <div class="d-flex align-items-center">
+                            <!-- Actual End Date (From) -->
+                            <div
+                                class="input-group date mr-2"
+                                id="actualEndDatePickerFrom"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="actualEndDateFrom"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#actualEndDatePickerFrom"
+                                    placeholder="From"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#actualEndDatePickerFrom"
+                                    data-toggle="datetimepicker"
+                                >
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dấu "-" -->
+                            <span class="mx-2">-</span>
+
+                            <!-- Actual End Date (To) -->
+                            <div
+                                class="input-group date ml-2"
+                                id="actualEndDatePickerTo"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="actualEndDateTo"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#actualEndDatePickerTo"
+                                    placeholder="To"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#actualEndDatePickerTo"
+                                    data-toggle="datetimepicker"
+                                >
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -269,6 +397,16 @@ onMounted(() => {
                     selectedAssignee.value = e.target.value;
                     filterTasks();
                     emit("updateSelectedAssignee", selectedAssignee.value);
+                })
+                .on("select2:open", () => {
+                    setTimeout(() => {
+                        let searchField = $(
+                            ".select2-container--open .select2-search__field"
+                        );
+                        if (searchField.length > 0) {
+                            searchField[0].focus();
+                        }
+                    }, 50);
                 });
 
             // Select2 cho Status (Multiple)
@@ -281,12 +419,32 @@ onMounted(() => {
                     selectedStatuses.value = $(e.target).val() || [];
                     filterTasks();
                     emit("updateSelectedStatuses", selectedStatuses.value);
+                })
+                .on("select2:open", () => {
+                    setTimeout(() => {
+                        let searchField = $(
+                            ".select2-container--open .select2-search__field"
+                        );
+                        if (searchField.length > 0) {
+                            searchField[0].focus();
+                        }
+                    }, 50);
                 });
 
             // Date picker for Plan Start Date (From)
             $("#planStartDatePickerFrom").datetimepicker({
                 format: "YYYY-MM-DD",
                 useCurrent: false,
+                buttons: {
+                    showToday: true, // Hiển thị nút "Today"
+                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                },
+                icons: {
+                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
             });
             $("#planStartDatePickerFrom").on(
                 "change.datetimepicker",
@@ -308,6 +466,16 @@ onMounted(() => {
             $("#planStartDatePickerTo").datetimepicker({
                 format: "YYYY-MM-DD",
                 useCurrent: false,
+                buttons: {
+                    showToday: true, // Hiển thị nút "Today"
+                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                },
+                icons: {
+                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
             });
             $("#planStartDatePickerTo").on(
                 "change.datetimepicker",
@@ -329,6 +497,16 @@ onMounted(() => {
             $("#planEndDatePickerFrom").datetimepicker({
                 format: "YYYY-MM-DD",
                 useCurrent: false,
+                buttons: {
+                    showToday: true, // Hiển thị nút "Today"
+                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                },
+                icons: {
+                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
             });
             $("#planEndDatePickerFrom").on(
                 "change.datetimepicker",
@@ -350,6 +528,16 @@ onMounted(() => {
             $("#planEndDatePickerTo").datetimepicker({
                 format: "YYYY-MM-DD",
                 useCurrent: false,
+                buttons: {
+                    showToday: true, // Hiển thị nút "Today"
+                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                },
+                icons: {
+                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
             });
             $("#planEndDatePickerTo").on("change.datetimepicker", function (e) {
                 let newPlanEndDateTo = e.date
@@ -368,6 +556,16 @@ onMounted(() => {
             $("#actualStartDatePickerFrom").datetimepicker({
                 format: "YYYY-MM-DD",
                 useCurrent: false,
+                buttons: {
+                    showToday: true, // Hiển thị nút "Today"
+                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                },
+                icons: {
+                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
             });
             $("#actualStartDatePickerFrom").on(
                 "change.datetimepicker",
@@ -389,6 +587,16 @@ onMounted(() => {
             $("#actualStartDatePickerTo").datetimepicker({
                 format: "YYYY-MM-DD",
                 useCurrent: false,
+                buttons: {
+                    showToday: true, // Hiển thị nút "Today"
+                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                },
+                icons: {
+                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
             });
             $("#actualStartDatePickerTo").on(
                 "change.datetimepicker",
@@ -410,6 +618,16 @@ onMounted(() => {
             $("#actualEndDatePickerFrom").datetimepicker({
                 format: "YYYY-MM-DD",
                 useCurrent: false,
+                buttons: {
+                    showToday: true, // Hiển thị nút "Today"
+                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                },
+                icons: {
+                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
             });
             $("#actualEndDatePickerFrom").on(
                 "change.datetimepicker",
@@ -431,6 +649,16 @@ onMounted(() => {
             $("#actualEndDatePickerTo").datetimepicker({
                 format: "YYYY-MM-DD",
                 useCurrent: false,
+                buttons: {
+                    showToday: true, // Hiển thị nút "Today"
+                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                },
+                icons: {
+                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
             });
             $("#actualEndDatePickerTo").on(
                 "change.datetimepicker",
@@ -459,7 +687,7 @@ onMounted(() => {
                 "plan-effort",
                 "actual-effort",
                 "status",
-                "action"
+                "action",
             ];
             $("#selectDisplayColumns").val(defaultColumns).trigger("change");
 
