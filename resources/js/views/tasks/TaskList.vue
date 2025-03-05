@@ -423,7 +423,9 @@
                                 v-if="isColumnVisible('actual-effort')"
                                 class="text-right"
                             >
-                                {{ task.actual_effort
+                                {{
+                                    Number(task.actual_effort) > 0 ??
+                                    task.actual_effort
                                 }}<i
                                     v-if="
                                         Number(task.actual_effort) >
