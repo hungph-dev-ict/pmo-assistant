@@ -244,7 +244,7 @@ onMounted(fetchTasks);
 }
 
 .task-list-container {
-    flex: 1; /* Chiếm phần còn lại */
+    max-height: 80vh; /* Tối đa 80% màn hình */
     overflow-y: auto; /* Thanh cuộn */
 }
 </style>
