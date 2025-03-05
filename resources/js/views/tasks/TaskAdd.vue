@@ -1,5 +1,4 @@
 <template>
-    <div>
         <div class="row">
             <div class="col-12">
                 <!-- Default box -->
@@ -18,7 +17,7 @@
                         </div>
                     </div>
                     <!-- /.card-header -->
-                    <div class="card-body">
+                    <div class="card-body" style="max-height: 40vh; overflow-y: auto;">
                         <div class="row">
                             <div class="col-md-10">
                                 <div class="form-group">
@@ -326,7 +325,6 @@
             </div>
             <!-- /.card-body -->
         </div>
-    </div>
 </template>
 
 <script setup>
