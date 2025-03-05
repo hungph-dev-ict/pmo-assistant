@@ -597,18 +597,48 @@ const initPlugins = (editTask) => {
         // Khởi động lại select2
         $("#selectAssignee")
             .select2()
+            .on("select2:open", () => {
+                setTimeout(() => {
+                    let searchField = $(
+                        ".select2-container--open .select2-search__field"
+                    );
+                    if (searchField.length > 0) {
+                        searchField[0].focus();
+                    }
+                }, 50);
+            })
             .on("change", function (e) {
                 editTask.assignee = $(this).val();
             });
 
         $("#selectPriority")
             .select2()
+            .on("select2:open", () => {
+                setTimeout(() => {
+                    let searchField = $(
+                        ".select2-container--open .select2-search__field"
+                    );
+                    if (searchField.length > 0) {
+                        searchField[0].focus();
+                    }
+                }, 50);
+            })
             .on("change", function (e) {
                 editTask.priority = $(this).val();
             });
 
         $("#selectStatus")
             .select2()
+            .on("select2:open", () => {
+                setTimeout(() => {
+                    let searchField = $(
+                        ".select2-container--open .select2-search__field"
+                    );
+                    if (searchField.length > 0) {
+                        searchField[0].focus();
+                    }
+                }, 50);
+            })
             .on("change", function (e) {
                 editTask.status = $(this).val();
             });
@@ -617,7 +647,16 @@ const initPlugins = (editTask) => {
             "#dpPlanStartDate, #dpPlanEndDate, #dpActualStartDate, #dpActualEndDate"
         ).datetimepicker({
             format: "YYYY-MM-DD",
-            icons: { time: "fa fa-clock", date: "fa fa-calendar" },
+            buttons: {
+                showToday: true, // Hiển thị nút "Today"
+                showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+            },
+            icons: {
+                today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                clear: "fa fa-trash",
+                close: "fa fa-times",
+            },
         });
 
         $("#dpPlanStartDate").on("change.datetimepicker", function (e) {

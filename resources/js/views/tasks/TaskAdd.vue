@@ -389,6 +389,16 @@ const fetchEpics = async () => {
                     placeholder: "Choose an epic",
                     allowClear: true,
                 })
+                .on("select2:open", () => {
+                    setTimeout(() => {
+                        let searchField = $(
+                            ".select2-container--open .select2-search__field"
+                        );
+                        if (searchField.length > 0) {
+                            searchField[0].focus();
+                        }
+                    }, 50);
+                })
                 .on("change", handleEpicChange);
         });
     }
@@ -470,12 +480,32 @@ onMounted(() => {
                 placeholder: "Choose a task type",
                 allowClear: true,
             })
+            .on("select2:open", () => {
+                setTimeout(() => {
+                    let searchField = $(
+                        ".select2-container--open .select2-search__field"
+                    );
+                    if (searchField.length > 0) {
+                        searchField[0].focus();
+                    }
+                }, 50);
+            })
             .on("change", handleTaskTypeChange); // Gán function async vào đây
 
         $(assigneeSelect.value)
             .select2({
                 placeholder: "Choose an assignee",
                 allowClear: true,
+            })
+            .on("select2:open", () => {
+                setTimeout(() => {
+                    let searchField = $(
+                        ".select2-container--open .select2-search__field"
+                    );
+                    if (searchField.length > 0) {
+                        searchField[0].focus();
+                    }
+                }, 50);
             })
             .on("change", handleAssigneeChange);
 
@@ -484,12 +514,31 @@ onMounted(() => {
                 placeholder: "Choose a priority",
                 allowClear: true,
             })
+            .on("select2:open", () => {
+                setTimeout(() => {
+                    let searchField = $(
+                        ".select2-container--open .select2-search__field"
+                    );
+                    if (searchField.length > 0) {
+                        searchField[0].focus();
+                    }
+                }, 50);
+            })
             .on("change", handlePriorityChange);
 
         $("#planStartDatePicker").datetimepicker({
             format: "YYYY-MM-DD",
-            useCurrent: false,
             allowInputToggle: true,
+            buttons: {
+                showToday: true, // Hiển thị nút "Today"
+                showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+            },
+            icons: {
+                today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                clear: "fa fa-trash",
+                close: "fa fa-times",
+            },
         });
 
         $("#planStartDatePicker").on("change.datetimepicker", function (e) {
@@ -503,8 +552,17 @@ onMounted(() => {
 
         $("#planEndDatePicker").datetimepicker({
             format: "YYYY-MM-DD",
-            useCurrent: false,
             allowInputToggle: true,
+            buttons: {
+                showToday: true, // Hiển thị nút "Today"
+                showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+            },
+            icons: {
+                today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                clear: "fa fa-trash",
+                close: "fa fa-times",
+            },
         });
 
         $("#planEndDatePicker").on("change.datetimepicker", function (e) {
@@ -518,8 +576,17 @@ onMounted(() => {
 
         $("#actualStartDatePicker").datetimepicker({
             format: "YYYY-MM-DD",
-            useCurrent: false,
             allowInputToggle: true,
+            buttons: {
+                showToday: true, // Hiển thị nút "Today"
+                showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+            },
+            icons: {
+                today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                clear: "fa fa-trash",
+                close: "fa fa-times",
+            },
         });
 
         $("#actualStartDatePicker").on("change.datetimepicker", function (e) {
@@ -533,8 +600,17 @@ onMounted(() => {
 
         $("#actualEndDatePicker").datetimepicker({
             format: "YYYY-MM-DD",
-            useCurrent: false,
             allowInputToggle: true,
+            buttons: {
+                showToday: true, // Hiển thị nút "Today"
+                showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+            },
+            icons: {
+                today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                clear: "fa fa-trash",
+                close: "fa fa-times",
+            },
         });
 
         $("#actualEndDatePicker").on("change.datetimepicker", function (e) {

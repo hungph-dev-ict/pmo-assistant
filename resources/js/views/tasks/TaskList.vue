@@ -21,17 +21,17 @@
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th style="width: 2%">#</th>
+                        <th style="width: 3%" class="text-center">Key</th>
                         <th
                             v-if="isColumnVisible('epic_task')"
-                            style="width: 32%"
+                            style="width: 30%"
                         >
                             Epic/Task
                         </th>
                         <th
                             v-if="isColumnVisible('priority')"
                             class="text-center"
-                            style="width: 6%"
+                            style="width: 5%"
                         >
                             Priority
                         </th>
@@ -68,16 +68,22 @@
                         <th
                             v-if="isColumnVisible('plan-effort')"
                             style="width: 3%"
+                            class="text-right"
                         >
                             Plan Effort
                         </th>
                         <th
                             v-if="isColumnVisible('actual-effort')"
                             style="width: 3%"
+                            class="text-right"
                         >
                             Actual Effort
                         </th>
-                        <th v-if="isColumnVisible('status')" style="width: 6%">
+                        <th
+                            v-if="isColumnVisible('status')"
+                            style="width: 6%"
+                            class="text-center"
+                        >
                             Status
                         </th>
                         <th
@@ -92,7 +98,7 @@
                 <tbody>
                     <template v-for="task in visibleTasks" :key="task.id">
                         <tr class="bg-light">
-                            <td>{{ task.id }}</td>
+                            <td class="text-center">{{ task.id }}</td>
                             <td v-if="isColumnVisible('epic_task')">
                                 <span
                                     v-if="
@@ -391,7 +397,10 @@
                                 </div>
                             </td>
 
-                            <td v-if="isColumnVisible('plan-effort')">
+                            <td
+                                v-if="isColumnVisible('plan-effort')"
+                                class="text-right"
+                            >
                                 <span
                                     v-if="
                                         !task.isEditing ||
@@ -410,7 +419,10 @@
                                 />
                             </td>
 
-                            <td v-if="isColumnVisible('actual-effort')">
+                            <td
+                                v-if="isColumnVisible('actual-effort')"
+                                class="text-right"
+                            >
                                 {{ task.actual_effort
                                 }}<i
                                     v-if="
@@ -422,7 +434,10 @@
                                 ></i>
                             </td>
 
-                            <td v-if="isColumnVisible('status')">
+                            <td
+                                v-if="isColumnVisible('status')"
+                                class="text-center"
+                            >
                                 <span
                                     v-if="!task.isEditing"
                                     :class="statusClass(task.status)"
@@ -456,7 +471,10 @@
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
                                     <a
-                                        v-if="hasPermissionClient || hasPermissionPm"
+                                        v-if="
+                                            hasPermissionClient ||
+                                            hasPermissionPm
+                                        "
                                         href="#"
                                         class="btn btn-danger btn-sm mr-2"
                                         @click="confirmDelete(task)"
@@ -602,16 +620,46 @@ const initPlugins = (task) => {
             .select2()
             .on("change", function (e) {
                 task.editedAssignee = $(this).val();
+            })
+            .on("select2:open", () => {
+                setTimeout(() => {
+                    let searchField = $(
+                        ".select2-container--open .select2-search__field"
+                    );
+                    if (searchField.length > 0) {
+                        searchField[0].focus();
+                    }
+                }, 50);
             });
         $(".priority-select")
             .select2()
             .on("change", function (e) {
                 task.editedPriority = $(this).val();
+            })
+            .on("select2:open", () => {
+                setTimeout(() => {
+                    let searchField = $(
+                        ".select2-container--open .select2-search__field"
+                    );
+                    if (searchField.length > 0) {
+                        searchField[0].focus();
+                    }
+                }, 50);
             });
         $(".status-select")
             .select2()
             .on("change", function (e) {
                 task.editedStatus = $(this).val();
+            })
+            .on("select2:open", () => {
+                setTimeout(() => {
+                    let searchField = $(
+                        ".select2-container--open .select2-search__field"
+                    );
+                    if (searchField.length > 0) {
+                        searchField[0].focus();
+                    }
+                }, 50);
             });
 
         // Khởi động lại datetimepicker cho tất cả các trường ngày tháng
@@ -619,7 +667,16 @@ const initPlugins = (task) => {
             ".plan-start-datepicker, .plan-end-datepicker, .actual-start-datepicker, .actual-end-datepicker"
         ).datetimepicker({
             format: "YYYY-MM-DD",
-            icons: { time: "fa fa-clock", date: "fa fa-calendar" },
+            buttons: {
+                showToday: true, // Hiển thị nút "Today"
+                showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+            },
+            icons: {
+                today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                clear: "fa fa-trash",
+                close: "fa fa-times",
+            },
         });
 
         $(".plan-start-datepicker").on("change.datetimepicker", function (e) {
@@ -876,14 +933,14 @@ const exportTasks = () => {
 import tippy from "tippy.js";
 // Directive tùy chỉnh để dùng Tippy.js
 const vTooltip = {
-  mounted(el, binding) {
-    tippy(el, {
-      content: binding.value,
-      placement: "top",
-      animation: "scale",
-      theme: "light-border",
-    });
-  },
+    mounted(el, binding) {
+        tippy(el, {
+            content: binding.value,
+            placement: "top",
+            animation: "scale",
+            theme: "light-border",
+        });
+    },
 };
 </script>
 

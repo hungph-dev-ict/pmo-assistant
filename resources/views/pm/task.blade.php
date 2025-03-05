@@ -41,9 +41,8 @@
         $(function() {
             //Initialize Select2 Elements
             $('.select2').select2({
-                placeholder: "Choose one", // Placeholder hiển thị khi không có lựa chọn
                 allowClear: true // Bật tính năng xóa lựa chọn
-            })
+            });
             $('#planStartDatePicker').datetimepicker({
                 format: 'YYYY-MM-DD', // Định dạng ngày
                 useCurrent: false,
