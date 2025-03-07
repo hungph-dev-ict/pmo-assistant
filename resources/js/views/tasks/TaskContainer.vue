@@ -1,6 +1,6 @@
 <template>
     <div>
-        <task-add v-if="hasPermissionClient || hasPermissionPm" :projectId="projectId"
+            <task-add v-if="hasPermissionClient || hasPermissionPm" :projectId="projectId"
             :listAssignee="parsedListAssignee" :currentUserId="numberCurrentUserId"
             :hasPermissionClient="hasPermissionClient" :hasPermissionPm="hasPermissionPm"
             :hasPermissionStaff="hasPermissionStaff" @update-task="handleTaskUpdate"></task-add>
