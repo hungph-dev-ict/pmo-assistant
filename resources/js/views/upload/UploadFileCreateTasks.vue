@@ -1,181 +1,134 @@
 <template>
-    <div class="card card-success collapsed-card">
-        <div class="card-header">
-            <h3 class="card-title">Upload Tasks via CSV</h3>
-            <div class="card-tools">
-                <button
-                    type="button"
-                    class="btn btn-tool"
-                    data-card-widget="collapse"
-                    title="Collapse"
-                >
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-9">
-                    <!-- CSV Import Guide -->
-                    <div class="card mt-3">
-                        <div class="card-header">
-                            <h5>📌 CSV Import Guide</h5>
-                        </div>
-                        <div class="card-body">
-                            <p><strong>General Requirements:</strong></p>
-                            <ul>
-                                <li>
-                                    The file
-                                    <strong>must be a UTF-8 encoded CSV</strong>
-                                </li>
-                                <li><strong>epic</strong> is required</li>
-                                <li><strong>task</strong> is optional.</li>
-                                <ul>
-                                    <li>
-                                        If left blank, it will be recognized as
-                                        an <strong>epic</strong>
-                                    </li>
-                                    <li>
-                                        Otherwise, it will be considered a
-                                        <strong>task</strong>
-                                    </li>
-                                </ul>
-                                <li>
-                                    <strong>priority</strong> is required and
-                                    must be one of the following (ordered from
-                                    highest to lowest):
-                                </li>
-                                <ul>
-                                    <li>
-                                        Blocker, Critical, Highest, Higher,
-                                        High, Minor, Low, Lower, Lowest, Trivial
-                                    </li>
-                                </ul>
-                                <li>
-                                    <strong>status</strong> is optional and must
-                                    be one of the following:
-                                </li>
-                                <ul>
-                                    <li>
-                                        Open, In Progress, Resolved, Feedback,
-                                        Done, Reopen, Pending, Canceled
-                                    </li>
-                                </ul>
-                                <li>
-                                    <strong>assignee</strong> is optional and
-                                    must be a project member’s account
-                                </li>
-                                <li>The following fields are optional:</li>
-                                <ul>
-                                    <li>
-                                        description, memo, plan_start_date,
-                                        plan_end_date, actual_start_date,
-                                        actual_end_date
-                                    </li>
-                                </ul>
-                            </ul>
-
-                            <label><strong>Example CSV File:</strong></label>
-                            <pre class="bg-light p-3">
-epic,task,priority,assignee,status,description,memo,plan_start_date,plan_end_date,actual_start_date,actual_end_date
-Project A,,Blocker,john.doe@example.com,Open,Main epic for project A,Initial phase,2024-03-01,2024-04-01,,
-Project A,Task 1,High,jane.doe@example.com,In Progress,Design the UI,,2024-03-02,2024-03-15,,
-Project A,Task 2,Low,john.doe@example.com,Open,Set up database,,2024-03-05,2024-03-20,,
-Project B,,Critical,,Open,Main epic for project B,Second phase,2024-04-01,2024-05-01,,
-        </pre
-                            >
-                        </div>
-                    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <!-- CSV Import Guide -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>📌 CSV Import Guide</h5>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="fileInput"
-                            >Select <span style="color: red">UTF-8</span> CSV
-                            File <span style="color: red">*</span></label
-                        >
-                        <div class="input-group">
-                            <div class="custom-file">
-                                <input
-                                    type="file"
-                                    class="custom-file-input"
-                                    id="fileInput"
-                                    accept=".csv"
-                                    :disabled="isLoading"
-                                    @change="handleFileChange"
-                                />
-                                <label
-                                    class="custom-file-label"
-                                    for="fileInput"
-                                    >{{ fileName }}</label
-                                >
-                            </div>
-                        </div>
-                        <p v-if="csvMessage" style="color: green">
-                            {{ csvMessage }}
-                        </p>
-                        <ul v-if="validationErrors.length">
-                            <li
-                                v-for="(error, index) in validationErrors"
-                                :key="index"
-                                style="color: red"
-                            >
-                                {{ error }}
+                <div class="card-body">
+                    <p><strong>General Requirements:</strong></p>
+                    <ul>
+                        <li>
+                            The file
+                            <strong>must be a UTF-8 encoded CSV</strong>
+                        </li>
+                        <li><strong>epic</strong> is required</li>
+                        <li><strong>task</strong> is optional.</li>
+                        <ul>
+                            <li>
+                                If left blank, it will be recognized as
+                                an <strong>epic</strong>
+                            </li>
+                            <li>
+                                Otherwise, it will be considered a
+                                <strong>task</strong>
                             </li>
                         </ul>
-                    </div>
-                    <span v-if="isLoading">
-                        <i class="fas fa-spinner fa-spin"></i> Processing... ({{
-                            processedRecords
-                        }}/{{ totalRecords }})
-                    </span>
-                    <button
-                        v-else
-                        type="button"
-                        class="btn btn-primary"
-                        @click="submitFile"
-                        :disabled="
-                            !selectedFile ||
-                            isLoading ||
-                            validationErrors.length > 0
-                        "
-                    >
-                        Submit Tasks
-                    </button>
-                    <hr />
-                    <div class="form-group">
-                        <label>Example CSV File:</label>
-                        <div>
-                            <a
-                                href="https://drive.google.com/uc?export=download&id=1j_dsdKesD3Fvo2Sq_JGg2LccXFBQQlTl"
-                                class="btn btn-primary"
-                                download
-                            >
-                                Download
-                            </a>
-                        </div>
-                        <p style="margin-top: 10px">
-                            Please ensure your CSV follows the required format.
-                        </p>
-                    </div>
+                        <li>
+                            <strong>priority</strong> is required and
+                            must be one of the following (ordered from
+                            highest to lowest):
+                        </li>
+                        <ul>
+                            <li>
+                                Blocker, Critical, Highest, Higher,
+                                High, Minor, Low, Lower, Lowest, Trivial
+                            </li>
+                        </ul>
+                        <li>
+                            <strong>status</strong> is optional and must
+                            be one of the following:
+                        </li>
+                        <ul>
+                            <li>
+                                Open, In Progress, Resolved, Feedback,
+                                Done, Reopen, Pending, Canceled
+                            </li>
+                        </ul>
+                        <li>
+                            <strong>assignee</strong> is optional and
+                            must be a project member’s account
+                        </li>
+                        <li>The following fields are optional:</li>
+                        <ul>
+                            <li>
+                                description, memo, plan_start_date,
+                                plan_end_date, actual_start_date,
+                                actual_end_date
+                            </li>
+                        </ul>
+                    </ul>
 
-                    <div class="form-group">
-                        <label>Example Excel File:</label>
-                        <div>
-                            <a
-                                href="https://drive.google.com/uc?export=download&id=1C9ylEDUAl27nu4qwQDD9ZUbOHxnXsKrr"
-                                class="btn btn-primary"
-                                download
-                            >
-                                Download
-                            </a>
-                        </div>
-                        <p style="margin-top: 10px">
-                            Please make sure to convert your Excel file to UTF-8
-                            CSV before importing.
-                        </p>
+                    <label><strong>Example CSV File:</strong></label>
+                    <pre class="bg-light p-3">
+epic,task,priority,assignee,status,description,memo,plan_start_date,plan_end_date,actual_start_date,actual_end_date
+Epic coding,,Blocker,PhamPH,Open,Main epic for coding,Initial phase,2024-03-01,2024-05-01,,
+Epic coding,Task 1,High,HoangHT,In Progress,Coding frontend,,2024-03-02,2024-03-15,,
+Epic coding,Task 2,Higher,NhatHP,In Progress,Coding frontend,,2024-04-02,2024-04-15,,
+Epic database,,Critical,,Open,Main epic for project B,Second phase,2024-04-01,2024-05-01,,
+Epic database,Task 3,Low,MinhTH,Open,Set up database,,2024-04-05,2024-04-20,,
+        </pre>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="fileInput">Select <span style="color: red">UTF-8</span> CSV
+                    File <span style="color: red">*</span></label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="fileInput" accept=".csv" :disabled="isLoading"
+                            @change="handleFileChange" />
+                        <label class="custom-file-label" for="fileInput">{{ fileName }}</label>
                     </div>
                 </div>
+                <p v-if="csvMessage" style="color: green">
+                    {{ csvMessage }}
+                </p>
+                <ul v-if="validationErrors.length">
+                    <li v-for="(error, index) in validationErrors" :key="index" style="color: red">
+                        {{ error }}
+                    </li>
+                </ul>
+            </div>
+            <span v-if="isLoading">
+                <i class="fas fa-spinner fa-spin"></i> Processing... ({{
+                    processedRecords
+                }}/{{ totalRecords }})
+            </span>
+            <button v-else type="button" class="btn btn-primary" @click="submitFile" :disabled="!selectedFile ||
+                isLoading ||
+                validationErrors.length > 0
+                ">
+                Submit Tasks
+            </button>
+            <hr />
+            <div class="form-group">
+                <label>Example CSV File:</label>
+                <div>
+                    <a href="https://drive.google.com/uc?export=download&id=1j_dsdKesD3Fvo2Sq_JGg2LccXFBQQlTl"
+                        class="btn btn-primary" download>
+                        Download
+                    </a>
+                </div>
+                <p style="margin-top: 10px">
+                    Please ensure your CSV follows the required format.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label>Example Excel File:</label>
+                <div>
+                    <a href="https://drive.google.com/uc?export=download&id=1C9ylEDUAl27nu4qwQDD9ZUbOHxnXsKrr"
+                        class="btn btn-primary" download>
+                        Download
+                    </a>
+                </div>
+                <p style="margin-top: 10px">
+                    Please make sure to convert your Excel file to UTF-8
+                    CSV before importing.
+                </p>
             </div>
         </div>
     </div>

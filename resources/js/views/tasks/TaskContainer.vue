@@ -1,29 +1,13 @@
 <template>
     <div>
-        <upload-file-create-tasks
-            v-if="hasPermissionClient || hasPermissionPm"
-            :projectId="projectId"
-            :listAssignee="parsedListAssignee"
-            :currentUserId="numberCurrentUserId"
-            @update-task="handleTaskUpdate"
-        ></upload-file-create-tasks>
+        <task-add v-if="hasPermissionClient || hasPermissionPm" :projectId="projectId"
+            :listAssignee="parsedListAssignee" :currentUserId="numberCurrentUserId"
+            :hasPermissionClient="hasPermissionClient" :hasPermissionPm="hasPermissionPm"
+            :hasPermissionStaff="hasPermissionStaff" @update-task="handleTaskUpdate"></task-add>
 
-        <task-add
-            v-if="hasPermissionClient || hasPermissionPm"
-            :projectId="projectId"
-            :listAssignee="parsedListAssignee"
-            :currentUserId="numberCurrentUserId"
-            @update-task="handleTaskUpdate"
-        ></task-add>
-
-        <task-search-box
-            class="task-search-box"
-            v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff"
-            :tasks="tasks"
-            @updateFilteredTasks="filteredTasks = $event"
-            @blankQuery="handleBlankQuery"
-            @updateVisibleColumns="updateVisibleColumns"
-        >
+        <task-search-box class="task-search-box" v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff"
+            :tasks="tasks" @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
+            @updateVisibleColumns="updateVisibleColumns">
         </task-search-box>
 
         <div class="task-list-container relative" ref="taskListContainer">
@@ -31,22 +15,13 @@
                 <div class="spinner"></div>
                 <p>Loading...</p>
             </div>
-            <task-list
-                v-if="
-                    hasPermissionClient || hasPermissionPm || hasPermissionStaff
-                "
-                :projectId="projectId"
-                :filteredTasks="filteredTasks"
-                :blankQuery="blankQuery"
-                :visibleColumns="visibleColumns"
-                :listAssignee="parsedListAssignee"
-                :hasPermissionClient="hasPermissionClient"
-                :hasPermissionPm="hasPermissionPm"
-                :hasPermissionStaff="hasPermissionStaff"
-                :currentUserId="numberCurrentUserId"
-                :currentUserAccount="currentUserAccount"
-                @update-data="handleTaskUpdate"
-            />
+            <task-list v-if="
+                hasPermissionClient || hasPermissionPm || hasPermissionStaff
+            " :projectId="projectId" :filteredTasks="filteredTasks" :blankQuery="blankQuery"
+                :visibleColumns="visibleColumns" :listAssignee="parsedListAssignee"
+                :hasPermissionClient="hasPermissionClient" :hasPermissionPm="hasPermissionPm"
+                :hasPermissionStaff="hasPermissionStaff" :currentUserId="numberCurrentUserId"
+                :currentUserAccount="currentUserAccount" @update-data="handleTaskUpdate" />
         </div>
     </div>
 </template>
@@ -57,7 +32,6 @@ import axios from "axios";
 import TaskAdd from "./TaskAdd.vue";
 import TaskSearchBox from "./TaskSearchBox.vue";
 import TaskList from "./TaskList.vue";
-import UploadFileCreateTasks from "../upload/UploadFileCreateTasks.vue";
 
 const props = defineProps({
     projectId: String,
