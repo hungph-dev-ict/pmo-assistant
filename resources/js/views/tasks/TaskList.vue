@@ -291,7 +291,7 @@
                                     <td style="width: 6%" v-if="isColumnVisible('status')" class="text-center">
                                         <span v-if="!task.isEditing" :class="statusClass(task.status)">{{
                                             task.task_status?.value1
-                                        }}</span>
+                                            }}</span>
                                         <select v-else class="form-control status-select" v-model="task.editedStatus">
                                             <option v-for="[status, id] in Object.entries(listStatuses)" :key="id"
                                                 :value="id">
@@ -350,7 +350,7 @@
 import { computed, ref, nextTick, onMounted } from "vue";
 import Swal from "sweetalert2";
 import LogWorkModal from "../../components/LogWorkModal.vue";
-import { TASK_ICONS, TASK_TYPES, statusClass } from "../../constants/taskConstants";
+import { TASK_ICONS, TASK_STATUS, TASK_TYPES, statusClass } from "../../constants/taskConstants";
 
 const props = defineProps({
     projectId: String,
@@ -513,19 +513,17 @@ const updateTask = async (task) => {
 const isOverdue = (planEndDate, status) => {
     if (!planEndDate || !status) return false;
 
-    const overdueStatuses = ["Open", "In Progress", "Feedback", "Reopen"];
+    const overdueStatuses = [TASK_STATUS.OPEN, TASK_STATUS.IN_PROGRESS, TASK_STATUS.FEEDBACK, TASK_STATUS.REOPEN];
     const today = new Date().toISOString().split("T")[0];
 
     return overdueStatuses.includes(status) && today > planEndDate;
 };
 
 const isDelayedStart = (planStartDate, status) => {
-    if (!planStartDate || !status) return false;
-
-    const notStartedStatus = "Open";
+    if (!planStartDate) return false;
     const today = new Date().toISOString().split("T")[0];
 
-    return status === notStartedStatus && today > planStartDate;
+    return status === TASK_STATUS.OPEN && today > planStartDate;
 };
 
 const cancelEdit = (task) => {
