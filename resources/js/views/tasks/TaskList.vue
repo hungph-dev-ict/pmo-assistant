@@ -14,7 +14,7 @@
                     </div>
                 </div>
 
-                <div class="card-body" style="min-height: 80vh;max-height: 80vh; overflow-y: auto">
+                <div class="card-body" style="max-height: 80vh; overflow-y: auto">
                     <table class="table table-sm fixed-header-table table-bordered" style="margin-right: 20px">
                         <thead>
                             <tr>
@@ -125,12 +125,12 @@
                                                 currentUserAccount
                                             ">
                                                 {{
-                                                    task.assignee_user?.account || "N/A"
+                                                    task.assignee_user?.account
                                                 }}
                                             </strong>
                                             <template v-else>
                                                 {{
-                                                    task.assignee_user?.account || "N/A"
+                                                    task.assignee_user?.account
                                                 }}
                                             </template>
                                         </span>
@@ -299,9 +299,9 @@
                                             </option>
                                         </select>
                                     </td>
-                                    <td style="width: 10%" v-if="isColumnVisible('action')" class="text-center">
+                                    <td style="width: 10%" v-if="isColumnVisible('action')" class="text-left">
                                         <template v-if="!task.isEditing">
-                                            <a href="#" class="btn btn-info btn-sm mr-2" @click.prevent="editTask(task)"
+                                            <a href="#" class="btn btn-info btn-sm ml-3 mr-2" @click.prevent="editTask(task)"
                                                 v-tooltip="'Edit'">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </a>
@@ -312,15 +312,15 @@
                                                 v-tooltip="'Delete'">
                                                 <i class="fas fa-trash"></i>
                                             </a>
-                                            <a href="#" class="btn btn-primary btn-sm mr-2" @click.prevent="
+                                            <button class="btn btn-secondary btn-sm mr-2" @click="copyTaskLink(task)"
+                                                v-tooltip="'Share'">
+                                                <i class="fas fa-link"></i>
+                                            </button>
+                                            <a href="#" class="btn btn-primary btn-sm" v-if="task.status !== TASK_STATUS.DONE" @click.prevent="
                                                 openLogWorkModal(task)
                                                 " v-tooltip="'Log Work'">
                                                 <i class="fas fa-clock"></i>
                                             </a>
-                                            <button class="btn btn-secondary btn-sm" @click="copyTaskLink(task)"
-                                                v-tooltip="'Share'">
-                                                <i class="fas fa-link"></i>
-                                            </button>
                                         </template>
 
                                         <template v-else>
@@ -663,5 +663,9 @@ table tbody tr td {
 table tbody tr:hover {
     background-color: #b3e0f5 !important;
     transition: background-color 0.2s ease-in-out !important;
+}
+
+.card-body {
+    overflow: visible !important;
 }
 </style>

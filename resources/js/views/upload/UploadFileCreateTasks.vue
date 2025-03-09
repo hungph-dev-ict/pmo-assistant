@@ -17,8 +17,8 @@
                         <li><strong>task</strong> is optional.</li>
                         <ul>
                             <li>
-                                If left blank, it will be recognized as
-                                an <strong>epic</strong>
+                                If left blank, it will be recognized as an
+                                <strong>epic</strong>
                             </li>
                             <li>
                                 Otherwise, it will be considered a
@@ -26,29 +26,29 @@
                             </li>
                         </ul>
                         <li>
-                            <strong>priority</strong> is required and
-                            must be one of the following (ordered from
-                            highest to lowest):
+                            <strong>priority</strong> is required and must be
+                            one of the following (ordered from highest to
+                            lowest):
                         </li>
                         <ul>
                             <li>
-                                Blocker, Critical, Highest, Higher,
-                                High, Minor, Low, Lower, Lowest, Trivial
+                                Blocker, Critical, Highest, Higher, High, Minor,
+                                Low, Lower, Lowest, Trivial
                             </li>
                         </ul>
                         <li>
-                            <strong>status</strong> is optional and must
-                            be one of the following:
+                            <strong>status</strong> is optional and must be one
+                            of the following:
                         </li>
                         <ul>
                             <li>
-                                Open, In Progress, Resolved, Feedback,
-                                Done, Reopen, Pending, Canceled
+                                Open, In Progress, Resolved, Feedback, Done,
+                                Reopen, Pending, Canceled
                             </li>
                         </ul>
                         <li>
-                            <strong>assignee</strong> is optional and
-                            must be a project member’s account
+                            <strong>assignee</strong> is optional and must be a
+                            project member’s account
                         </li>
                         <li>The following fields are optional:</li>
                         <ul>
@@ -68,26 +68,42 @@ Epic coding,Task 1,High,HoangHT,In Progress,Coding frontend,,2024-03-02,2024-03-
 Epic coding,Task 2,Higher,NhatHP,In Progress,Coding frontend,,2024-04-02,2024-04-15,,
 Epic database,,Critical,,Open,Main epic for project B,Second phase,2024-04-01,2024-05-01,,
 Epic database,Task 3,Low,MinhTH,Open,Set up database,,2024-04-05,2024-04-20,,
-        </pre>
+        </pre
+                    >
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group">
-                <label for="fileInput">Select <span style="color: red">UTF-8</span> CSV
-                    File <span style="color: red">*</span></label>
+                <label for="fileInput"
+                    >Select <span style="color: red">UTF-8</span> CSV File
+                    <span style="color: red">*</span></label
+                >
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="fileInput" accept=".csv" :disabled="isLoading"
-                            @change="handleFileChange" ref="fileInputRef"/>
-                        <label class="custom-file-label" for="fileInput">{{ fileName }}</label>
+                        <input
+                            type="file"
+                            class="custom-file-input"
+                            id="fileInput"
+                            accept=".csv"
+                            :disabled="isLoading"
+                            @change="handleFileChange"
+                            ref="fileInputRef"
+                        />
+                        <label class="custom-file-label" for="fileInput">{{
+                            fileName
+                        }}</label>
                     </div>
                 </div>
                 <p v-if="csvMessage" style="color: green">
                     {{ csvMessage }}
                 </p>
                 <ul v-if="validationErrors.length">
-                    <li v-for="(error, index) in validationErrors" :key="index" style="color: red">
+                    <li
+                        v-for="(error, index) in validationErrors"
+                        :key="index"
+                        style="color: red"
+                    >
                         {{ error }}
                     </li>
                 </ul>
@@ -97,18 +113,26 @@ Epic database,Task 3,Low,MinhTH,Open,Set up database,,2024-04-05,2024-04-20,,
                     processedRecords
                 }}/{{ totalRecords }})
             </span>
-            <button v-else type="button" class="btn btn-primary" @click="submitFile" :disabled="!selectedFile ||
-                isLoading ||
-                validationErrors.length > 0
-                ">
+            <button
+                v-else
+                type="button"
+                class="btn btn-primary"
+                @click="submitFile"
+                :disabled="
+                    !selectedFile || isLoading || validationErrors.length > 0
+                "
+            >
                 Submit Tasks
             </button>
             <hr />
             <div class="form-group">
                 <label>Example CSV File:</label>
                 <div>
-                    <a href="https://drive.google.com/uc?export=download&id=1j_dsdKesD3Fvo2Sq_JGg2LccXFBQQlTl"
-                        class="btn btn-primary" download>
+                    <a
+                        href="https://drive.google.com/uc?export=download&id=1j_dsdKesD3Fvo2Sq_JGg2LccXFBQQlTl"
+                        class="btn btn-primary"
+                        download
+                    >
                         Download
                     </a>
                 </div>
@@ -120,14 +144,17 @@ Epic database,Task 3,Low,MinhTH,Open,Set up database,,2024-04-05,2024-04-20,,
             <div class="form-group">
                 <label>Example Excel File:</label>
                 <div>
-                    <a href="https://drive.google.com/uc?export=download&id=1C9ylEDUAl27nu4qwQDD9ZUbOHxnXsKrr"
-                        class="btn btn-primary" download>
+                    <a
+                        href="https://drive.google.com/uc?export=download&id=1C9ylEDUAl27nu4qwQDD9ZUbOHxnXsKrr"
+                        class="btn btn-primary"
+                        download
+                    >
                         Download
                     </a>
                 </div>
                 <p style="margin-top: 10px">
-                    Please make sure to convert your Excel file to UTF-8
-                    CSV before importing.
+                    Please make sure to convert your Excel file to UTF-8 CSV
+                    before importing.
                 </p>
             </div>
         </div>
@@ -135,10 +162,11 @@ Epic database,Task 3,Low,MinhTH,Open,Set up database,,2024-04-05,2024-04-20,,
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import axios from "axios";
 import toastr from "toastr";
 import dayjs from "dayjs";
+import { TASK_PRIORITY, TASK_STATUS } from "../../constants/taskConstants";
 
 const selectedFile = ref(null);
 const fileName = ref("Choose file");
@@ -164,6 +192,41 @@ const props = defineProps({
         required: true,
     },
 });
+
+const priorityMapping = {
+    Blocker: TASK_PRIORITY.BLOCKER,
+    Critical: TASK_PRIORITY.CRITICAL,
+    Highest: TASK_PRIORITY.HIGHEST,
+    Higher: TASK_PRIORITY.HIGHER,
+    High: TASK_PRIORITY.HIGH,
+    Minor: TASK_PRIORITY.MINOR,
+    Low: TASK_PRIORITY.LOW,
+    Lower: TASK_PRIORITY.LOWER,
+    Lowest: TASK_PRIORITY.LOWEST,
+    Trivial: TASK_PRIORITY.TRIVIAL,
+};
+
+// Hàm chuyển đổi Priority từ CSV sang số
+const convertPriority = (priority) => {
+    return priorityMapping[priority] ?? TASK_PRIORITY.LOW; // Mặc định là "Low" nếu không tìm thấy
+};
+
+// Mapping từ chuỗi CSV sang số
+const statusMapping = {
+    Open: TASK_STATUS.OPEN,
+    "In Progress": TASK_STATUS.IN_PROGRESS,
+    Resolved: TASK_STATUS.RESOLVED,
+    Feedback: TASK_STATUS.FEEDBACK,
+    Done: TASK_STATUS.DONE,
+    Reopen: TASK_STATUS.REOPEN,
+    Pending: TASK_STATUS.PENDING,
+    Canceled: TASK_STATUS.CANCELED,
+};
+
+// Hàm chuyển đổi Status từ CSV sang số
+const convertStatus = (status) => {
+    return statusMapping[status] ?? TASK_STATUS.OPEN; // Mặc định là "Open" nếu không tìm thấy
+};
 
 const emit = defineEmits(["update-task"]);
 
@@ -203,18 +266,28 @@ const processCsv = (csvText) => {
     tasks.value = [];
     epicMap.value = {};
 
-    const lines = csvText
-        .trim()
-        .split("\n")
-        .map((line) => line.split(",").map((cell) => cell.trim()));
-    if (lines.length < 2) {
+    // Tách từng dòng
+    const lines = csvText.trim().split("\n");
+
+    // Sử dụng regex để tách từng cột, xử lý giá trị nằm trong dấu `"..."` (có thể chứa dấu `,`)
+    const parseCsvLine = (line) => {
+        const regex = /"(.*?)"|([^,]+)/g;
+        return [...line.matchAll(regex)].map(
+            (match) => match[1] || match[2] || ""
+        );
+    };
+
+    // Chuyển mỗi dòng thành một mảng các cột
+    const data = lines.map(parseCsvLine);
+
+    if (data.length < 2) {
         validationErrors.value.push(
             "⚠️ CSV file must have at least one data row."
         );
         return;
     }
 
-    const headers = lines[0];
+    const headers = data[0]; // Dòng tiêu đề
     const requiredHeaders = ["epic", "task", "priority"];
 
     if (!requiredHeaders.every((h) => headers.includes(h))) {
@@ -224,18 +297,17 @@ const processCsv = (csvText) => {
         return;
     }
 
-    totalRecords.value = lines.length - 1;
+    totalRecords.value = data.length - 1;
 
-    lines.slice(1).forEach((row, index) => {
+    data.slice(1).forEach((row, index) => {
         const lineNumber = index + 2;
         const rowData = Object.fromEntries(
-            headers.map((header, i) => [header, row[i] || null])
+            headers.map((header, i) => [header, row[i] || ""])
         );
 
         const { epic, task, priority } = rowData;
-
         const assignee = rowData.assignee || null;
-        const status = rowData.status || "Open"; // Nếu không có, mặc định là "Open"
+        const status = rowData.status || "Open";
         const description = rowData.description || null;
         const memo = rowData.memo || null;
         const planStartDate = rowData.plan_start_date || null;
@@ -243,7 +315,6 @@ const processCsv = (csvText) => {
         const planEndDate = rowData.plan_end_date || null;
         const actualEndDate = rowData.actual_end_date || null;
 
-        // Kiểm tra dữ liệu hợp lệ
         if (!epic || !priority) {
             validationErrors.value.push(
                 `⚠️ Line ${lineNumber} is missing required fields (epic, priority).`
@@ -276,17 +347,18 @@ const processCsv = (csvText) => {
             csvMessage.value = `The CSV file is valid. It will import ${totalRecords.value} tasks.`;
         }
 
-        let assigneeId = assignee != null ? props.listAssignee[assignee] : props.currentUserId;
+        let assigneeId = assignee
+            ? props.listAssignee[assignee]
+            : props.currentUserId;
 
         if (epic && !task) {
-            // Nếu chỉ có Epic, tạo Epic
             tasks.value.push({
                 name: epic,
                 type: 0,
                 parent_id: null,
                 assignee: assigneeId,
-                priority: priority,
-                status: status,
+                priority: convertPriority(priority),
+                status: convertStatus(status),
                 description: description,
                 memo: memo,
                 plan_start_date: planStartDate,
@@ -296,21 +368,16 @@ const processCsv = (csvText) => {
                 created_by: props.currentUserId,
             });
         } else if (epic && task) {
-            // Nếu có cả Epic và Task, kiểm tra xem Epic đã tồn tại chưa
             tasks.value.push({
                 name: task,
                 type: 1,
-                parent_name: epic, // Giữ lại tên Epic để sau này tìm ID
+                parent_name: epic,
                 parent_id: null,
                 assignee: assigneeId,
-                priority: priority,
-                status: status,
+                priority: convertPriority(priority),
+                status: convertStatus(status),
                 description: description,
                 memo: memo,
-                plan_start_date: planStartDate,
-                plan_end_date: planEndDate,
-                actual_start_date: actualStartDate,
-                actual_end_date: actualEndDate,
                 created_by: props.currentUserId,
             });
         }
@@ -323,9 +390,9 @@ const submitFile = async () => {
     processedRecords.value = 0;
 
     try {
-        // 1️⃣ Gửi danh sách Epic trước và lưu vào epicMap
         const epicMap = {};
 
+        // 1️⃣ Gửi danh sách Epic trước và lưu vào epicMap
         for (const task of tasks.value.filter((t) => t.type === 0)) {
             const requestData = {
                 project_id: props.projectId,
@@ -340,33 +407,19 @@ const submitFile = async () => {
                 created_by: task.created_by,
             };
 
-            if (task.plan_start_date) {
-                requestData.plan_start_date = dayjs(
-                    task.plan_start_date,
-                    "M/D/YYYY"
-                ).format("YYYY-MM-DD");
-            }
-
-            if (task.plan_end_date) {
-                requestData.plan_end_date = dayjs(
-                    task.plan_end_date,
-                    "M/D/YYYY"
-                ).format("YYYY-MM-DD");
-            }
-
-            if (task.actual_start_date) {
-                requestData.actual_start_date = dayjs(
-                    task.actual_start_date,
-                    "M/D/YYYY"
-                ).format("YYYY-MM-DD");
-            }
-
-            if (task.actual_end_date) {
-                requestData.actual_end_date = dayjs(
-                    task.actual_end_date,
-                    "M/D/YYYY"
-                ).format("YYYY-MM-DD");
-            }
+            [
+                "plan_start_date",
+                "plan_end_date",
+                "actual_start_date",
+                "actual_end_date",
+            ].forEach((dateField) => {
+                if (task[dateField]) {
+                    requestData[dateField] = dayjs(
+                        task[dateField],
+                        "M/D/YYYY"
+                    ).format("YYYY-MM-DD");
+                }
+            });
 
             const response = await axios.post(
                 `/api/pm/${props.projectId}/tasks/store`,
@@ -380,13 +433,24 @@ const submitFile = async () => {
 
         // 2️⃣ Gửi danh sách Task sau khi có Epic ID
         for (const task of tasks.value.filter((t) => t.type === 1)) {
-            const epicId = epicMap[task.parent_name];
+            let epicId = epicMap[task.parent_name];
 
+            // ✅ Nếu Epic chưa tồn tại, tự động tạo mới Epic
             if (!epicId) {
-                toastr.error(
-                    `⚠️ Epic "${task.parent_name}" not found, cannot create task "${task.name}".`
+                const epicRequest = {
+                    project_id: props.projectId,
+                    name: task.parent_name,
+                    priority: TASK_PRIORITY.MINOR,
+                    type: 'epic',
+                    created_by: props.currentUserId, // Giả sử có props.userId
+                };
+
+                const epicResponse = await axios.post(
+                    `/api/pm/${props.projectId}/tasks/store`,
+                    epicRequest
                 );
-                return;
+                epicId = epicResponse.data.task.id;
+                epicMap[task.parent_name] = epicId; // Cập nhật Epic ID vào map
             }
 
             const requestData = {
@@ -402,33 +466,19 @@ const submitFile = async () => {
                 created_by: task.created_by,
             };
 
-            if (task.plan_start_date) {
-                requestData.plan_start_date = dayjs(
-                    task.plan_start_date,
-                    "M/D/YYYY"
-                ).format("YYYY-MM-DD");
-            }
-
-            if (task.plan_end_date) {
-                requestData.plan_end_date = dayjs(
-                    task.plan_end_date,
-                    "M/D/YYYY"
-                ).format("YYYY-MM-DD");
-            }
-
-            if (task.actual_start_date) {
-                requestData.actual_start_date = dayjs(
-                    task.actual_start_date,
-                    "M/D/YYYY"
-                ).format("YYYY-MM-DD");
-            }
-
-            if (task.actual_end_date) {
-                requestData.actual_end_date = dayjs(
-                    task.actual_end_date,
-                    "M/D/YYYY"
-                ).format("YYYY-MM-DD");
-            }
+            [
+                "plan_start_date",
+                "plan_end_date",
+                "actual_start_date",
+                "actual_end_date",
+            ].forEach((dateField) => {
+                if (task[dateField]) {
+                    requestData[dateField] = dayjs(
+                        task[dateField],
+                        "M/D/YYYY"
+                    ).format("YYYY-MM-DD");
+                }
+            });
 
             await axios.post(
                 `/api/pm/${props.projectId}/tasks/store`,
@@ -436,9 +486,8 @@ const submitFile = async () => {
             );
             processedRecords.value++;
         }
-        toastr.success(processedRecords.value + " tasks created successfully!");
 
-        // Emit để component cha xử lý
+        toastr.success(processedRecords.value + " tasks created successfully!");
         emit("update-task", true);
     } catch (error) {
         // Lấy thông tin lỗi từ response

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Project;
 use App\Models\Constant;
 use Illuminate\Support\Facades\Log;
 
@@ -24,13 +25,13 @@ class TaskService
         if ($request->filled('priority')) {
             // Chuyển chuỗi priority thành mảng
             $f_priorityArray = explode(',', $request->priority);
-        
+
             // Truy vấn bảng constants để lấy các priority tương ứng trong tasks
             $priorityMapped = Constant::where('group', 'task_priority')
                 ->whereIn('value1', $f_priorityArray)
                 ->pluck('key') // hoặc 'id' tùy vào cách ánh xạ của bạn
                 ->toArray();
-        
+
             // Nếu tìm thấy priority hợp lệ, áp dụng vào query
             if (!empty($priorityMapped)) {
                 $query->whereIn('priority', $priorityMapped);
@@ -39,9 +40,10 @@ class TaskService
 
         if ($request->filled('assignee')) {
             $f_assignee = $request->assignee; // account của user
-
+            $project = Project::find($projectId);
+            $tenantId = $project->projectManager->tenant_id;
             // 🔹 Lấy user_id từ bảng users dựa trên account
-            $user = User::where('account', $f_assignee)->first();
+            $user = User::where('account', $f_assignee)->where('tenant_id', $tenantId)->first();
 
             if ($user) {
                 $query->where('assignee', $user->id); // Lọc theo ID của user
@@ -55,18 +57,20 @@ class TaskService
         if ($request->filled('status')) {
             // Chuyển chuỗi status thành mảng
             $f_statusArray = explode(',', $request->status);
-        
+
             // Truy vấn bảng constants để lấy các status tương ứng trong tasks
             $statusMapped = Constant::where('group', 'task_status')
                 ->whereIn('value1', $f_statusArray)
                 ->pluck('key') // hoặc 'id' tùy vào cách ánh xạ của bạn
                 ->toArray();
-        
+
             // Nếu tìm thấy status hợp lệ, áp dụng vào query
             if (!empty($statusMapped)) {
                 $query->whereIn('status', $statusMapped);
             }
         }
+        // Log::debug("Generated SQL: " . $query->toSql());
+        // Log::debug("Bindings: ", $query->getBindings());
 
         $task_list = $query->get();
 
