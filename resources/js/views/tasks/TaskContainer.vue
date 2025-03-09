@@ -102,19 +102,23 @@ const taskListIsLoading = ref(false); // Biến kiểm soát trạng thái loadi
 const fetchTasksByQuery = async (p_filters) => {
     taskListIsLoading.value = true; // Bắt đầu loading
 
-    let url = `/api/pm/${props.projectId}/list`;
+    let apiUrl = computed(() => {
+        return userRoles.value.includes("pm") || userRoles.value.includes("client")
+            ? `/api/pm/${props.projectId}/list`
+            : `/api/staff/${props.projectId}/list`;
+    });
+
+    let fullApiUrl = apiUrl.value; // Lấy URL cơ bản
 
     if (p_filters) {
         queryParams.value = new URLSearchParams(p_filters).toString();
-
         if (queryParams.value) {
-            url += `?${queryParams.value}`;
+            fullApiUrl += `?${queryParams.value}`; // Gắn query vào URL
         }
     }
 
-
     try {
-        const { data } = await axios.get(url);
+        const { data } = await axios.get(fullApiUrl);
         taskListData.value = {
             ...taskListData.value,
             tasks: [...data.tasks] // Gán lại mảng mới
@@ -232,9 +236,6 @@ onMounted(async () => {
     }
     // Gán lại vào filters để Vue phản ứng
     filters.value = urlFilters;
-
-    // Gọi API lấy danh sách tasks
-    fetchTasksByQuery(hasParams ? filters.value : null);
 
     // Lấy danh sách members trong dự án
     try {

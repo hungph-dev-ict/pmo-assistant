@@ -84,6 +84,7 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
 
 Route::group(['middleware' => ['auth', 'role:client|pm|staff']], function () {
     Route::get('/api/staff/{project_id}/tasks', [StaffController::class, 'listTasks']);
+    Route::get('/api/staff/{project_id}/list', [StaffController::class, 'listTasksByFilter']);
     Route::get('/api/{project_id}/getAllMembers', [ProjectController::class, 'getAllMembers']);
     Route::get('/api/getAllStatuses', [TaskController::class, 'getStatuses']);
     Route::get('/api/getAllPriorities', [TaskController::class, 'getPriorities']);
