@@ -15,7 +15,7 @@
                             "
                         >
                             <PriorityIcon
-                                :priority="priorityMap[task.priority]"
+                                :priority="task.priority"
                             />
                             <strong v-if="task.type == 1">
                                 {{ task.parent.name }}
@@ -506,26 +506,13 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import LogWorkModal from "../../components/LogWorkModal.vue";
 
-const priorityMap = {
-    0: "Trivial",
-    1: "Lowest",
-    2: "Lower",
-    3: "Low",
-    4: "Minor",
-    5: "High",
-    6: "Higher",
-    7: "Highest",
-    8: "Critical",
-    9: "Blocker",
-};
-
 const props = defineProps({
     task: {
         type: [Array, String], // Có thể là Array hoặc String
         default: () => [],
     },
     listAssignee: {
-        type: [Array, String], // Có thể là Array hoặc String
+        type: [Array, String, Object], // Có thể là Array hoặc String
         default: () => [],
     },
     currentUserId: {
