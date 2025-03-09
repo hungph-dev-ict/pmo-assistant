@@ -179,10 +179,7 @@ const props = defineProps({
         type: [String, Number],
         required: true,
     },
-    listAssignee: {
-        type: [String, Array],
-        required: true,
-    },
+    listAssignee: Object,
     currentUserId: {
         type: [String, Number],
         required: true,
@@ -190,17 +187,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update-task"]);
-
-const parsedListAssignee = computed(() => {
-    const list =
-        typeof props.listAssignee === "string"
-            ? JSON.parse(props.listAssignee)
-            : props.listAssignee;
-    return list.reduce((acc, user) => {
-        acc[user.account] = user.id;
-        return acc;
-    }, {});
-});
 
 const handleFileChange = () => {
     const file = event.target.files[0];
@@ -293,7 +279,7 @@ const processCsv = (csvText) => {
             return;
         }
 
-        if (!parsedListAssignee.value.hasOwnProperty(assignee)) {
+        if (!props.listAssignee.hasOwnProperty(assignee)) {
             validationErrors.value.push(
                 `⚠️ Assignee "${assignee}" at line ${lineNumber} not found.`
             );
@@ -304,12 +290,7 @@ const processCsv = (csvText) => {
             csvMessage.value = `The CSV file is valid. It will import ${totalRecords.value} tasks.`;
         }
 
-        let assigneeId;
-        if (assignee != null) {
-            assigneeId = parsedListAssignee.value[assignee];
-        } else {
-            assigneeId = props.currentUserId;
-        }
+        let assigneeId = assignee != null ? props.listAssignee[assignee] : props.currentUserId;
 
         if (epic && !task) {
             // Nếu chỉ có Epic, tạo Epic

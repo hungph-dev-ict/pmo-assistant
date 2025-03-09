@@ -85,7 +85,7 @@
                                         <select id="assignee" v-model="selectedAssignee" name="assignee"
                                             class="form-control select2" style="width: 100%" ref="assigneeSelect">
                                             <option value="">Assignee</option>
-                                            <option v-for="assignee in parsedListAssignee" :key="assignee.id"
+                                            <option v-for="assignee in listAssignee" :key="assignee.id"
                                                 :value="assignee.id">
                                                 {{ assignee.account }}
                                             </option>
@@ -212,20 +212,11 @@ import UploadFileCreateTasks from "../upload/UploadFileCreateTasks.vue";
 
 const props = defineProps({
     projectId: String,
-    listAssignee: {
-        type: [Array, String], // Có thể là Array hoặc String
-        default: () => [],
-    },
+    listAssignee: Object,
     currentUserId: Number,
     hasPermissionClient: Boolean,
     hasPermissionPm: Boolean,
     hasPermissionStaff: Boolean,
-});
-
-const parsedListAssignee = computed(() => {
-    return typeof props.listAssignee === "string"
-        ? JSON.parse(props.listAssignee)
-        : props.listAssignee;
 });
 
 const taskTitle = ref("");
@@ -518,8 +509,6 @@ onMounted(() => {
 });
 
 const handleTaskUpdate = (updatedTask) => {
-    console.log("Task updated:", updatedTask);
-
     // Tiếp tục emit sự kiện `update-task` lên component cha
     emit("update-task", updatedTask);
 };

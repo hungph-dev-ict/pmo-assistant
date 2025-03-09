@@ -151,4 +151,25 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.index')->with('error', __('messages.failed_to_restore_project'));
     }
+
+    public function getAllMembers($project_id) {
+        try {
+            $members = Project::findOrFail($project_id)->users()->pluck('users.id', 'users.account');
+
+            return response()->json([
+                'message' => 'Get list members of project successfully!',
+                'members' => $members,
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Member not found!',
+                'error' => $e->getMessage(),
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch members!',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }
