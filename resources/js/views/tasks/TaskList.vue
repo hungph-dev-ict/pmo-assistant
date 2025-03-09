@@ -1,139 +1,77 @@
 <template>
     <div>
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">List Task</h3>
-                <div class="card-tools">
-                    <!-- <button @click="exportTasks" class="btn btn-info btn-sm mr-2">
+        <div>
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">List Task</h3>
+                    <div class="card-tools">
+                        <!-- <button @click="exportTasks" class="btn btn-info btn-sm mr-2">
                     Export to CSV
                 </button> -->
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-        <div class="card-body" style="max-height: 80vh; overflow-y: auto">
-            <table
-                class="table table-sm fixed-header-table table-bordered"
-                style="margin-right: 20px"
-            >
-                <thead>
-                    <tr>
-                        <th style="width: 3%" class="text-center">Key</th>
-                        <th style="width: 2.5%" class="text-center">Type</th>
-                        <th
-                            v-if="isColumnVisible('epic_task')"
-                            class="text-center"
-                            style="width: 25.5%"
-                        >
-                            Summary
-                        </th>
-                        <th
-                            v-if="isColumnVisible('priority')"
-                            class="text-center"
-                            style="width: 5%"
-                        >
-                            Priority
-                        </th>
-                        <th
-                            v-if="isColumnVisible('assignee')"
-                            class="text-center"
-                            style="width: 6%"
-                        >
-                            Assignee
-                        </th>
-                        <th
-                            v-if="isColumnVisible('plan_start_date')"
-                            style="width: 8%"
-                            class="text-center"
-                        >
-                            Plan Start Date
-                        </th>
-                        <th
-                            v-if="isColumnVisible('plan_end_date')"
-                            style="width: 8%"
-                            class="text-center"
-                        >
-                            Plan End Date
-                        </th>
-                        <th
-                            v-if="isColumnVisible('actual_start_date')"
-                            style="width: 8%"
-                            class="text-center"
-                        >
-                            Actual Start Date
-                        </th>
-                        <th
-                            v-if="isColumnVisible('actual_end_date')"
-                            style="width: 8%"
-                            class="text-center"
-                        >
-                            Actual End Date
-                        </th>
-                        <th
-                            v-if="isColumnVisible('plan-effort')"
-                            style="width: 4%"
-                            class="text-center"
-                        >
-                            Plan Effort
-                        </th>
-                        <th
-                            v-if="isColumnVisible('actual-effort')"
-                            style="width: 4%"
-                            class="text-center"
-                        >
-                            Actual Effort
-                        </th>
-                        <th
-                            v-if="isColumnVisible('status')"
-                            style="width: 6%"
-                            class="text-center"
-                        >
-                            Status
-                        </th>
-                        <th
-                            class="text-center"
-                            v-if="isColumnVisible('action')"
-                            style="width: 10%"
-                        >
-                            Action
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template
-                        v-for="task in visibleTasks"
-                        :key="task.id"
-                        v-show="
+                <div class="card-body" style="min-height: 80vh;max-height: 80vh; overflow-y: auto">
+                    <table class="table table-sm fixed-header-table table-bordered" style="margin-right: 20px">
+                        <thead>
+                            <tr>
+                                <th style="width: 3%" class="text-center">Key</th>
+                                <th style="width: 2.5%" class="text-center">Type</th>
+                                <th v-if="isColumnVisible('epic_task')" class="text-center" style="width: 25.5%">
+                                    Summary
+                                </th>
+                                <th v-if="isColumnVisible('priority')" class="text-center" style="width: 5%">
+                                    Priority
+                                </th>
+                                <th v-if="isColumnVisible('assignee')" class="text-center" style="width: 6%">
+                                    Assignee
+                                </th>
+                                <th v-if="isColumnVisible('plan_start_date')" style="width: 8%" class="text-center">
+                                    Plan Start Date
+                                </th>
+                                <th v-if="isColumnVisible('plan_end_date')" style="width: 8%" class="text-center">
+                                    Plan End Date
+                                </th>
+                                <th v-if="isColumnVisible('actual_start_date')" style="width: 8%" class="text-center">
+                                    Actual Start Date
+                                </th>
+                                <th v-if="isColumnVisible('actual_end_date')" style="width: 8%" class="text-center">
+                                    Actual End Date
+                                </th>
+                                <th v-if="isColumnVisible('plan-effort')" style="width: 4%" class="text-center">
+                                    Plan Effort
+                                </th>
+                                <th v-if="isColumnVisible('actual-effort')" style="width: 4%" class="text-center">
+                                    Actual Effort
+                                </th>
+                                <th v-if="isColumnVisible('status')" style="width: 6%" class="text-center">
+                                    Status
+                                </th>
+                                <th class="text-center" v-if="isColumnVisible('action')" style="width: 10%">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template v-for="task in taskListData.tasks" :key="task.id" v-show="
                             task.type !== 'task' ||
                             expandedTasks.includes(task.parent_id)
-                        "
-                    >
-                        <tr class="bg-light">
-                            <td class="text-center">
-                                {{ task.id }}
-                            </td>
-                            <td class="text-center">
-                                <i
-                                    v-if="task.type === 'epic'"
-                                    class="fas fa-bolt text-purple"
-                                ></i>
-                                <i
-                                    v-else-if="task.type === 'task'"
-                                    class="fas fa-check-square text-blue"
-                                ></i>
-                            </td>
-                            <td v-if="isColumnVisible('epic_task')">
-                                <span>
-                                    <!-- Nút toggle cho Epic -->
-                                    <span
-                                        v-if="task.type === 'epic'"
-                                        @click="toggleTask(task.id)"
-                                        class="cursor-pointer mr-2"
-                                    >
-                                        <i
-                                            :class="{
+                        ">
+                                <tr class="bg-light">
+                                    <td class="text-center">
+                                        {{ task.id }}
+                                    </td>
+                                    <td class="text-center">
+                                        <i :class="TASK_ICONS[task.type]"></i>
+                                    </td>
+                                    <td v-if="isColumnVisible('epic_task')">
+                                        <!-- Nút toggle cho Epic -->
+                                        <!-- <span v-if="task.type === 0" @click="toggleTask(task.id)"
+                                            class="cursor-pointer mr-2">
+                                            <i :class="{
                                                 'fas fa-chevron-right':
                                                     !expandedTasks.includes(
                                                         task.id
@@ -142,13 +80,11 @@
                                                     expandedTasks.includes(
                                                         task.id
                                                     ),
-                                            }"
-                                        ></i>
-                                    </span>
+                                            }"></i>
+                                        </span> -->
 
-                                    <!-- Hiển thị tên task -->
-                                    <a
-                                        v-if="
+                                        <!-- Hiển thị tên task -->
+                                        <a v-if="
                                             !task.isEditing ||
                                             (task.isEditing &&
                                                 !hasPermissionClient &&
@@ -290,7 +226,7 @@
                                             (task.isEditing &&
                                                 !hasPermissionClient &&
                                                 !hasPermissionPm &&
-                                                hasPermissionStaff)
+                                                !hasPermissionStaff)
                                         ">{{ task.actual_start_date }}</span>
                                         <div v-else class="input-group date actual-start-datepicker"
                                             data-target-input="nearest">
@@ -312,7 +248,7 @@
                                             (task.isEditing &&
                                                 !hasPermissionClient &&
                                                 !hasPermissionPm &&
-                                                hasPermissionStaff)
+                                                !hasPermissionStaff)
                                         ">{{ task.actual_end_date }}</span>
                                         <div v-else class="input-group date actual-end-datepicker"
                                             data-target-input="nearest">
@@ -432,9 +368,6 @@ const props = defineProps({
     filtersQuery: Object,
 });
 
-// Tạo danh sách task dưới dạng ref để có thể cập nhật giá trị
-const list = ref([]);
-
 const selectedTask = ref(null);
 const showLogWorkModal = ref(false);
 const globalIsEditting = ref(false);
@@ -443,7 +376,8 @@ onMounted(() => {
     globalIsEditting.value = false;
 });
 
-const isBlankQuery = computed(() => props.blankQuery ?? true);
+// Emit sự kiện update để thông báo lên component cha
+const emit = defineEmits(["update-data", "task-list-editing"]);
 
 // Kiểm tra xem cột có hiển thị không
 const isColumnVisible = (column) => {
@@ -452,6 +386,7 @@ const isColumnVisible = (column) => {
 
 // Hàm bật chế độ edit
 const editTask = (task) => {
+    emit('task-list-editing', true);
     if (globalIsEditting.value) {
         toastr.error(
             "Other worklog edit is in progress. Please cancel it before edit other."
@@ -516,10 +451,6 @@ const initPlugins = (task) => {
     });
 };
 
-
-// Emit sự kiện update để thông báo lên component cha
-const emit = defineEmits(["update-data"]);
-
 const updateTask = async (task) => {
     // Hủy Select2 trước khi cập nhật giao diện
     destroySelect2();
@@ -534,33 +465,9 @@ const updateTask = async (task) => {
         plan_start_date: task.editedPlanStartDate,
         plan_end_date: task.editedPlanEndDate,
         actual_start_date: task.editedActualStartDate,
-        actual_end_date: task.editedlanActualEndDate,
+        actual_end_date: task.editedActualEndDate,
         plan_effort: task.editedPlanEffort,
         isEditing: false,
-    };
-
-    const priorityMapping = {
-        Trivial: 0,
-        Lowest: 1,
-        Lower: 2,
-        Low: 3,
-        Minor: 4,
-        High: 5,
-        Higher: 6,
-        Highest: 7,
-        Critical: 8,
-        Blocker: 9,
-    };
-
-    const statusMapping = {
-        Open: 0,
-        "In Progress": 1,
-        Resolved: 2,
-        Feedback: 3,
-        Done: 4,
-        Reopen: 5,
-        Pending: 6,
-        Canceled: 7,
     };
 
     try {
@@ -594,11 +501,13 @@ const updateTask = async (task) => {
         toastr.error(
             error.response?.data?.error || "❌ Có lỗi xảy ra khi gửi dữ liệu."
         );
+    } finally {
+        task.isEditing = false;
+        globalIsEditting.value = false;
+        emit('task-list-editing', false);
+        // Emit để component cha xử lý
+        emit("update-data");
     }
-    task.isEditing = false;
-    globalIsEditting.value = false;
-    // Emit để component cha xử lý
-    emit("update-data");
 };
 
 const isOverdue = (planEndDate, status) => {
@@ -626,6 +535,7 @@ const cancelEdit = (task) => {
     Object.assign(task, task.originalData); // Khôi phục dữ liệu gốc
     task.isEditing = false;
     globalIsEditting.value = false;
+    emit('task-list-editing', false);
 };
 
 const copyTaskLink = (task) => {

@@ -85,7 +85,7 @@
                                         <select id="assignee" v-model="selectedAssignee" name="assignee"
                                             class="form-control select2" style="width: 100%" ref="assigneeSelect">
                                             <option value="">Assignee</option>
-                                            <option v-for="assignee in parsedListAssignee" :key="assignee.id"
+                                            <option v-for="assignee in listAssignee" :key="assignee.id"
                                                 :value="assignee.id">
                                                 {{ assignee.account }}
                                             </option>
@@ -509,8 +509,6 @@ onMounted(() => {
 });
 
 const handleTaskUpdate = (updatedTask) => {
-    console.log("Task updated:", updatedTask);
-
     // Tiếp tục emit sự kiện `update-task` lên component cha
     emit("update-task", updatedTask);
 };

@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <div class="card-body" style="max-height: 20vh; overflow-y: auto;">
+        <div class="card-body" :class="{ 'disabled-overlay': props.taskListEditing }" style="max-height: 20vh; overflow-y: auto;">
             <div class="row">
                 <!-- Tìm kiếm chung -->
                 <div class="col-2">
@@ -36,7 +36,8 @@
                         <label>Search Priority:</label>
                         <select ref="prioritySelect" v-model="filtersQuery.priority" class="form-control select2"
                             multiple="multiple" data-placeholder="Select Priority" style="width: 100%">
-                            <option v-for="[priority, id] in Object.entries(listPriorities)" :key="id" :value="priority">
+                            <option v-for="[priority, id] in Object.entries(listPriorities)" :key="id"
+                                :value="priority">
                                 {{ priority }}
                             </option>
                         </select>
@@ -243,7 +244,6 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from "vue";
-import { useDebounceFn } from "@vueuse/core";
 
 const props = defineProps({
     tasks: Array,
@@ -251,6 +251,7 @@ const props = defineProps({
     listAssignee: Object,
     listStatuses: Object,
     listPriorities: Object,
+    taskListEditing: Boolean,
 });
 
 const prioritySelect = ref([]);
@@ -274,16 +275,11 @@ const filtersQuery = ref({
     status: [],
 });
 
-// Gửi filters lên Vue Cha sau 300ms (debounce)
-// const updateFiltersQuery = useDebounceFn(() => {
-//     emit("filter-changed", filtersQuery.value);
-// }, 300);
-
 // 1️⃣ Đồng bộ filters từ cha xuống con (chỉ cập nhật khi khác)
 watch(() => props.filters, (newFilters) => {
     filtersQuery.value = {
         text: newFilters.text || "",
-        priority: Array.isArray(newFilters.priority) ? newFilters.priority : [], 
+        priority: Array.isArray(newFilters.priority) ? newFilters.priority : [],
         assignee: newFilters.assignee || "",
         status: Array.isArray(newFilters.status) ? newFilters.status : [],
     };
@@ -378,6 +374,13 @@ const uniqueStatuses = computed(() => {
 const resetSearchTitle = () => {
     filtersQuery.value.text = "";
 };
-
-
 </script>
+
+<style scoped>
+.disabled-overlay {
+    position: relative;
+    pointer-events: none; /* Chặn tất cả thao tác */
+    opacity: 0.6; /* Làm mờ nội dung */
+}
+
+</style>

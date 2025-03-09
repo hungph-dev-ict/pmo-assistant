@@ -9,7 +9,7 @@
             v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff" :tasks="tasks" :filters="filters"
             :listAssignee="listAssigneeByProject" :listStatuses="listTaskStatuses" :listPriorities="listTaskPriorities"
             @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
-            @updateVisibleColumns="updateVisibleColumns">
+            @updateVisibleColumns="updateVisibleColumns" :taskListEditing="taskListEditing">
         </task-search-box>
 
         <div class="task-list-container relative" ref="taskListContainer">
@@ -24,7 +24,7 @@
                 :listPriorities="listTaskPriorities" :hasPermissionClient="hasPermissionClient"
                 :hasPermissionPm="hasPermissionPm" :hasPermissionStaff="hasPermissionStaff"
                 :currentUserId="numberCurrentUserId" :currentUserAccount="currentUserAccount"
-                @update-data="handleTaskUpdate" />
+                @update-data="handleTaskUpdate" @task-list-editing="handleTaskListEditing"/>
         </div>
     </div>
 </template>
@@ -64,6 +64,7 @@ const listTaskStatuses = ref({});
 const listTaskPriorities = ref({});
 
 const taskListContainer = ref(null);
+const taskListEditing = ref(false);
 
 const userRoles = computed(() => {
     try {
@@ -181,6 +182,10 @@ const handleTaskUpdate = (loadNew = false) => {
 
     // Gọi API lấy danh sách tasks
     fetchTasksByQuery(hasParams ? filters.value : null);
+};
+
+const handleTaskListEditing = (status) => {
+    taskListEditing.value = status;
 };
 
 const buildQueryParams = (p_filters) => {

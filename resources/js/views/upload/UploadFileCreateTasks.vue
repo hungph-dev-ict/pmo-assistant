@@ -279,7 +279,7 @@ const processCsv = (csvText) => {
             return;
         }
 
-        if (!parsedListAssignee.value.hasOwnProperty(assignee)) {
+        if (!props.listAssignee.hasOwnProperty(assignee)) {
             validationErrors.value.push(
                 `⚠️ Assignee "${assignee}" at line ${lineNumber} not found.`
             );
@@ -290,12 +290,7 @@ const processCsv = (csvText) => {
             csvMessage.value = `The CSV file is valid. It will import ${totalRecords.value} tasks.`;
         }
 
-        let assigneeId;
-        if (assignee != null) {
-            assigneeId = parsedListAssignee.value[assignee];
-        } else {
-            assigneeId = props.currentUserId;
-        }
+        let assigneeId = assignee != null ? props.listAssignee[assignee] : props.currentUserId;
 
         if (epic && !task) {
             // Nếu chỉ có Epic, tạo Epic
