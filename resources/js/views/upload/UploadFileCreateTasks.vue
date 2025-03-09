@@ -179,10 +179,7 @@ const props = defineProps({
         type: [String, Number],
         required: true,
     },
-    listAssignee: {
-        type: [String, Array],
-        required: true,
-    },
+    listAssignee: Object,
     currentUserId: {
         type: [String, Number],
         required: true,
@@ -190,17 +187,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update-task"]);
-
-const parsedListAssignee = computed(() => {
-    const list =
-        typeof props.listAssignee === "string"
-            ? JSON.parse(props.listAssignee)
-            : props.listAssignee;
-    return list.reduce((acc, user) => {
-        acc[user.account] = user.id;
-        return acc;
-    }, {});
-});
 
 const handleFileChange = () => {
     const file = event.target.files[0];

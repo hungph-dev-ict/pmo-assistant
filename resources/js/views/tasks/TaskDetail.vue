@@ -525,7 +525,7 @@ const props = defineProps({
         default: () => [],
     },
     listAssignee: {
-        type: [Array, String], // Có thể là Array hoặc String
+        type: [Array, String, Object], // Có thể là Array hoặc String
         default: () => [],
     },
     currentUserId: {

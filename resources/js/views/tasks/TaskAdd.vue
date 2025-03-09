@@ -212,20 +212,11 @@ import UploadFileCreateTasks from "../upload/UploadFileCreateTasks.vue";
 
 const props = defineProps({
     projectId: String,
-    listAssignee: {
-        type: [Array, String], // Có thể là Array hoặc String
-        default: () => [],
-    },
+    listAssignee: Object,
     currentUserId: Number,
     hasPermissionClient: Boolean,
     hasPermissionPm: Boolean,
     hasPermissionStaff: Boolean,
-});
-
-const parsedListAssignee = computed(() => {
-    return typeof props.listAssignee === "string"
-        ? JSON.parse(props.listAssignee)
-        : props.listAssignee;
 });
 
 const taskTitle = ref("");

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\TaskService;
 use App\Http\Requests\StoreTaskRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PmController extends Controller
@@ -25,6 +26,19 @@ class PmController extends Controller
         $project = Project::findOrFail($project_id);
         if ($request->ajax()) {
             $data = $this->taskService->getTasksByProject($project_id);
+
+            return response()->json($data);
+        }
+        $listAssignee = Project::with('users')->find($project_id)->users;
+
+        return view('pm.task', compact('project_id', 'listAssignee', 'project'));
+    }
+
+    public function listTasksByFilter(Request $request, $project_id)
+    {
+        $project = Project::findOrFail($project_id);
+        if ($request->ajax()) {
+            $data = $this->taskService->getTasksByFilter($project_id, $request);
 
             return response()->json($data);
         }

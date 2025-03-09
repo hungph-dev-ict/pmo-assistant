@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::post('projects/{id}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
 
     Route::get('/api/pm/{project_id}/tasks', [PmController::class, 'listTasks']);
+    Route::get('/api/pm/{project_id}/list', [PmController::class, 'listTasksByFilter']);
     Route::get('/api/pm/{project_id}/epics', [PmController::class, 'listEpics']);
     Route::post('/api/pm/{project_id}/tasks/store', [PmController::class, 'storeTask']);
     Route::put('/api/pm/{project_id}/tasks/{task_id}/update', [PmController::class, 'updateTask']);
@@ -83,6 +84,9 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
 
 Route::group(['middleware' => ['auth', 'role:client|pm|staff']], function () {
     Route::get('/api/staff/{project_id}/tasks', [StaffController::class, 'listTasks']);
+    Route::get('/api/{project_id}/getAllMembers', [ProjectController::class, 'getAllMembers']);
+    Route::get('/api/getAllStatuses', [TaskController::class, 'getStatuses']);
+    Route::get('/api/getAllPriorities', [TaskController::class, 'getPriorities']);
     Route::put('/api/staff/{project_id}/tasks/{task_id}/update', [StaffController::class, 'updateTask']);
 
     Route::get('/export-tasks', [TaskExportController::class, 'export'])->name('tasks.export');

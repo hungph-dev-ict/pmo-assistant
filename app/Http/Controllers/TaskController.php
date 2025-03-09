@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Constant;
 use App\Models\Task;
 use App\Models\Project;
 use Illuminate\Http\Request;
@@ -75,6 +76,50 @@ class TaskController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to update task!',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getStatuses()
+    {
+        try {
+            $statuses = Constant::where('group', 'task_status')->orderBy('key', 'asc')->pluck('key', 'value1');
+
+            return response()->json([
+                'message' => 'Get list members of project successfully!',
+                'statuses' => $statuses,
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Member not found!',
+                'error' => $e->getMessage(),
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch members!',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getPriorities()
+    {
+        try {
+            $priorities = Constant::where('group', 'task_priority')->orderBy('key', 'desc')->pluck('key', 'value1');
+
+            return response()->json([
+                'message' => 'Get list members of project successfully!',
+                'priorities' => $priorities,
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Member not found!',
+                'error' => $e->getMessage(),
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch members!',
                 'error' => $e->getMessage(),
             ], 500);
         }
