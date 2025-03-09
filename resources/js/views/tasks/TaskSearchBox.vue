@@ -16,9 +16,9 @@
                     <div class="form-group">
                         <label>Task Title Search:</label>
                         <div class="position-relative">
-                            <input v-model="filtersQuery.text" type="text" class="form-control"
-                                placeholder="Enter Text Search..." />
-                            <button v-if="filtersQuery.text" @click="resetSearchTitle"
+                            <input v-model="searchText" @keyup.enter="updateSearch" type="text" class="form-control"
+                                placeholder="Enter text, press Enter..." />
+                            <button v-if="searchText" @click="resetSearchTitle"
                                 class="btn btn-sm btn-light position-absolute" style="
                                     right: 10px;
                                     top: 50%;
@@ -254,6 +254,7 @@ const props = defineProps({
     taskListEditing: Boolean,
 });
 
+const searchText = ref("");
 const prioritySelect = ref([]);
 const assigneeSelect = ref(null);
 const statusSelect = ref([]);
@@ -291,6 +292,12 @@ watch(filtersQuery, (newQuery) => {
         emit("filter-changed", { ...newQuery });
     }
 }, { deep: true });
+
+const updateSearch = () => {
+  if (searchText.value !== filtersQuery.value.text) {
+    filtersQuery.value.text = searchText.value;
+  }
+};
 
 onMounted(() => {
     nextTick(() => {
@@ -365,13 +372,8 @@ const emit = defineEmits([
     "filter-changed"
 ]);
 
-const uniqueStatuses = computed(() => {
-    return Array.from(
-        new Set(props.tasks.map((task) => task.status).filter(Boolean))
-    );
-});
-
 const resetSearchTitle = () => {
+    searchText.value = "";
     filtersQuery.value.text = "";
 };
 </script>
