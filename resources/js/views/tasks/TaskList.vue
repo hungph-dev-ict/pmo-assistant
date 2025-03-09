@@ -125,12 +125,12 @@
                                                 currentUserAccount
                                             ">
                                                 {{
-                                                    task.assignee_user?.account || "N/A"
+                                                    task.assignee_user?.account
                                                 }}
                                             </strong>
                                             <template v-else>
                                                 {{
-                                                    task.assignee_user?.account || "N/A"
+                                                    task.assignee_user?.account
                                                 }}
                                             </template>
                                         </span>

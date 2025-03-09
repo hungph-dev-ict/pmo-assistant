@@ -1,16 +1,35 @@
 <template>
     <div>
-        <task-add v-if="hasPermissionClient || hasPermissionPm" :projectId="projectId"
-            :listAssignee="listAssigneeByProject" :listPriorities="listTaskPriorities" :listStatuses="listTaskStatuses"
-            :currentUserId="numberCurrentUserId" :hasPermissionClient="hasPermissionClient"
-            :hasPermissionPm="hasPermissionPm" :hasPermissionStaff="hasPermissionStaff"
-            @update-task="handleTaskUpdate"></task-add>
+        <task-add
+            v-if="hasPermissionClient || hasPermissionPm"
+            :projectId="projectId"
+            :listAssignee="listAssigneeByProject"
+            :listPriorities="listTaskPriorities"
+            :listStatuses="listTaskStatuses"
+            :currentUserId="numberCurrentUserId"
+            :hasPermissionClient="hasPermissionClient"
+            :hasPermissionPm="hasPermissionPm"
+            :hasPermissionStaff="hasPermissionStaff"
+            @update-task="handleTaskUpdate"
+        ></task-add>
 
-        <task-search-box @filter-changed="updatefilters" class="task-search-box"
-            v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff" :tasks="tasks" :filters="filters"
-            :listAssignee="listAssigneeByProject" :listStatuses="listTaskStatuses" :listPriorities="listTaskPriorities"
-            @updateFilteredTasks="filteredTasks = $event" @blankQuery="handleBlankQuery"
-            @updateVisibleColumns="updateVisibleColumns" :taskListEditing="taskListEditing">
+        <task-search-box
+            @filter-changed="updatefilters"
+            class="task-search-box"
+            v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff"
+            :tasks="tasks"
+            :filters="filters"
+            :listAssignee="listAssigneeByProject"
+            :listStatuses="listTaskStatuses"
+            :listPriorities="listTaskPriorities"
+            :tenantId="tenantId"
+            :currentUserId="numberCurrentUserId"
+            :currentUserAccount="currentUserAccount"
+            @updateFilteredTasks="filteredTasks = $event"
+            @blankQuery="handleBlankQuery"
+            @updateVisibleColumns="updateVisibleColumns"
+            :taskListEditing="taskListEditing"
+        >
         </task-search-box>
 
         <div class="task-list-container relative" ref="taskListContainer">
@@ -19,13 +38,29 @@
                 <p>Loading...</p>
             </div>
             <task-list
-                v-if="(hasPermissionClient || hasPermissionPm || hasPermissionStaff) && taskListData && taskListData.tasks"
-                :filters="filters" :taskListData="taskListData" :projectId="projectId" :blankQuery="blankQuery"
-                :visibleColumns="visibleColumns" :listAssignee="listAssigneeByProject" :listStatuses="listTaskStatuses"
-                :listPriorities="listTaskPriorities" :hasPermissionClient="hasPermissionClient"
-                :hasPermissionPm="hasPermissionPm" :hasPermissionStaff="hasPermissionStaff"
-                :currentUserId="numberCurrentUserId" :currentUserAccount="currentUserAccount"
-                @update-data="handleTaskUpdate" @task-list-editing="handleTaskListEditing" />
+                v-if="
+                    (hasPermissionClient ||
+                        hasPermissionPm ||
+                        hasPermissionStaff) &&
+                    taskListData &&
+                    taskListData.tasks
+                "
+                :filters="filters"
+                :taskListData="taskListData"
+                :projectId="projectId"
+                :blankQuery="blankQuery"
+                :visibleColumns="visibleColumns"
+                :listAssignee="listAssigneeByProject"
+                :listStatuses="listTaskStatuses"
+                :listPriorities="listTaskPriorities"
+                :hasPermissionClient="hasPermissionClient"
+                :hasPermissionPm="hasPermissionPm"
+                :hasPermissionStaff="hasPermissionStaff"
+                :currentUserId="numberCurrentUserId"
+                :currentUserAccount="currentUserAccount"
+                @update-data="handleTaskUpdate"
+                @task-list-editing="handleTaskListEditing"
+            />
         </div>
     </div>
 </template>
@@ -38,6 +73,7 @@ import TaskSearchBox from "./TaskSearchBox.vue";
 import TaskList from "./TaskList.vue";
 
 const props = defineProps({
+    tenantId: String,
     projectId: String,
     currentUserId: {
         type: [Number, String], // Có thể là Number hoặc String
@@ -97,7 +133,7 @@ const taskListData = ref({});
 const tasks = ref([]); // Danh sách task gốc
 const filteredTasks = ref([]); // Danh sách task đã lọc
 const blankQuery = ref(true); // Mặc định là false
-const queryParams = ref('');
+const queryParams = ref("");
 
 const taskListIsLoading = ref(false); // Biến kiểm soát trạng thái loading
 
@@ -105,7 +141,8 @@ const fetchTasksByQuery = async (p_filters) => {
     taskListIsLoading.value = true; // Bắt đầu loading
 
     let apiUrl = computed(() => {
-        return userRoles.value.includes("pm") || userRoles.value.includes("client")
+        return userRoles.value.includes("pm") ||
+            userRoles.value.includes("client")
             ? `/api/pm/${props.projectId}/list`
             : `/api/staff/${props.projectId}/list`;
     });
@@ -123,7 +160,7 @@ const fetchTasksByQuery = async (p_filters) => {
         const { data } = await axios.get(fullApiUrl);
         taskListData.value = {
             ...taskListData.value,
-            tasks: [...data.tasks] // Gán lại mảng mới
+            tasks: [...data.tasks], // Gán lại mảng mới
         };
     } catch (error) {
         console.error("Lỗi khi lấy dữ liệu:", error);
@@ -172,7 +209,9 @@ const handleTaskUpdate = (loadNew = false) => {
 
         // Nếu có dấu ",", chuyển thành mảng (tự động chuyển số nếu có)
         if (value.includes(",")) {
-            urlFilters[key] = value.split(",").map(val => (isNaN(val) ? val : Number(val)));
+            urlFilters[key] = value
+                .split(",")
+                .map((val) => (isNaN(val) ? val : Number(val)));
         } else {
             // Nếu là số, chuyển thành Number, nếu không giữ nguyên
             urlFilters[key] = isNaN(value) ? value : Number(value);
@@ -196,15 +235,17 @@ const buildQueryParams = (p_filters) => {
         const value = p_filters.value[key];
 
         if (
-            (Array.isArray(value) && value.length > 0) ||  // Nếu là mảng, chỉ thêm khi có phần tử
-            (!Array.isArray(value) && value !== "" && value !== null && value !== undefined) // Nếu không phải mảng, kiểm tra bình thường
+            (Array.isArray(value) && value.length > 0) || // Nếu là mảng, chỉ thêm khi có phần tử
+            (!Array.isArray(value) &&
+                value !== "" &&
+                value !== null &&
+                value !== undefined) // Nếu không phải mảng, kiểm tra bình thường
         ) {
             params.set(key, Array.isArray(value) ? value.join(",") : value); // Convert mảng thành chuỗi nếu cần
         } else {
             params.delete(key); // Xóa nếu giá trị bị xóa hoặc không hợp lệ
         }
     });
-
 
     return params.toString();
 };
@@ -213,15 +254,21 @@ const updateURL = () => {
     queryParams.value = buildQueryParams(filters);
 
     // Nếu có query params thì thêm `?`, nếu không thì để trống
-    const newURL = queryParams.value ? `?${queryParams.value}` : window.location.pathname;
+    const newURL = queryParams.value
+        ? `?${queryParams.value}`
+        : window.location.pathname;
 
     window.history.pushState({}, "", newURL);
 };
 
 // Khi filters thay đổi, cập nhật URL
-watch(filters, () => {
-    updateURL();
-}, { deep: true });
+watch(
+    filters,
+    () => {
+        updateURL();
+    },
+    { deep: true }
+);
 
 onMounted(async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -234,7 +281,9 @@ onMounted(async () => {
 
         // Nếu có dấu ",", chuyển thành mảng (tự động chuyển số nếu có)
         if (value.includes(",")) {
-            urlFilters[key] = value.split(",").map(val => (isNaN(val) ? val : Number(val)));
+            urlFilters[key] = value
+                .split(",")
+                .map((val) => (isNaN(val) ? val : Number(val)));
         } else {
             // Nếu là số, chuyển thành Number, nếu không giữ nguyên
             urlFilters[key] = isNaN(value) ? value : Number(value);
@@ -245,7 +294,9 @@ onMounted(async () => {
 
     // Lấy danh sách members trong dự án
     try {
-        const response = await axios.get(`/api/${props.projectId}/getAllMembers`);
+        const response = await axios.get(
+            `/api/${props.projectId}/getAllMembers`
+        );
         listAssigneeByProject.value = response.data.members;
     } catch (error) {
         console.error("Lỗi khi lấy dữ liệu:", error);
@@ -271,7 +322,6 @@ const updatefilters = async (filtersFromSearch) => {
     filters.value = { ...filtersFromSearch };
     updateURL();
     fetchTasksByQuery(filters.value);
-
 };
 </script>
 
