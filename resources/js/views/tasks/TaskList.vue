@@ -112,7 +112,7 @@
                                             </option>
                                         </select>
                                     </td>
-                                    <td style="width: 6%" v-if="isColumnVisible('assignee')">
+                                    <td style="width: 6%" v-if="isColumnVisible('assignee')" class="text-center">
                                         <span v-if="
                                             !task.isEditing ||
                                             (task.isEditing &&
@@ -288,7 +288,7 @@
                                             title="Actual effort exceeds plan effort"></i>
                                     </td>
 
-                                    <td style="width: 6%" v-if="isColumnVisible('status')" class="text-right">
+                                    <td style="width: 6%" v-if="isColumnVisible('status')" class="text-center">
                                         <span v-if="!task.isEditing" :class="statusClass(task.status)">{{
                                             task.task_status?.value1
                                         }}</span>
@@ -299,7 +299,7 @@
                                             </option>
                                         </select>
                                     </td>
-                                    <td style="width: 10%" v-if="isColumnVisible('action')" class="text-right">
+                                    <td style="width: 10%" v-if="isColumnVisible('action')" class="text-center">
                                         <template v-if="!task.isEditing">
                                             <a href="#" class="btn btn-info btn-sm mr-2" @click.prevent="editTask(task)"
                                                 v-tooltip="'Edit'">

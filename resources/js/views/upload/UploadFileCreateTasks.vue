@@ -79,7 +79,7 @@ Epic database,Task 3,Low,MinhTH,Open,Set up database,,2024-04-05,2024-04-20,,
                 <div class="input-group">
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" id="fileInput" accept=".csv" :disabled="isLoading"
-                            @change="handleFileChange" />
+                            @change="handleFileChange" ref="fileInputRef"/>
                         <label class="custom-file-label" for="fileInput">{{ fileName }}</label>
                     </div>
                 </div>
@@ -149,30 +149,7 @@ const processedRecords = ref(0);
 const totalRecords = ref(0);
 const csvMessage = ref("");
 const epicMap = ref({});
-
-// Map priority và status sang số
-const statusMap = {
-    Open: 0,
-    "In Progress": 1,
-    Resolved: 2,
-    Feedback: 3,
-    Done: 4,
-    Reopen: 5,
-    Pending: 6,
-    Canceled: 7,
-};
-const priorityMap = {
-    Trivial: 0,
-    Lowest: 1,
-    Lower: 2,
-    Low: 3,
-    Minor: 4,
-    High: 5,
-    Higher: 6,
-    Highest: 7,
-    Critical: 8,
-    Blocker: 9,
-};
+const fileInputRef = ref(null);
 
 const props = defineProps({
     projectId: {
@@ -180,6 +157,8 @@ const props = defineProps({
         required: true,
     },
     listAssignee: Object,
+    listPriorities: Object,
+    listStatuses: Object,
     currentUserId: {
         type: [String, Number],
         required: true,
@@ -188,19 +167,17 @@ const props = defineProps({
 
 const emit = defineEmits(["update-task"]);
 
-const handleFileChange = () => {
+const handleFileChange = (event) => {
     const file = event.target.files[0];
+
     if (!file) {
-        fileName.value = "Choose file";
-        selectedFile.value = null;
+        resetFileInput();
         return;
     }
 
     if (!file.name.endsWith(".csv")) {
         toastr.error("Only CSV files are allowed!");
-        fileName.value = "Choose file";
-        selectedFile.value = null;
-        event.target.value = "";
+        resetFileInput();
         return;
     }
 
@@ -208,8 +185,17 @@ const handleFileChange = () => {
     selectedFile.value = file;
 
     const reader = new FileReader();
-    reader.onload = (e) => processCsv(e.target.result, event);
+    reader.onload = (e) => processCsv(e.target.result);
     reader.readAsText(file);
+};
+
+const resetFileInput = () => {
+    fileName.value = "Choose file";
+    selectedFile.value = null;
+
+    if (fileInputRef.value) {
+        fileInputRef.value.value = ""; // Reset input file
+    }
 };
 
 const processCsv = (csvText) => {
@@ -265,14 +251,14 @@ const processCsv = (csvText) => {
             return;
         }
 
-        if (!priorityMap.hasOwnProperty(priority)) {
+        if (!props.listPriorities.hasOwnProperty(priority)) {
             validationErrors.value.push(
                 `⚠️ Invalid priority at line ${lineNumber}: "${priority}".`
             );
             return;
         }
 
-        if (!statusMap.hasOwnProperty(status)) {
+        if (!props.listStatuses.hasOwnProperty(status)) {
             validationErrors.value.push(
                 `⚠️ Invalid status at line ${lineNumber}: "${status}".`
             );
@@ -299,8 +285,8 @@ const processCsv = (csvText) => {
                 type: 0,
                 parent_id: null,
                 assignee: assigneeId,
-                priority: priorityMap[priority],
-                status: statusMap[status],
+                priority: priority,
+                status: status,
                 description: description,
                 memo: memo,
                 plan_start_date: planStartDate,
@@ -317,8 +303,8 @@ const processCsv = (csvText) => {
                 parent_name: epic, // Giữ lại tên Epic để sau này tìm ID
                 parent_id: null,
                 assignee: assigneeId,
-                priority: priorityMap[priority],
-                status: statusMap[status],
+                priority: priority,
+                status: status,
                 description: description,
                 memo: memo,
                 plan_start_date: planStartDate,
@@ -400,7 +386,7 @@ const submitFile = async () => {
                 toastr.error(
                     `⚠️ Epic "${task.parent_name}" not found, cannot create task "${task.name}".`
                 );
-                continue;
+                return;
             }
 
             const requestData = {
@@ -467,11 +453,6 @@ const submitFile = async () => {
         csvMessage.value = "";
         resetFileInput();
     }
-};
-
-const resetFileInput = (event) => {
-    fileName.value = "Choose file";
-    selectedFile.value = null;
 };
 </script>
 
