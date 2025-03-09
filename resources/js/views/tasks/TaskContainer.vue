@@ -1,9 +1,10 @@
 <template>
     <div>
         <task-add v-if="hasPermissionClient || hasPermissionPm" :projectId="projectId"
-            :listAssignee="listAssigneeByProject" :currentUserId="numberCurrentUserId"
-            :hasPermissionClient="hasPermissionClient" :hasPermissionPm="hasPermissionPm"
-            :hasPermissionStaff="hasPermissionStaff" @update-task="handleTaskUpdate"></task-add>
+            :listAssignee="listAssigneeByProject" :listPriorities="listTaskPriorities" :listStatuses="listTaskStatuses"
+            :currentUserId="numberCurrentUserId" :hasPermissionClient="hasPermissionClient"
+            :hasPermissionPm="hasPermissionPm" :hasPermissionStaff="hasPermissionStaff"
+            @update-task="handleTaskUpdate"></task-add>
 
         <task-search-box @filter-changed="updatefilters" class="task-search-box"
             v-if="hasPermissionClient || hasPermissionPm || hasPermissionStaff" :tasks="tasks" :filters="filters"
@@ -24,7 +25,7 @@
                 :listPriorities="listTaskPriorities" :hasPermissionClient="hasPermissionClient"
                 :hasPermissionPm="hasPermissionPm" :hasPermissionStaff="hasPermissionStaff"
                 :currentUserId="numberCurrentUserId" :currentUserAccount="currentUserAccount"
-                @update-data="handleTaskUpdate" @task-list-editing="handleTaskListEditing"/>
+                @update-data="handleTaskUpdate" @task-list-editing="handleTaskListEditing" />
         </div>
     </div>
 </template>

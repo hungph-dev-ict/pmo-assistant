@@ -6,10 +6,13 @@
                 <div class="card-header d-flex p-0">
                     <h3 class="card-title p-3">Add New Task</h3>
                     <ul class="nav nav-pills ml-auto p-2">
-                        <li class="nav-item" :class="{ 'd-none': isCollapsed }"><a class="nav-link active" href="#via_form" data-toggle="tab">Via Form</a>
+                        <li class="nav-item" :class="{ 'd-none': isCollapsed }"><a class="nav-link active"
+                                href="#via_form" data-toggle="tab">Via Form</a>
                         </li>
-                        <li class="nav-item" :class="{ 'd-none': isCollapsed }"><a class="nav-link" href="#via_csv" data-toggle="tab">Via CSV</a></li>
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse" @click="toggleCard">
+                        <li class="nav-item" :class="{ 'd-none': isCollapsed }"><a class="nav-link" href="#via_csv"
+                                data-toggle="tab">Via CSV</a></li>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"
+                            @click="toggleCard">
                             <i class="fas fa-plus"></i>
                         </button>
                     </ul>
@@ -84,10 +87,9 @@
                                         <label for="assignee">Assignee</label>
                                         <select id="assignee" v-model="selectedAssignee" name="assignee"
                                             class="form-control select2" style="width: 100%" ref="assigneeSelect">
-                                            <option value="">Assignee</option>
-                                            <option v-for="assignee in listAssignee" :key="assignee.id"
-                                                :value="assignee.id">
-                                                {{ assignee.account }}
+                                            <option v-for="[account, id] in Object.entries(listAssignee)" :key="id"
+                                                :value="id">
+                                                {{ account }}
                                             </option>
                                         </select>
                                     </div>
@@ -96,19 +98,10 @@
                                         <label for="priority">Priority<span style="color: red">*</span></label>
                                         <select id="priority" name="priority" v-model="selectedPriority"
                                             class="form-control select2" style="width: 100%" ref="prioritySelect">
-                                            <option value="" selected disabled>
-                                                Select a Priority
+                                            <option v-for="[priority, id] in Object.entries(listPriorities)" :key="id"
+                                                :value="id">
+                                                {{ priority }}
                                             </option>
-                                            <option value="0">Trivial</option>
-                                            <option value="1">Lowest</option>
-                                            <option value="2">Lower</option>
-                                            <option value="3">Low</option>
-                                            <option value="4">Minor</option>
-                                            <option value="5">High</option>
-                                            <option value="6">Higher</option>
-                                            <option value="7">Highest</option>
-                                            <option value="8">Critical</option>
-                                            <option value="9">Blocker</option>
                                         </select>
                                     </div>
 
@@ -192,9 +185,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane active" id="via_csv">
+                        <div class="tab-pane" id="via_csv">
                             <upload-file-create-tasks v-if="hasPermissionClient || hasPermissionPm"
-                                :projectId="projectId" :listAssignee="props.listAssignee" :currentUserId="currentUserId"
+                                :projectId="projectId" :listAssignee="listAssignee" :listPriorities="listPriorities"
+                                :listStatuses="listStatuses" :currentUserId="currentUserId"
                                 @update-task="handleTaskUpdate"></upload-file-create-tasks>
                         </div>
                     </div>
@@ -213,6 +207,8 @@ import UploadFileCreateTasks from "../upload/UploadFileCreateTasks.vue";
 const props = defineProps({
     projectId: String,
     listAssignee: Object,
+    listPriorities: Object,
+    listStatuses: Object,
     currentUserId: Number,
     hasPermissionClient: Boolean,
     hasPermissionPm: Boolean,
