@@ -167,6 +167,7 @@ import axios from "axios";
 import toastr from "toastr";
 import dayjs from "dayjs";
 import { TASK_PRIORITY, TASK_STATUS } from "../../constants/taskConstants";
+import Papa from "papaparse";
 
 const selectedFile = ref(null);
 const fileName = ref("Choose file");
@@ -231,6 +232,7 @@ const convertStatus = (status) => {
 const emit = defineEmits(["update-task"]);
 
 const handleFileChange = (event) => {
+    validationErrors.value = [];
     const file = event.target.files[0];
 
     if (!file) {
@@ -262,125 +264,147 @@ const resetFileInput = () => {
 };
 
 const processCsv = (csvText) => {
-    validationErrors.value = [];
     tasks.value = [];
     epicMap.value = {};
 
-    // Tách từng dòng
-    const lines = csvText.trim().split("\n");
+    Papa.parse(csvText, {
+        complete: function (results) {
+            const data = results.data;
 
-    // Sử dụng regex để tách từng cột, xử lý giá trị nằm trong dấu `"..."` (có thể chứa dấu `,`)
-    const parseCsvLine = (line) => {
-        const regex = /"(.*?)"|([^,]+)/g;
-        return [...line.matchAll(regex)].map(
-            (match) => match[1] || match[2] || ""
-        );
-    };
+            if (data.length < 2) {
+                validationErrors.value.push(
+                    "⚠️ CSV file must have at least one data row."
+                );
+                return;
+            }
 
-    // Chuyển mỗi dòng thành một mảng các cột
-    const data = lines.map(parseCsvLine);
+            const headers = data[0]; // Dòng tiêu đề
+            const requiredHeaders = ["epic", "priority"];
 
-    if (data.length < 2) {
-        validationErrors.value.push(
-            "⚠️ CSV file must have at least one data row."
-        );
-        return;
-    }
+            if (!requiredHeaders.every((h) => headers.includes(h))) {
+                validationErrors.value.push(
+                    `⚠️ CSV file must contain: ${requiredHeaders.join(", ")}.`
+                );
+                return;
+            }
 
-    const headers = data[0]; // Dòng tiêu đề
-    const requiredHeaders = ["epic", "task", "priority"];
+            totalRecords.value = data.length - 1;
 
-    if (!requiredHeaders.every((h) => headers.includes(h))) {
-        validationErrors.value.push(
-            `⚠️ CSV file must contain: ${requiredHeaders.join(", ")}.`
-        );
-        return;
-    }
+            data.slice(1).forEach((row, index) => {
+                const lineNumber = index + 2;
+                console.log(`Row ${lineNumber}:`, row);
 
-    totalRecords.value = data.length - 1;
+                const rowData = {};
+                headers.forEach((header, colIndex) => {
+                    rowData[header] = row[colIndex]?.trim() || "";
+                });
 
-    data.slice(1).forEach((row, index) => {
-        const lineNumber = index + 2;
-        const rowData = Object.fromEntries(
-            headers.map((header, i) => [header, row[i] || ""])
-        );
+                console.log(`RowData ${lineNumber}:`, rowData);
 
-        const { epic, task, priority } = rowData;
-        const assignee = rowData.assignee || null;
-        const status = rowData.status || "Open";
-        const description = rowData.description || null;
-        const memo = rowData.memo || null;
-        const planStartDate = rowData.plan_start_date || null;
-        const actualStartDate = rowData.actual_start_date || null;
-        const planEndDate = rowData.plan_end_date || null;
-        const actualEndDate = rowData.actual_end_date || null;
+                const epic = rowData["epic"] || null;
+                const task = rowData["task"] || null;
+                const priority = rowData["priority"] || null;
+                const assignee = rowData["assignee"] || null;
+                const status = rowData.status || "Open";
+                const description = rowData.description || null;
+                const memo = rowData.memo || null;
+                const planStartDate = rowData.plan_start_date || null;
+                const actualStartDate = rowData.actual_start_date || null;
+                const planEndDate = rowData.plan_end_date || null;
+                const actualEndDate = rowData.actual_end_date || null;
 
-        if (!epic || !priority) {
-            validationErrors.value.push(
-                `⚠️ Line ${lineNumber} is missing required fields (epic, priority).`
-            );
-            return;
-        }
+                const isEmpty = (val) =>
+                    val === undefined || val === null || val.trim() === "";
 
-        if (!props.listPriorities.hasOwnProperty(priority)) {
-            validationErrors.value.push(
-                `⚠️ Invalid priority at line ${lineNumber}: "${priority}".`
-            );
-            return;
-        }
+                const missingFields = requiredHeaders.filter((h) =>
+                    isEmpty(rowData[h])
+                );
 
-        if (!props.listStatuses.hasOwnProperty(status)) {
-            validationErrors.value.push(
-                `⚠️ Invalid status at line ${lineNumber}: "${status}".`
-            );
-            return;
-        }
+                if (missingFields.length > 0) {
+                    validationErrors.value.push(
+                        `⚠️ Line ${lineNumber} is missing required fields: ${missingFields.join(
+                            ", "
+                        )}.`
+                    );
+                    return;
+                }
 
-        if (!props.listAssignee.hasOwnProperty(assignee)) {
-            validationErrors.value.push(
-                `⚠️ Assignee "${assignee}" at line ${lineNumber} not found.`
-            );
-            return;
-        }
+                if (!props.listPriorities.hasOwnProperty(priority)) {
+                    validationErrors.value.push(
+                        `⚠️ Invalid priority at line ${lineNumber}: "${priority}".`
+                    );
+                    return;
+                }
 
-        if (validationErrors.value.length == 0) {
-            csvMessage.value = `The CSV file is valid. It will import ${totalRecords.value} tasks.`;
-        }
+                if (!props.listStatuses.hasOwnProperty(status)) {
+                    validationErrors.value.push(
+                        `⚠️ Invalid status at line ${lineNumber}: "${status}".`
+                    );
+                    return;
+                }
 
-        let assigneeId = assignee
-            ? props.listAssignee[assignee]
-            : props.currentUserId;
+                if (!props.listAssignee.hasOwnProperty(assignee) && assignee != null ) {
+                    validationErrors.value.push(
+                        `⚠️ Assignee "${assignee}" at line ${lineNumber} not found.`
+                    );
+                    return;
+                }
 
-        if (epic && !task) {
-            tasks.value.push({
-                name: epic,
-                type: 0,
-                parent_id: null,
-                assignee: assigneeId,
-                priority: convertPriority(priority),
-                status: convertStatus(status),
-                description: description,
-                memo: memo,
-                plan_start_date: planStartDate,
-                plan_end_date: planEndDate,
-                actual_start_date: actualStartDate,
-                actual_end_date: actualEndDate,
-                created_by: props.currentUserId,
+                if (validationErrors.value.length == 0) {
+                    csvMessage.value = `The CSV file is valid. It will import ${totalRecords.value} tasks.`;
+                }
+
+                let assigneeId = assignee
+                    ? props.listAssignee[assignee]
+                    : null;
+
+                if (epic && !task) {
+                    tasks.value.push({
+                        name: epic,
+                        type: 0,
+                        parent_id: null,
+                        assignee: assigneeId,
+                        priority: convertPriority(priority),
+                        status: convertStatus(status),
+                        description: description,
+                        memo: memo,
+                        plan_start_date: planStartDate,
+                        plan_end_date: planEndDate,
+                        actual_start_date: actualStartDate,
+                        actual_end_date: actualEndDate,
+                        created_by: props.currentUserId,
+                    });
+                } else if (epic && task) {
+                    tasks.value.push({
+                        name: task,
+                        type: 1,
+                        parent_name: epic,
+                        parent_id: null,
+                        assignee: assigneeId,
+                        priority: convertPriority(priority),
+                        status: convertStatus(status),
+                        description: description,
+                        memo: memo,
+                        plan_start_date: planStartDate,
+                        plan_end_date: planEndDate,
+                        actual_start_date: actualStartDate,
+                        actual_end_date: actualEndDate,
+                        created_by: props.currentUserId,
+                    });
+                }
             });
-        } else if (epic && task) {
-            tasks.value.push({
-                name: task,
-                type: 1,
-                parent_name: epic,
-                parent_id: null,
-                assignee: assigneeId,
-                priority: convertPriority(priority),
-                status: convertStatus(status),
-                description: description,
-                memo: memo,
-                created_by: props.currentUserId,
-            });
-        }
+        },
+        skipEmptyLines: true, // Không bỏ qua dòng trống
+        transform: function (value, column) {
+            if (
+                column === "assignee" &&
+                (!value || value.trim().toLowerCase() === "null")
+            ) {
+                return null; // Để trống hoặc thay thế bằng giá trị khác như "Unassigned"
+            }
+            return value;
+        },
+        delimiter: ",", // Giữ đúng dấu phân cách
     });
 };
 
@@ -502,7 +526,7 @@ const submitFile = async () => {
         csvMessage.value = "";
         resetFileInput();
     }
-};
+}
 </script>
 
 <style scoped>
