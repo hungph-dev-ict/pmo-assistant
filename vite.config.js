@@ -92,6 +92,8 @@ export default defineConfig({
                     "resources/js/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css",
                 "swal2-js":
                     "resources/js/plugins/sweetalert2/sweetalert2.min.js",
+                "chart-js":
+                    "resources/js/plugins/chart.js/Chart.min.js",
             },
             output: {
                 format: "cjs", // Chuyển định dạng xuất sang CommonJS

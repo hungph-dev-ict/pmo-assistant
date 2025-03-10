@@ -48,6 +48,7 @@
                 :filters="filters"
                 :taskListData="taskListData"
                 :projectId="projectId"
+                :projectAudit="parsedProjectAudit"
                 :blankQuery="blankQuery"
                 :visibleColumns="visibleColumns"
                 :listAssignee="listAssigneeByProject"
@@ -87,6 +88,16 @@ const props = defineProps({
         type: [Array, String], // Có thể là Array hoặc String
         default: () => [],
     },
+    projectAudit: {
+        type: [Object, String], // Có thể là Object hoặc chuỗi JSON
+        default: () => ({}), // Tránh null gây lỗi
+    }
+});
+
+const parsedProjectAudit = computed(() => {
+    return typeof props.projectAudit === "string"
+        ? JSON.parse(props.projectAudit)
+        : props.projectAudit;
 });
 
 const filters = ref({
@@ -292,7 +303,6 @@ onMounted(async () => {
     // Gán lại vào filters để Vue phản ứng
     filters.value = urlFilters;
 
-    // Lấy danh sách members trong dự án
     try {
         const response = await axios.get(
             `/api/${props.projectId}/getAllMembers`

@@ -8,30 +8,39 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\TaskService;
+use App\Services\ProjectService;
 use App\Http\Requests\StoreTaskRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class PmController extends Controller
 {
     protected $taskService;
+    protected $projectService;
 
-    public function __construct(TaskService $taskService)
+    public function __construct(TaskService $taskService, ProjectService $projectService)
     {
         $this->taskService = $taskService;
+        $this->projectService = $projectService;
     }
 
     public function listTasks(Request $request, $project_id)
     {
         $project = Project::findOrFail($project_id);
-        if ($request->ajax()) {
-            $data = $this->taskService->getTasksByProject($project_id);
+        // if ($request->ajax()) {
+        //     $data = $this->taskService->getTasksByProject($project_id);
 
-            return response()->json($data);
-        }
+        //     return response()->json($data);
+        // }
+
+        // Project Audit
+        $today = Carbon::today();
+        $project_audit = $this->projectService->calculateProjectMetrics($project_id, $today);
+
         $listAssignee = Project::with('users')->find($project_id)->users;
 
-        return view('pm.task', compact('project_id', 'listAssignee', 'project'));
+        return view('pm.task', compact('project_id', 'listAssignee', 'project', 'project_audit'));
     }
 
     public function listTasksByFilter(Request $request, $project_id)
@@ -196,18 +205,6 @@ class PmController extends Controller
         $maxDate = $tasks->whereNotNull('plan_end_date')->max('plan_end_date');
 
         return view('pm.chart', compact('taskTree', 'minDate', 'maxDate', 'project'));
-    }
-
-    public function store(Request $request, $project_id)
-    {
-        // dd($request->all());
-        $newTaskInfo = $request->all();
-        $createNewTask = $this->taskService->createTask($newTaskInfo);
-        // if ($createNewTask) {
-        //     return redirect()->route('pm.tasks.store')
-        //         ->with('success', 'Task created successfully.');
-        // }
-        // return 500;
     }
 
     public function softDeleteTask($project_id, $task_id)
