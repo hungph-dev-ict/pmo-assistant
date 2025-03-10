@@ -6,29 +6,38 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Project;
 use App\Services\TaskService;
+use App\Services\ProjectService;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class StaffController extends Controller
 {
     protected $taskService;
+    protected $projectService;
 
-    public function __construct(TaskService $taskService)
+    public function __construct(TaskService $taskService, ProjectService $projectService)
     {
         $this->taskService = $taskService;
+        $this->projectService = $projectService;
     }
 
     public function listTasks(Request $request, $project_id)
     {
         $project = Project::findOrFail($project_id);
-        if ($request->ajax()) {
-            $tasks = Task::where('project_id', $project_id)->with('assigneeUser')->get();
-            $data = $this->taskService->getTasksByProject($project_id);
+        // if ($request->ajax()) {
+        //     $tasks = Task::where('project_id', $project_id)->with('assigneeUser')->get();
+        //     $data = $this->taskService->getTasksByProject($project_id);
 
-            return response()->json($data);
-        }
+        //     return response()->json($data);
+        // }
+
+        // Project Audit
+        $today = Carbon::today();
+        $project_audit = $this->projectService->calculateProjectMetrics($project_id, $today);
+
         $listAssignee = Project::with('users')->find($project_id)->users;
 
-        return view('staff.task', compact('project_id', 'listAssignee', 'project'));
+        return view('staff.task', compact('project_id', 'listAssignee', 'project', 'project_audit'));
     }
 
     public function listTasksByFilter(Request $request, $project_id)

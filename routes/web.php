@@ -90,6 +90,7 @@ Route::group(['middleware' => ['auth', 'role:client|pm|staff']], function () {
     Route::get('/api/staff/{project_id}/tasks', [StaffController::class, 'listTasks']);
     Route::get('/api/staff/{project_id}/list', [StaffController::class, 'listTasksByFilter']);
     Route::get('/api/{project_id}/getAllMembers', [ProjectController::class, 'getAllMembers']);
+    Route::get('/api/project-metrics/{project_id}', [ProjectController::class, 'getProjectMetrics']);
     Route::get('/api/getAllStatuses', [TaskController::class, 'getStatuses']);
     Route::get('/api/getAllPriorities', [TaskController::class, 'getPriorities']);
     Route::put('/api/staff/{project_id}/tasks/{task_id}/update', [StaffController::class, 'updateTask']);
