@@ -10,6 +10,7 @@ use App\Services\WorklogService;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ProjectController extends Controller
 {
@@ -152,7 +153,8 @@ class ProjectController extends Controller
         return redirect()->route('projects.index')->with('error', __('messages.failed_to_restore_project'));
     }
 
-    public function getAllMembers($project_id) {
+    public function getAllMembers($project_id)
+    {
         try {
             $members = Project::findOrFail($project_id)->users()->pluck('users.id', 'users.account');
 
@@ -171,5 +173,56 @@ class ProjectController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function getProjectMetrics($projectId)
+    {
+        // Lấy ngày bắt đầu của project
+        $project = Project::findOrFail($projectId);
+        $startDate = Carbon::parse($project->start_date);
+        $endDate = Carbon::today();
+
+        // Xác định khoảng thời gian
+        $daysDiff = $startDate->diffInDays($endDate);
+
+        if ($daysDiff <= 7) {
+            $interval = 'day'; // Hiển thị theo ngày
+        } elseif ($daysDiff <= 90) {
+            $interval = 'week'; // Hiển thị theo tuần
+        } else {
+            $interval = 'month'; // Hiển thị theo tháng
+        }
+
+        // Tạo danh sách mốc thời gian phù hợp (labels)
+        $labels = [];
+        $datePointer = clone $startDate;
+
+        while ($datePointer <= $endDate) {
+            $labels[] = $datePointer->format('Y-m-d');
+
+            if ($interval === 'day') {
+                $datePointer->addDay();
+            } elseif ($interval === 'week') {
+                $datePointer->addWeek();
+            } else {
+                $datePointer->addMonth();
+            }
+        }
+
+        // Lấy dữ liệu CPI, SPI theo từng mốc thời gian
+        $cpiSeries = [];
+        $spiSeries = [];
+
+        foreach ($labels as $date) {
+            $metrics = $this->projectService->calculateProjectMetrics($projectId, $date);
+            $cpiSeries[] = $metrics['cpi'] ?? 0; // Nếu không có thì mặc định là 0
+            $spiSeries[] = $metrics['spi'] ?? 0;
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'cpi_series' => $cpiSeries,
+            'spi_series' => $spiSeries,
+        ]);
     }
 }

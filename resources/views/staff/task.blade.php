@@ -20,7 +20,7 @@
 @section('content')
     <div data-vue-app="task-container" data-project-id="{{ $project_id }}"
         data-current-user-id="{{ auth()->user()->id }}" data-current-user-account="{{ auth()->user()->account }}"
-        data-user-role="{{ auth()->user()->getRoleNames() }}"></div>
+        data-user-role="{{ auth()->user()->getRoleNames() }}" data-project-audit='@json($project_audit)'></div>
 @endsection
 
 @section('inline_js')
@@ -34,6 +34,7 @@
     <!-- SweetAlert2 -->
     @vite(['resources/js/plugins/sweetalert2/sweetalert2.min.js'])
     @vite(['resources/js/plugins/toastr/toastr.min.js'])
+    @vite(['resources/js/plugins/chart.js/Chart.min.js'])
 @endsection
 
 @section('custom_inline_js')
