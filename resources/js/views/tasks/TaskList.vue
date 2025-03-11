@@ -689,8 +689,15 @@
                                                         href="#"
                                                         class="btn btn-primary btn-sm"
                                                         v-if="
-                                                            task.status !==
-                                                            TASK_STATUS.DONE
+                                                            ![
+                                                                TASK_STATUS.OPEN,
+                                                                TASK_STATUS.DONE,
+                                                                TASK_STATUS.REOPEN,
+                                                                TASK_STATUS.PENDING,
+                                                                TASK_STATUS.CANCELED,
+                                                            ].includes(
+                                                                task.status
+                                                            )
                                                         "
                                                         @click.prevent="
                                                             openLogWorkModal(
