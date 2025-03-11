@@ -350,7 +350,7 @@ const updatefilters = async (filtersFromSearch) => {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: rgb(0, 0, 0);
     font-weight: bold;
     z-index: 10;
     border-radius: 8px;
@@ -360,7 +360,7 @@ const updatefilters = async (filtersFromSearch) => {
     width: 40px;
     height: 40px;
     border: 5px solid rgba(255, 255, 255, 0.3);
-    border-top-color: white;
+    border-top-color: blue;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-right: 10px;
