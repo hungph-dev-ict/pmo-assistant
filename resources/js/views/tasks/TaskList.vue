@@ -56,7 +56,7 @@
                                         <th
                                             v-if="isColumnVisible('epic_task')"
                                             class="text-center"
-                                            style="width: 25.5%"
+                                            style="width: 21.5%"
                                         >
                                             Summary
                                         </th>
@@ -120,7 +120,7 @@
                                             v-if="
                                                 isColumnVisible('plan-effort')
                                             "
-                                            style="width: 4%"
+                                            style="width: 5%"
                                             class="text-center"
                                         >
                                             Plan Effort
@@ -129,7 +129,7 @@
                                             v-if="
                                                 isColumnVisible('actual-effort')
                                             "
-                                            style="width: 4%"
+                                            style="width: 5%"
                                             class="text-center"
                                         >
                                             Actual Effort
@@ -144,7 +144,7 @@
                                         <th
                                             class="text-center"
                                             v-if="isColumnVisible('action')"
-                                            style="width: 10%"
+                                            style="width: 12%"
                                         >
                                             Action
                                         </th>
@@ -744,113 +744,115 @@
 
                                     <div class="table-responsive">
                                         <table class="table">
-                                            <tr>
-                                                <th
-                                                    style="width: 50%"
-                                                    v-tooltip="
-                                                        'Tổng effort đã lập kế hoạch (PV) tính theo giờ, MD, MM'
-                                                    "
-                                                >
-                                                    Reported Plan Effort:
-                                                </th>
-                                                <td>
-                                                    {{
-                                                        props.projectAudit
-                                                            .reported_plan_effort
-                                                            .hours
-                                                    }}
-                                                    h /
-                                                    {{
-                                                        props.projectAudit
-                                                            .reported_plan_effort
-                                                            .md
-                                                    }}
-                                                    MD /
-                                                    {{
-                                                        props.projectAudit
-                                                            .reported_plan_effort
-                                                            .mm
-                                                    }}
-                                                    MM
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Tổng effort thực tế đã tiêu tốn (AC) tính theo giờ, MD, MM'
-                                                    "
-                                                >
-                                                    Reported Actual Effort:
-                                                </th>
-                                                <td>
-                                                    {{
-                                                        props.projectAudit
-                                                            .reported_actual_effort
-                                                            .hours
-                                                    }}
-                                                    h /
-                                                    {{
-                                                        props.projectAudit
-                                                            .reported_actual_effort
-                                                            .md
-                                                    }}
-                                                    MD /
-                                                    {{
-                                                        props.projectAudit
-                                                            .reported_actual_effort
-                                                            .mm
-                                                    }}
-                                                    MM
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Giá trị kế hoạch (PV) – tổng effort kế hoạch của các task có ngày kết thúc <= hôm nay'
-                                                    "
-                                                >
-                                                    Plan Value (PV):
-                                                </th>
-                                                <td>
-                                                    {{
-                                                        props.projectAudit
-                                                            .planned_value
-                                                    }}
-                                                    h
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Chi phí thực tế (AC) – tổng effort thực tế của các task đã hoàn thành'
-                                                    "
-                                                >
-                                                    Actual Cost (AC):
-                                                </th>
-                                                <td>
-                                                    {{
-                                                        props.projectAudit
-                                                            .actual_cost
-                                                    }}
-                                                    h
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Giá trị đạt được (EV) – tổng effort kế hoạch của các task đã hoàn thành'
-                                                    "
-                                                >
-                                                    Earned Value (EV):
-                                                </th>
-                                                <td>
-                                                    {{
-                                                        props.projectAudit
-                                                            .earned_value
-                                                    }}
-                                                    h
-                                                </td>
-                                            </tr>
+                                            <tbody>
+                                                <tr>
+                                                    <th
+                                                        style="width: 50%"
+                                                        v-tooltip="
+                                                            'Tổng effort đã lập kế hoạch (PV) tính theo giờ, MD, MM'
+                                                        "
+                                                    >
+                                                        Reported Plan Effort:
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .reported_plan_effort
+                                                                .hours
+                                                        }}
+                                                        h /
+                                                        {{
+                                                            props.projectAudit
+                                                                .reported_plan_effort
+                                                                .md
+                                                        }}
+                                                        MD /
+                                                        {{
+                                                            props.projectAudit
+                                                                .reported_plan_effort
+                                                                .mm
+                                                        }}
+                                                        MM
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Tổng effort thực tế đã tiêu tốn (AC) tính theo giờ, MD, MM'
+                                                        "
+                                                    >
+                                                        Reported Actual Effort:
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .reported_actual_effort
+                                                                .hours
+                                                        }}
+                                                        h /
+                                                        {{
+                                                            props.projectAudit
+                                                                .reported_actual_effort
+                                                                .md
+                                                        }}
+                                                        MD /
+                                                        {{
+                                                            props.projectAudit
+                                                                .reported_actual_effort
+                                                                .mm
+                                                        }}
+                                                        MM
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Giá trị kế hoạch (PV) – tổng effort kế hoạch của các task có ngày kết thúc <= hôm nay'
+                                                        "
+                                                    >
+                                                        Plan Value (PV):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .planned_value
+                                                        }}
+                                                        h
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Chi phí thực tế (AC) – tổng effort thực tế của các task đã hoàn thành'
+                                                        "
+                                                    >
+                                                        Actual Cost (AC):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .actual_cost
+                                                        }}
+                                                        h
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Giá trị đạt được (EV) – tổng effort kế hoạch của các task đã hoàn thành'
+                                                        "
+                                                    >
+                                                        Earned Value (EV):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .earned_value
+                                                        }}
+                                                        h
+                                                    </td>
+                                                </tr>
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -860,121 +862,150 @@
 
                                     <div class="table-responsive">
                                         <table class="table">
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Chỉ số hiệu suất chi phí (CPI) = EV / AC. CPI > 1 nghĩa là chi phí hiệu quả.'
-                                                    "
-                                                >
-                                                    Cost Performance Index
-                                                    (CPI):
-                                                </th>
-                                                <td>
-                                                    {{ props.projectAudit.cpi }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Chỉ số hiệu suất tiến độ (SPI) = EV / PV. SPI > 1 nghĩa là tiến độ tốt.'
-                                                    "
-                                                >
-                                                    Schedule Performance Index
-                                                    (SPI):
-                                                </th>
-                                                <td>
-                                                    {{ props.projectAudit.spi }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Chênh lệch tiến độ (SV) = EV - PV. SV > 0 nghĩa là dự án đang vượt tiến độ.'
-                                                    "
-                                                >
-                                                    Schedule Variance (SV):
-                                                </th>
-                                                <td>
-                                                    {{ props.projectAudit.sv }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Chênh lệch chi phí (CV) = EV - AC. CV > 0 nghĩa là chi phí đang được kiểm soát tốt.'
-                                                    "
-                                                >
-                                                    Cost Variance (CV):
-                                                </th>
-                                                <td>
-                                                    {{ props.projectAudit.cv }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Tổng ngân sách dự án khi hoàn thành (BAC) – tổng effort kế hoạch ban đầu.'
-                                                    "
-                                                >
-                                                    Budget At Completion (BAC):
-                                                </th>
-                                                <td>
-                                                    {{ props.projectAudit.bac }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Ước tính tổng chi phí hoàn thành dự án (EAC) = BAC / CPI.'
-                                                    "
-                                                >
-                                                    Estimate At Completion
-                                                    (EAC):
-                                                </th>
-                                                <td>
-                                                    {{ props.projectAudit.eac }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Chênh lệch dự kiến khi hoàn thành (VAC) = BAC - EAC.'
-                                                    "
-                                                >
-                                                    Variance At Completion
-                                                    (VAC):
-                                                </th>
-                                                <td>
-                                                    {{ props.projectAudit.vac }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Ước tính effort còn lại để hoàn thành dự án (ETC) = EAC - AC.'
-                                                    "
-                                                >
-                                                    Estimate To Complete (ETC):
-                                                </th>
-                                                <td>
-                                                    {{ props.projectAudit.etc }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    v-tooltip="
-                                                        'Chỉ số hiệu suất cần đạt để hoàn thành dự án đúng ngân sách (TCPI) = (BAC - EV) / (BAC - AC).'
-                                                    "
-                                                >
-                                                    To Complete Performance
-                                                    Index (TCPI):
-                                                </th>
-                                                <td>
-                                                    {{
-                                                        props.projectAudit.tcpi
-                                                    }}
-                                                </td>
-                                            </tr>
+                                            <tbody>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Chỉ số hiệu suất chi phí (CPI) = EV / AC. CPI > 1 nghĩa là chi phí hiệu quả.'
+                                                        "
+                                                    >
+                                                        Cost Performance Index
+                                                        (CPI):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .cpi
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Chỉ số hiệu suất tiến độ (SPI) = EV / PV. SPI > 1 nghĩa là tiến độ tốt.'
+                                                        "
+                                                    >
+                                                        Schedule Performance
+                                                        Index (SPI):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .spi
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Chênh lệch tiến độ (SV) = EV - PV. SV > 0 nghĩa là dự án đang vượt tiến độ.'
+                                                        "
+                                                    >
+                                                        Schedule Variance (SV):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .sv
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Chênh lệch chi phí (CV) = EV - AC. CV > 0 nghĩa là chi phí đang được kiểm soát tốt.'
+                                                        "
+                                                    >
+                                                        Cost Variance (CV):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .cv
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Tổng ngân sách dự án khi hoàn thành (BAC) – tổng effort kế hoạch ban đầu.'
+                                                        "
+                                                    >
+                                                        Budget At Completion
+                                                        (BAC):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .bac
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Ước tính tổng chi phí hoàn thành dự án (EAC) = BAC / CPI.'
+                                                        "
+                                                    >
+                                                        Estimate At Completion
+                                                        (EAC):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .eac
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Chênh lệch dự kiến khi hoàn thành (VAC) = BAC - EAC.'
+                                                        "
+                                                    >
+                                                        Variance At Completion
+                                                        (VAC):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .vac
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Ước tính effort còn lại để hoàn thành dự án (ETC) = EAC - AC.'
+                                                        "
+                                                    >
+                                                        Estimate To Complete
+                                                        (ETC):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .etc
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                        v-tooltip="
+                                                            'Chỉ số hiệu suất cần đạt để hoàn thành dự án đúng ngân sách (TCPI) = (BAC - EV) / (BAC - AC).'
+                                                        "
+                                                    >
+                                                        To Complete Performance
+                                                        Index (TCPI):
+                                                    </th>
+                                                    <td>
+                                                        {{
+                                                            props.projectAudit
+                                                                .tcpi
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>

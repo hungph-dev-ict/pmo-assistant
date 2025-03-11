@@ -541,6 +541,8 @@ onMounted(() => {
                 "assignee",
                 "plan_start_date",
                 "plan_end_date",
+                "actual_start_date",
+                "actual_end_date",
                 "plan-effort",
                 "actual-effort",
                 "status",
