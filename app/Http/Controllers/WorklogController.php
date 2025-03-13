@@ -57,6 +57,13 @@ class WorklogController extends Controller
         return response()->json($projectWorklogs, 201);
     }
 
+    public function getWorlogAuditInWeek($project_id)
+    {
+        $worklogLacks = $this->worklogService->getUsersWithoutWorklogs($project_id);
+
+        return response()->json($worklogLacks, 201);
+    }
+
     public function getTenantWorklogs()
     {
         $tenantWorklogs = $this->worklogService->getTenantWorklogs();

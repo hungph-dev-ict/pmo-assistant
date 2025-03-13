@@ -70,7 +70,6 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::put('/api/pm/{project_id}/tasks/{task_id}/update', [PmController::class, 'updateTask']);
     Route::delete('/api/pm/{project_id}/tasks/{task_id}/destroy', [PmController::class, 'softDeleteTask']);
     Route::get('/api/tenant-worklog', [WorklogController::class, 'getTenantWorklogs']);
-    Route::get('/api/project/{project_id}/worklog', [WorklogController::class, 'getProjectWorklogs']);
 
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');
@@ -89,6 +88,8 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
 Route::group(['middleware' => ['auth', 'role:client|pm|staff']], function () {
     Route::get('/api/staff/{project_id}/tasks', [StaffController::class, 'listTasks']);
     Route::get('/api/staff/{project_id}/list', [StaffController::class, 'listTasksByFilter']);
+    Route::get('/api/project/{project_id}/worklog', [WorklogController::class, 'getProjectWorklogs']);
+    Route::get('/api/project/{project_id}/users-without-worklogs', [WorklogController::class, 'getWorlogAuditInWeek']);
     Route::get('/api/{project_id}/getAllMembers', [ProjectController::class, 'getAllMembers']);
     Route::get('/api/project-metrics/{project_id}', [ProjectController::class, 'getProjectMetrics']);
     Route::get('/api/getAllStatuses', [TaskController::class, 'getStatuses']);
