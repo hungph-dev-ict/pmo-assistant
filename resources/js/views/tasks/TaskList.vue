@@ -8,8 +8,13 @@
                         <li class="nav-item">
                             <a
                                 class="nav-link active"
-                                href="#list"
+                                href="#history"
                                 data-toggle="tab"
+                                >Recently Activities</a
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#list" data-toggle="tab"
                                 >List</a
                             >
                         </li>
@@ -34,7 +39,85 @@
                     style="max-height: 80vh; overflow-y: auto"
                 >
                     <div class="tab-content">
-                        <div class="tab-pane active" id="list">
+                        <div class="tab-pane active" id="history">
+                            <div v-if="projectWorklogIsLoading" class="overlay">
+                                <div class="spinner"></div>
+                                <p>Loading...</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-8">
+                                    <p class="lead">Worklog Activities</p>
+
+                                    <div
+                                        v-for="worklog in projecWorklogs"
+                                        :key="worklog.id"
+                                    >
+                                        <p>
+                                            <strong
+                                                >{{ worklog.user.name }} ({{
+                                                    worklog.user.account
+                                                }})</strong
+                                            >
+                                            at
+                                            {{
+                                                new Date(worklog.created_at)
+                                                    .toISOString()
+                                                    .slice(0, 16)
+                                                    .replace("T", " ")
+                                            }}
+                                            <!-- /.user-block -->
+
+                                            logged into:
+                                            <strong>{{
+                                                worklog.task.name
+                                            }}</strong>
+                                            . Time logged:
+                                            <strong
+                                                :style="{
+                                                    color:
+                                                        worklog.log_time > 4
+                                                            ? 'red'
+                                                            : 'inherit',
+                                                }"
+                                            >
+                                                {{ worklog.log_time }}
+                                            </strong>
+                                            hours.
+
+                                            <span v-if="worklog.description"
+                                                >Work description:
+                                                {{ worklog.description }}</span
+                                            >
+                                            <strong style="color: red" v-else
+                                                >No work description
+                                                provided.</strong
+                                            >
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-4">
+                                    <p class="lead">Users Without Worklog</p>
+
+                                    <div
+                                        v-for="(users, date) in groupedUsers"
+                                        :key="date"
+                                        class="post"
+                                    >
+                                        <p>
+                                            <strong>Ngày {{ date }}</strong>
+                                        </p>
+                                        <p>
+                                            The users have not logged their work:
+                                            <span style="color: red">{{
+                                                users.join(", ")
+                                            }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="list">
                             <table
                                 class="table table-sm fixed-header-table table-bordered"
                                 style="margin-right: 20px"
@@ -689,8 +772,15 @@
                                                         href="#"
                                                         class="btn btn-primary btn-sm"
                                                         v-if="
-                                                            task.status !==
-                                                            TASK_STATUS.DONE
+                                                            ![
+                                                                TASK_STATUS.OPEN,
+                                                                TASK_STATUS.DONE,
+                                                                TASK_STATUS.REOPEN,
+                                                                TASK_STATUS.PENDING,
+                                                                TASK_STATUS.CANCELED,
+                                                            ].includes(
+                                                                task.status
+                                                            )
                                                         "
                                                         @click.prevent="
                                                             openLogWorkModal(
@@ -1100,10 +1190,6 @@ const selectedTask = ref(null);
 const showLogWorkModal = ref(false);
 const globalIsEditting = ref(false);
 
-onMounted(() => {
-    globalIsEditting.value = false;
-});
-
 // Emit sự kiện update để thông báo lên component cha
 const emit = defineEmits(["update-data", "task-list-editing"]);
 
@@ -1400,7 +1486,27 @@ const cpiSeries = ref([]);
 const spiSeries = ref([]);
 let chartInstance = null;
 
+const projecWorklogs = ref([]);
+
+import { format, subDays, isWeekend } from "date-fns";
+
+const usersWithoutWorklog = ref([]);
+const lastWorkday = ref("");
+
+const getLastWorkday = () => {
+    let date = subDays(new Date(), 1);
+    while (isWeekend(date)) {
+        date = subDays(date, 1);
+    }
+    return format(date, "yyyy-MM-dd");
+};
+
+const projectWorklogIsLoading = ref(false);
+
 onMounted(async () => {
+    projectWorklogIsLoading.value = true; 
+    globalIsEditting.value = false;
+
     const response = await axios.get(`/api/project-metrics/${props.projectId}`);
 
     labels.value = response.data.labels;
@@ -1408,6 +1514,42 @@ onMounted(async () => {
     spiSeries.value = response.data.spi_series;
 
     renderChart();
+
+    const worklogResponse = await axios.get(
+        `/api/project/${props.projectId}/worklog/`
+    );
+    projecWorklogs.value = worklogResponse.data.original.data;
+
+    const worklogAuditResponse = await axios.get(
+        `/api/project/${props.projectId}/users-without-worklogs`
+    );
+    usersWithoutWorklog.value = worklogAuditResponse.data.original.data || [];
+    lastWorkday.value = getLastWorkday();
+    projectWorklogIsLoading.value = false; 
+});
+
+// Computed để nhóm user theo ngày
+const groupedUsers = computed(() => {
+    if (!Array.isArray(usersWithoutWorklog.value)) return {}; // Kiểm tra mảng hợp lệ
+
+    let grouped = {};
+    console.log(usersWithoutWorklog.value);
+
+    for (const user of usersWithoutWorklog.value) {
+        if (Array.isArray(user.missing_days)) {
+            // Kiểm tra missing_days có phải là mảng không
+            for (const date of user.missing_days) {
+                if (!grouped[date]) {
+                    grouped[date] = [];
+                }
+                grouped[date].push(user.user_name);
+            }
+        }
+    }
+
+    return Object.fromEntries(
+        Object.entries(grouped).sort((a, b) => b[0].localeCompare(a[0]))
+    );
 });
 
 function renderChart() {
@@ -1510,5 +1652,41 @@ table tbody tr:hover {
     background-color: #0d36a5 !important;
     /* Màu tối hơn khi hover */
     color: white !important;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    z-index: 10;
+    border-radius: 8px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: blue;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 class WorklogService
 {
@@ -71,24 +74,72 @@ class WorklogService
 
     public function getProjectWorklogs($project_id)
     {
-        $user = Auth::user();
-
-        if (!$user || (!$user->hasRole('client') && !$user->hasRole('pm'))) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
         // Lấy danh sách task_id thuộc về các project trong projectIds
         $taskIds = Task::where('project_id', $project_id)->pluck('id');
 
         // Lấy worklogs có task_id nằm trong danh sách taskIds
         $worklogs = Worklog::whereIn('task_id', $taskIds)
-            ->with('user', 'task.project', 'task.assigneeUser')
-            ->orderBy('log_date', 'desc')
+            ->with('user:id,account,name', 'task.project:id,name')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return response()->json([
             'success' => true,
             'data' => $worklogs
+        ]);
+    }
+
+    public function getUsersWithoutWorklogs($project_id)
+    {
+        // Lấy danh sách user thuộc project
+        $usersInProject = User::whereHas('projects', function ($query) use ($project_id) {
+            $query->where('project_id', $project_id);
+        })->pluck('id');
+
+        // Lấy danh sách ngày hợp lệ từ thứ Hai đến hôm qua, bỏ thứ 7 và CN
+        $startOfWeek = Carbon::now()->startOfWeek(); // Thứ Hai đầu tuần
+        $yesterday = Carbon::yesterday(); // Hôm qua
+
+        $validDays = [];
+        $currentDate = $startOfWeek->copy();
+
+        while ($currentDate->lte($yesterday)) {
+            if (!in_array($currentDate->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY])) {
+                $validDays[] = $currentDate->format('Y-m-d');
+            }
+            $currentDate->addDay();
+        }
+
+        // Lấy danh sách user đã log work vào từng ngày hợp lệ
+        $worklogs = Worklog::whereHas('task', function ($query) use ($project_id) {
+            $query->where('project_id', $project_id);
+        })
+            ->whereIn(DB::raw('DATE(created_at)'), $validDays)
+            ->get(['log_user', 'created_at']);
+
+        // Tạo một mảng chứa user và ngày họ đã log work
+        $userWorklogDays = [];
+        foreach ($worklogs as $worklog) {
+            $date = Carbon::parse($worklog->created_at)->format('Y-m-d');
+            $userWorklogDays[$worklog->log_user][] = $date;
+        }
+
+        // Tạo danh sách user và những ngày họ chưa log work
+        $usersWithoutWorklogs = [];
+        foreach ($usersInProject as $userId) {
+            $missingDays = array_diff($validDays, $userWorklogDays[$userId] ?? []);
+            if (!empty($missingDays)) {
+                $usersWithoutWorklogs[] = [
+                    'user_id' => $userId,
+                    'user_name' => User::find($userId)->name,
+                    'missing_days' => array_values($missingDays) // Convert array keys to sequential
+                ];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $usersWithoutWorklogs
         ]);
     }
 

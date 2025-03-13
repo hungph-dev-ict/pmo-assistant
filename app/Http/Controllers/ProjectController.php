@@ -11,6 +11,7 @@ use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Enums\ProjectStatus;
 
 class ProjectController extends Controller
 {
@@ -180,12 +181,13 @@ class ProjectController extends Controller
         // Lấy ngày bắt đầu của project
         $project = Project::findOrFail($projectId);
         $startDate = Carbon::parse($project->start_date);
-        $endDate = Carbon::today();
+        // Nếu dự án đã đóng (closed), lấy end_date, ngược lại lấy hôm nay
+        $endDate = $project->status === ProjectStatus::SUCCESS ? Carbon::parse($project->end_date) : Carbon::today();
 
         // Xác định khoảng thời gian
         $daysDiff = $startDate->diffInDays($endDate);
 
-        if ($daysDiff <= 7) {
+        if ($daysDiff <= 30) {
             $interval = 'day'; // Hiển thị theo ngày
         } elseif ($daysDiff <= 90) {
             $interval = 'week'; // Hiển thị theo tuần
