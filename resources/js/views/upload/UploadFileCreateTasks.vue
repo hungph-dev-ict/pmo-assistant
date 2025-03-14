@@ -292,14 +292,11 @@ const processCsv = (csvText) => {
 
             data.slice(1).forEach((row, index) => {
                 const lineNumber = index + 2;
-                console.log(`Row ${lineNumber}:`, row);
 
                 const rowData = {};
                 headers.forEach((header, colIndex) => {
                     rowData[header] = row[colIndex]?.trim() || "";
                 });
-
-                console.log(`RowData ${lineNumber}:`, rowData);
 
                 const epic = rowData["epic"] || null;
                 const task = rowData["task"] || null;
