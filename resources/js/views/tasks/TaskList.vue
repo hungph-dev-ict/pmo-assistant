@@ -122,6 +122,20 @@
                             </div>
                         </div>
                         <div class="tab-pane active" id="list">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icheck-primary d-inline">
+                                    <input
+                                        type="checkbox"
+                                        id="collapseTasks"
+                                        v-model="collapseAll"
+                                        :disabled="collapseAll || isFiltering(props.filters)"
+                                        class="mr-2"
+                                    />
+                                    <label for="collapseTasks"
+                                        >Collapse all tasks</label
+                                    >
+                                </div>
+                            </div>
                             <table
                                 class="table table-sm fixed-header-table table-bordered"
                                 style="margin-right: 20px"
@@ -243,8 +257,11 @@
                                         v-for="task in taskListData.tasks"
                                         :key="task.id"
                                         v-show="
-                                            task.type == TASK_TYPES.EPIC ||
-                                            isExpanded(task.parent_id)
+                                            collapseAll
+                                                ? task.type === TASK_TYPES.EPIC
+                                                : task.type ==
+                                                      TASK_TYPES.EPIC ||
+                                                  isExpanded(task.parent_id)
                                         "
                                     >
                                         <td class="text-center">
@@ -266,7 +283,10 @@
                                                 class="cursor-pointer mr-2"
                                             >
                                                 <span
-                                                    v-if="!isExpanded(task.id)"
+                                                    v-if="
+                                                        !isExpanded(task.id) ||
+                                                        collapseAll
+                                                    "
                                                 >
                                                     <i
                                                         class="fas fa-chevron-right"
@@ -1142,7 +1162,7 @@ const props = defineProps({
     hasPermissionStaff: Boolean,
     currentUserId: Number,
     currentUserAccount: String,
-    filtersQuery: Object,
+    filters: Object,
     projectAudit: Object,
 });
 
@@ -1150,6 +1170,8 @@ const expandedTasks = ref([]);
 const selectedTask = ref(null);
 const showLogWorkModal = ref(false);
 const globalIsEditting = ref(false);
+
+const collapseAll = ref(true);
 
 // Emit sự kiện update để thông báo lên component cha
 const emit = defineEmits(["update-data", "task-list-editing"]);
@@ -1424,12 +1446,23 @@ const vTooltip = {
         });
     },
 };
-
+// Theo dõi khi collapseAll thay đổi
+watch(collapseAll, (newValue) => {
+    if (newValue) {
+        expandedTasks.value = []; // Đóng tất cả task
+    }
+});
 const toggleTask = (taskId) => {
     if (expandedTasks.value.includes(taskId)) {
         expandedTasks.value = expandedTasks.value.filter((id) => id !== taskId);
     } else {
         expandedTasks.value.push(taskId);
+    }
+
+    if (expandedTasks.value.length) {
+        collapseAll.value = false;
+    } else {
+        collapseAll.value = true;
     }
 };
 
@@ -1458,6 +1491,17 @@ const getLastWorkday = () => {
 };
 
 const projectWorklogIsLoading = ref(false);
+
+// Kiểm tra filters có giá trị nào khác mặc định không
+const isFiltering = (() => {
+    console.log(props.filters.assignee);
+    return (
+        props.filters.text.trim() !== "" ||
+        props.filters.priority.length > 0 ||
+        props.filters.assignee.length !== "" ||
+        props.filters.status.length > 0
+    );
+});
 
 onMounted(async () => {
     projectWorklogIsLoading.value = true;
