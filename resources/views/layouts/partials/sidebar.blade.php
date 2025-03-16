@@ -182,6 +182,12 @@
                                                 <i class="fas fa-briefcase nav-icon"></i>
                                                 <p>Project Worklog</p>
                                             </a>
+                                        </li><li class="nav-item">
+                                            <a href="{{ route('pm.components', $project->id) }}"
+                                                class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.components') ? 'active' : '' }}">
+                                                <i class="fas fa-puzzle-piece nav-icon"></i>
+                                                <p>Components</p>
+                                            </a>
                                         </li>
                                     </ul>
                                 </li>
@@ -284,6 +290,13 @@
                                                 class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.worklogs.management') ? 'active' : '' }}">
                                                 <i class="fas fa-briefcase nav-icon"></i>
                                                 <p>Project Worklog</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('pm.components', $project->id) }}"
+                                                class="nav-link {{ request()->segment(2) == $project->id && request()->routeIs('pm.components') ? 'active' : '' }}">
+                                                <i class="fas fa-puzzle-piece nav-icon"></i>
+                                                <p>Components</p>
                                             </a>
                                         </li>
                                     </ul>

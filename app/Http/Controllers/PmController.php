@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Task;
 use App\Models\Project;
+use App\Models\Component;
+use App\Http\Controllers\TaskComponent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\TaskService;
@@ -205,6 +207,62 @@ class PmController extends Controller
         $maxDate = $tasks->whereNotNull('plan_end_date')->max('plan_end_date');
 
         return view('pm.chart', compact('taskTree', 'minDate', 'maxDate', 'project'));
+    }
+
+    public function viewComponents($project_id)
+    {
+        $project = Project::find($project_id);
+        $components = Component::where('project_id', $project_id)->get();
+        return view('pm.components', compact('components', 'project_id'));
+    }
+
+    public function createComponents(Request $request, $project_id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'memo' => 'nullable|string',
+        ]);
+
+        Component::create([
+            'project_id' => $project_id,
+            'name' => $request->name,
+            'memo' => $request->memo,
+        ]);
+        return redirect()->route('pm.components', ['project_id' => $project_id]);
+    }
+
+    public function destroy(Request $request, $project_id, $id)
+    {
+
+        $component = Component::findOrFail($id);
+        $component->delete();
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
+        return redirect()->route('pm.components', ['project_id' => $project_id]);
+    }
+
+    public function restore(Request $request, $project_id, $id)
+    {
+        $component = Component::withTrashed()->findOrFail($id);
+        $component->restore();
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
+        return redirect()->route('pm.components', ['project_id' => $project_id]);
+    }
+
+    public function store(Request $request, $project_id)
+    {
+        // dd($request->all());
+        $newTaskInfo = $request->all();
+        $createNewTask = $this->taskService->createTask($newTaskInfo);
+        // if ($createNewTask) {
+        //     return redirect()->route('pm.tasks.store')
+        //         ->with('success', 'Task created successfully.');
+        // }
+        // return 500;
     }
 
     public function softDeleteTask($project_id, $task_id)

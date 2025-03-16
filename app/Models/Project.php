@@ -54,7 +54,7 @@ class Project extends Model
     {
         return $this->hasMany(Task::class, 'project_id', 'id');
     }
-    
+
     public static function createProject($projectData)
     {
         $newProject = self::create([
@@ -92,5 +92,10 @@ class Project extends Model
         ]);
 
         return $project;
+    }
+
+    public function components()
+    {
+        return $this->hasMany(Component::class);
     }
 }
