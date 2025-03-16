@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->string('name')->unique(); // Tên component, không trùng nhau
             $table->text('description')->nullable(); // Mô tả component (tùy chọn)
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
