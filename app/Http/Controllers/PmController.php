@@ -235,6 +235,9 @@ class PmController extends Controller
 
         $component = Component::findOrFail($id);
         $component->delete();
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
         return redirect()->route('pm.components', ['project_id' => $project_id]);
     }
 
@@ -243,6 +246,9 @@ class PmController extends Controller
         $component = Component::withTrashed()->findOrFail($id);
         $component->restore();
 
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
         return redirect()->route('pm.components', ['project_id' => $project_id]);
     }
 

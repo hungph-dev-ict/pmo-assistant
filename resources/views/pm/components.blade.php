@@ -33,20 +33,23 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($components as $component)
-                                        <tr class="{{ $component->deleted_at ? 'table-secondary' : '' }}">
+                                        <tr id="row-{{ $component->id }}"
+                                            class="{{ $component->deleted_at ? 'table-secondary' : '' }}">
                                             <td>{{ $component->name }}</td>
                                             <td>{{ $component->memo }}</td>
                                             <td>
                                                 @if ($component->deleted_at)
                                                     <form method="POST"
-                                                        action="{{ route('pm.components.restore', ['project_id' => $project_id, 'id' => $component->id]) }}">
+                                                        action="{{ route('pm.components.restore', ['project_id' => $project_id, 'id' => $component->id]) }}"
+                                                        class="restore-form" data-id="{{ $component->id }}">
                                                         @csrf
                                                         <button type="submit"
                                                             class="btn btn-success btn-sm">Restore</button>
                                                     </form>
                                                 @else
                                                     <form method="POST"
-                                                        action="{{ route('pm.components.delete', ['project_id' => $project_id, 'id' => $component->id]) }}">
+                                                        action="{{ route('pm.components.delete', ['project_id' => $project_id, 'id' => $component->id]) }}"
+                                                        class="delete-form" data-id="{{ $component->id }}">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -85,3 +88,41 @@
         </div>
     </div>
 @endsection
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("submit", function(event) {
+            if (event.target.classList.contains('delete-form')) {
+                event.preventDefault();
+                let form = event.target;
+                let componentId = form.getAttribute('data-id');
+                let projectId = "{{ request()->route('project_id') }}";
+                let row = document.getElementById('row-' + componentId);
+                console.log("DELETE request to:", form.action);
+                fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            _method: "DELETE"
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            row.classList.add('table-secondary');
+                            row.querySelector('td:last-child').innerHTML = `
+                        <form method="POST" action="/pm/${projectId}/components/${componentId}/restore" class="restore-form" data-id="${componentId}">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                        </form>
+                    `;
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
+    });
+</script>

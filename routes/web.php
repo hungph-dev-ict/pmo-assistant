@@ -80,7 +80,7 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::put('/api/pm/{project_id}/tasks/{task_id}/update', [PmController::class, 'updateTask']);
     Route::delete('/api/pm/{project_id}/tasks/{task_id}/destroy', [PmController::class, 'softDeleteTask']);
     Route::get('/api/tenant-worklog', [WorklogController::class, 'getTenantWorklogs']);
-    Route::get('/api/project/{project_id}/worklog', [WorklogController::class, 'getProjectWorklogs']);    
+    Route::get('/api/project/{project_id}/worklog', [WorklogController::class, 'getProjectWorklogs']);
     Route::get('/api/leave-request-management', [LeaveRequestController::class, 'getLeaveRequestsManagement']);
 
     Route::prefix('pm/{project_id}')->group(function () {
