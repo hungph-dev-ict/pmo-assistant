@@ -26,6 +26,14 @@
                                 >Audit</a
                             >
                         </li>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link"
+                                href="#deepshock"
+                                data-toggle="tab"
+                                >DeepShock AI</a
+                            >
+                        </li>
                         <button
                             type="button"
                             class="btn btn-tool"
@@ -1104,6 +1112,41 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane" id="deepshock">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="lead">
+                                        Recommended by DeepShock AI, a friend of
+                                        DeepSeek
+                                    </p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 20%">
+                                                        Task ID
+                                                    </th>
+                                                    <th>Recommended Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    v-for="(
+                                                        action, index
+                                                    ) in deepshock_actions"
+                                                    :key="index"
+                                                >
+                                                    <td>
+                                                        {{ action.task_id }}
+                                                    </td>
+                                                    <td>{{ action.action }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1482,6 +1525,8 @@ onMounted(async () => {
     usersWithoutWorklog.value = worklogAuditResponse.data.original.data || [];
     lastWorkday.value = getLastWorkday();
     projectWorklogIsLoading.value = false;
+
+    analyzeTasks();
 });
 
 // Computed để nhóm user theo ngày
@@ -1566,6 +1611,41 @@ function renderChart() {
         options: chartOptions,
     });
 }
+
+const deepshock_actions = ref([]);
+
+const analyzeTasks = async () => {
+    try {
+        const url = "http://localhost:8003/analyze"; // API phân tích task
+        const filteredTasks = props.taskListData.tasks.map((task) => ({
+            id: task.id,
+            name: task.name,
+            status: task.status,
+            plan_start_date: task.plan_start_date,
+            plan_end_date: task.plan_end_date,
+            actual_end_date: task.actual_end_date || null,
+            plan_effort: task.plan_effort || 0,
+            actual_effort: task.actual_effort || 0,
+        }));
+
+        const response = await axios.post(url, filteredTasks, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        deepshock_actions.value = response.data.actions;
+    } catch (error) {
+        console.log(error);
+        // Lấy thông tin lỗi từ response
+        const errorMessage =
+            error.response?.data?.message || "Failed to analyze tasks!";
+        const errorDetail = error.response?.data?.error || "Unknown error";
+
+        // Hiển thị toastr lỗi với cả message và error detail
+        toastr.error(`${errorMessage}: ${errorDetail}`);
+    }
+};
 </script>
 
 <style>
