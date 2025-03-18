@@ -209,6 +209,54 @@ class ConstantsTableSeeder extends Seeder
                 'value2' => NULL,
                 'created_at' => now(),
                 'updated_at' => now(),
+            ],
+            [
+                'group' => 'leave_request_type', 
+                'key' => '0',
+                'value1' => 'Working from home', // Trạng thái đã hoàn thành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'leave_request_type', 
+                'key' => '1',
+                'value1' => 'All-day leave', // Trạng thái đang tiến hành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'leave_request_type', 
+                'key' => '2',
+                'value1' => 'Partial leave', // Trạng thái đã hoàn thành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'leave_request_status', 
+                'key' => '0',
+                'value1' => 'Pending', // Trạng thái đã hoàn thành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'leave_request_status', 
+                'key' => '1',
+                'value1' => 'Approved', // Trạng thái đang tiến hành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'group' => 'leave_request_status', 
+                'key' => '2',
+                'value1' => 'Rejected', // Trạng thái đã hoàn thành
+                'value2' => NULL,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         ]);
     }

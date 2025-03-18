@@ -8,6 +8,7 @@ use App\Http\Controllers\PmController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WorklogController;
+use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/api/worklog/{worklog_id}/destroy', [WorklogController::class, 'softDeleteWorklog']);
     Route::get('/api/{project_id}/task/{task_id}/worklog', [WorklogController::class, 'get']);
     Route::post('/api/{project_id}/tasks/{task_id}/worklog', [WorklogController::class, 'store']);
+
+    Route::get('/leave-request', [LeaveRequestController::class, 'viewLeaveRequest'])->name('leave-request');
+    Route::get('/api/leave-request', [LeaveRequestController::class, 'getMyLeaveRequests']);
+    Route::get('/api/leave-request/types', [LeaveRequestController::class, 'getLeaveRequestType']);
+    Route::get('/api/leave-request/approvers', [LeaveRequestController::class, 'getLeaveRequestApprover']);
+    Route::put('/api/leave-request/{leave_id}/update', [LeaveRequestController::class, 'updateLeaveRequest']);
+    Route::put('/api/leave-request/update-status', [LeaveRequestController::class, 'updateLeaveStatus']);
+    Route::delete('/api/leave-request/{leave_id}/destroy', [LeaveRequestController::class, 'softDeleteLeaveRequest']);
+    Route::post('/api/leave-request/store', [LeaveRequestController::class, 'store']);
 });
 
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
@@ -70,6 +80,8 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::put('/api/pm/{project_id}/tasks/{task_id}/update', [PmController::class, 'updateTask']);
     Route::delete('/api/pm/{project_id}/tasks/{task_id}/destroy', [PmController::class, 'softDeleteTask']);
     Route::get('/api/tenant-worklog', [WorklogController::class, 'getTenantWorklogs']);
+    Route::get('/api/project/{project_id}/worklog', [WorklogController::class, 'getProjectWorklogs']);    
+    Route::get('/api/leave-request-management', [LeaveRequestController::class, 'getLeaveRequestsManagement']);
 
     Route::prefix('pm/{project_id}')->group(function () {
         Route::get('/task', [PmController::class, 'listTasks'])->name('pm.task');
