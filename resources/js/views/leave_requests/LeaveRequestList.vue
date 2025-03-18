@@ -7,9 +7,9 @@
             </div>
 
             <div v-if="isClientOrPm"  class="ml-auto">           
-                <button @click.prevent="updateLeaveRequestStatus(true)" class="btn btn-success ml-auto"><i class="fas fa-check-circle"></i> Approved</button>
+                <button @click.prevent="updateLeaveRequestStatus(true)" class="btn btn-success ml-auto"><i class="fas fa-check-circle"></i> Approve</button>
                 <span class="mx-1"></span>
-                <button @click.prevent="updateLeaveRequestStatus(false)" class="btn btn-danger ml-auto"><i class="fas fa-times-circle"></i> Rejected</button>
+                <button @click.prevent="updateLeaveRequestStatus(false)" class="btn btn-danger ml-auto"><i class="fas fa-times-circle"></i> Decline</button>
             </div>
             <button v-else @click="openLeaveRequestModal()" class="btn btn-primary  ml-auto"><i class="fas fa-plus-circle"></i> Create New Leave Request</button>
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
