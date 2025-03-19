@@ -265,8 +265,6 @@
 import { computed, ref, nextTick, onMounted, watch } from "vue";
 import Swal from "sweetalert2";
 import LeaveRequestModal from "./LeaveRequestModal.vue";
-import "select2";
-import "select2/dist/css/select2.min.css";
 import tippy from "tippy.js";
 // Directive tùy chỉnh để dùng Tippy.js
 const vTooltip = {
