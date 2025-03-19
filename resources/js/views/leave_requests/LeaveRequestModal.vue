@@ -122,8 +122,6 @@
 <script setup>
 import { ref, defineProps, defineEmits, nextTick, watch, onMounted } from "vue";
 import axios from "axios";
-import "select2";
-import "select2/dist/css/select2.min.css";
 const props = defineProps({
     showModal: Boolean,
     currentUserId: {
