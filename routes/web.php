@@ -92,7 +92,7 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
         Route::get('/chart', [PmController::class, 'viewChart'])->name('pm.chart');
         Route::get('/components', [PmController::class, 'viewComponents'])->name('pm.components');
         Route::post('/components', [PmController::class, 'createComponents'])->name('pm.components.create');
-        Route::delete('/components/{id}/destroy', [PmController::class, 'destroy'])->name('pm.components.delete');
+        Route::delete('/components/{id}', [PmController::class, 'destroy'])->name('pm.components.delete');
         Route::post('/components/{id}/restore', [PmController::class, 'restore'])->name('pm.components.restore');
     });
 });

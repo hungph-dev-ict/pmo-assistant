@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Task;
 use App\Models\Project;
 use App\Models\Component;
-use App\Http\Controllers\TaskComponent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\TaskService;
@@ -212,7 +211,7 @@ class PmController extends Controller
     public function viewComponents($project_id)
     {
         $project = Project::find($project_id);
-        $components = Component::where('project_id', $project_id)->get();
+        $components = Component::withTrashed()->where('project_id', $project_id)->get();
         return view('pm.components', compact('components', 'project_id'));
     }
 
@@ -235,10 +234,7 @@ class PmController extends Controller
     {
 
         $component = Component::findOrFail($id);
-        $component->delete();
-        if ($request->ajax()) {
-            return response()->json(['success' => true]);
-        }
+        $component->delete(); 
         return redirect()->route('pm.components', ['project_id' => $project_id]);
     }
 
@@ -247,9 +243,6 @@ class PmController extends Controller
         $component = Component::withTrashed()->findOrFail($id);
         $component->restore();
 
-        if ($request->ajax()) {
-            return response()->json(['success' => true]);
-        }
         return redirect()->route('pm.components', ['project_id' => $project_id]);
     }
 
