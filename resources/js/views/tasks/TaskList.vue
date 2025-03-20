@@ -267,16 +267,12 @@
                                             >
                                                 <span
                                                     v-if="!isExpanded(task.id)"
-                                                >
-                                                    <i
-                                                        class="fas fa-chevron-right"
-                                                    ></i>
-                                                </span>
-                                                <span v-else>
-                                                    <i
-                                                        class="fas fa-chevron-down"
-                                                    ></i>
-                                                </span>
+                                                    class="triangle-right"
+                                                ></span>
+                                                <span
+                                                    v-else
+                                                    class="triangle-down"
+                                                ></span>
                                             </span>
 
                                             <!-- Hiển thị tên task -->
@@ -407,22 +403,13 @@
                                                 "
                                                 ><span
                                                     :style="{
-                                                        color: isDelayedStart(
-                                                            task.plan_start_date,
-                                                            task.status
-                                                        )
+                                                        color: task.delayed
                                                             ? 'red'
                                                             : 'inherit',
                                                     }"
                                                 >
                                                     {{ task.plan_start_date }}
-                                                    <span
-                                                        v-if="
-                                                            isDelayedStart(
-                                                                task.plan_start_date,
-                                                                task.status
-                                                            )
-                                                        "
+                                                    <span v-if="task.delayed"
                                                         >🔥</span
                                                     >
                                                 </span></span
@@ -474,22 +461,13 @@
                                             >
                                                 <span
                                                     :style="{
-                                                        color: isOverdue(
-                                                            task.plan_end_date,
-                                                            task.status
-                                                        )
+                                                        color: task.overdue
                                                             ? 'red'
                                                             : 'inherit',
                                                     }"
                                                 >
                                                     {{ task.plan_end_date }}
-                                                    <span
-                                                        v-if="
-                                                            isOverdue(
-                                                                task.plan_end_date,
-                                                                task.status
-                                                            )
-                                                        "
+                                                    <span v-if="task.overdue"
                                                         >🔥</span
                                                     >
                                                 </span>
@@ -660,10 +638,7 @@
                                                     ? task.actual_effort
                                                     : ""
                                             }}<i
-                                                v-if="
-                                                    Number(task.actual_effort) >
-                                                    Number(task.plan_effort)
-                                                "
+                                                v-if="task.overcost"
                                                 class="fas fa-exclamation-triangle text-danger ml-2"
                                                 title="Actual effort exceeds plan effort"
                                             ></i>
@@ -1303,27 +1278,6 @@ const updateTask = async (task) => {
     }
 };
 
-const isOverdue = (planEndDate, status) => {
-    if (!planEndDate || !status) return false;
-
-    const overdueStatuses = [
-        TASK_STATUS.OPEN,
-        TASK_STATUS.IN_PROGRESS,
-        TASK_STATUS.FEEDBACK,
-        TASK_STATUS.REOPEN,
-    ];
-    const today = new Date().toISOString().split("T")[0];
-
-    return overdueStatuses.includes(status) && today > planEndDate;
-};
-
-const isDelayedStart = (planStartDate, status) => {
-    if (!planStartDate) return false;
-    const today = new Date().toISOString().split("T")[0];
-
-    return status === TASK_STATUS.OPEN && today > planStartDate;
-};
-
 const cancelEdit = (task) => {
     // Hủy Select2 trước khi cập nhật DOM
     destroySelect2();
@@ -1643,5 +1597,37 @@ table tbody tr:hover {
     100% {
         transform: rotate(360deg);
     }
+}
+
+.triangle-right,
+.triangle-down {
+    margin-left: 5px;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.triangle-right {
+    border-width: 6px 0 6px 10px;
+    border-color: transparent transparent transparent #3498db; /* Màu xanh dương */
+}
+
+.triangle-down {
+    border-width: 10px 6px 0 6px;
+    border-color: #e74c3c transparent transparent transparent; /* Màu đỏ */
+}
+
+/* Hover: Phóng to + đổi màu */
+.triangle-right:hover {
+    transform: scale(1.3);
+    border-color: transparent transparent transparent #1abc9c; /* Màu xanh ngọc */
+}
+
+.triangle-down:hover {
+    transform: scale(1.3);
+    border-color: #f39c12 transparent transparent transparent; /* Màu cam */
 }
 </style>

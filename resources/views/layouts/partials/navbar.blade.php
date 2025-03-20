@@ -11,6 +11,9 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('my-worklog') }}" class="nav-link">My Worklog</a>
         </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ route('leave-request') }}" class="nav-link">Leave Requests</a>
+        </li>
         
     </ul>
 
