@@ -15,6 +15,19 @@
 @section('content')
     <!-- Small boxes (Stat box) -->
     <div class="row">
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ $user_count }}</h3>
+                    <p>Number of Employees</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-info">
@@ -30,23 +43,10 @@
         <!-- ./col -->
         <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>{{ $user_count }}</h3>
-                    <p>Number of Employees</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
-                </div>
-            </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
-            <!-- small box -->
             <div class="small-box bg-warning">
                 <div class="inner">
                     <h3>{{ $task_done_count }}</h3>
-                    <p>Completed Tasks</p>
+                    <p>Your Completed Tasks</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>

@@ -81,7 +81,6 @@
                             ref="assigneeSelect"
                             class="form-control select2"
                             data-placeholder="Select Assignee"
-                            style="width: 80%"
                             v-model="filtersQuery.assignee"
                         >
                             <option value="" selected disabled></option>
@@ -98,18 +97,6 @@
                                 >
                             </option>
                         </select>
-                    </div>
-                    <!-- Icon "Me" nằm trong form-group -->
-                    <div
-                        class="position-absolute assignee-icon"
-                        @click="setToCurrentUser"
-                        :class="{
-                            active:
-                                filtersQuery.assignee === currentUserAccount,
-                        }"
-                        title="Assign to Me"
-                    >
-                        🙋‍♂️
                     </div>
                 </div>
 
@@ -139,7 +126,7 @@
                 </div>
 
                 <div class="col-4">
-                    <div class="form-group">
+                    <div class="form-group" style="display: none">
                         <label>Select Display Column</label>
                         <select
                             id="selectDisplayColumns"
@@ -405,6 +392,22 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-2">
+                    <button
+                        @click="setToCurrentUser"
+                        :class="{
+                            'btn btn-primary active':
+                                filtersQuery.assignee === currentUserAccount,
+                            'btn btn-outline-primary':
+                                filtersQuery.assignee !== currentUserAccount,
+                        }"
+                        title="Assign to Me"
+                    >
+                        🙋‍♂️ Assign to Me
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -599,27 +602,5 @@ const setToCurrentUser = () => {
     position: relative;
     pointer-events: none; /* Chặn tất cả thao tác */
     opacity: 0.6; /* Làm mờ nội dung */
-}
-
-.assignee-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #ccc;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    right: 20px; /* Điều chỉnh khoảng cách với select */
-    top: 35%;
-    transform: translateY(-50%);
-    z-index: 10; /* Đảm bảo icon không bị che khuất */
-}
-
-.assignee-icon.active {
-    background-color: #007bff; /* Khi được chọn */
 }
 </style>
