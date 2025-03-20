@@ -37,6 +37,8 @@ class ProjectService
 
     public function calculateProjectMetrics($project_id, $date)
     {
+        $excluded_statuses = [TaskStatus::PENDING, TaskStatus::CANCELED];
+
         // Hàm chuyển đổi đơn vị
         $convertToMD = fn($hours) => round($hours / 8, 2);
         $convertToMM = fn($hours) => round($hours / 176, 2);
@@ -48,15 +50,18 @@ class ProjectService
         // Các chỉ số khác chỉ cần đơn vị Hours
         $planned_value = Task::where('project_id', $project_id)
             ->where('plan_end_date', '<=', $date)
+            ->whereNotIn('status', $excluded_statuses)
             ->sum('plan_effort');
 
         $actual_cost = Task::where('project_id', $project_id)
             ->where('actual_end_date', '<=', $date)
+            ->whereNotIn('status', $excluded_statuses)
             ->sum('actual_effort');
 
         $earned_value = Task::where('project_id', $project_id)
             ->where('status', TaskStatus::DONE)
             ->where('actual_end_date', '<=', $date)
+            ->whereNotIn('status', $excluded_statuses)
             ->sum('plan_effort');
 
         $spi = ($planned_value > 0) ? round($earned_value / $planned_value, 2) : 0;

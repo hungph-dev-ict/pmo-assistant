@@ -72,7 +72,13 @@ class TaskService
         // Log::debug("Generated SQL: " . $query->toSql());
         // Log::debug("Bindings: ", $query->getBindings());
 
-        $task_list = $query->get();
+        $task_list = $query->get()->map(function ($task) {
+            $task->overdue = !is_null($task->plan_end_date) && $task->plan_end_date < now() && !in_array($task->status, [4, 7]);
+            $task->delayed = !is_null($task->plan_start_date) && $task->plan_start_date < now()->subDays(1) && $task->status == 0;
+            $task->overcost = floatval($task->actual_effort) > floatval($task->plan_effort);
+        
+            return $task;
+        });
 
         // Lấy danh sách assignee duy nhất từ danh sách task
         $assignees = $task_list->pluck('assignee:id,account')->filter()->unique('id')->values();
