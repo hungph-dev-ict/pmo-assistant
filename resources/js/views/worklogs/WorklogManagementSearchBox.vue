@@ -50,7 +50,7 @@
                 <!-- Tìm kiếm theo Plan Start Date -->
                 <div class="col-6">
                     <div class="form-group">
-                        <label>Filter Logged Date:</label>
+                        <label>Filter Worklog Date:</label>
                         <div class="d-flex align-items-center">
                             <!-- Plan Start Date (From) -->
                             <div
@@ -106,6 +106,65 @@
                     </div>
                 </div>
 
+                <!-- Filter by Logged Datetime -->
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Filter Logged Datetime:</label>
+                        <div class="d-flex align-items-center">
+                            <!-- Logged Datetime From -->
+                            <div
+                                class="input-group date mr-2"
+                                id="loggedDatetimePickerFrom"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="loggedDatetimeFrom"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#loggedDatetimePickerFrom"
+                                    placeholder="From"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#loggedDatetimePickerFrom"
+                                    data-toggle="datetimepicker"
+                                >
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dấu "-" -->
+                            <span class="mx-2">-</span>
+
+                            <!-- Logged Datetime To -->
+                            <div
+                                class="input-group date ml-2"
+                                id="loggedDatetimePickerTo"
+                                data-target-input="nearest"
+                            >
+                                <input
+                                    type="text"
+                                    id="loggedDatetimeTo"
+                                    class="form-control datetimepicker-input"
+                                    data-target="#loggedDatetimePickerTo"
+                                    placeholder="To"
+                                />
+                                <div
+                                    class="input-group-append"
+                                    data-target="#loggedDatetimePickerTo"
+                                    data-toggle="datetimepicker"
+                                >
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-sm-6">
                     <!-- Select multiple-->
                     <div class="form-group">
@@ -123,8 +182,9 @@
                             <option value="plan-effort">Plan Effort</option>
                             <option value="actual-effort">Actual Effort</option>
                             <option value="logged-user">Logged User</option>
-                            <option value="logged-date">Logged Date</option>
-                            <option value="logged-time">Logged Time</option>
+                            <option value="logged-date">Worklog Date</option>
+                            <option value="logged-time">Worklog Time</option>
+                            <option value="created-at">Logged Datetime</option>
                             <option value="description">Description</option>
                             <!-- <option value="action">Action</option> -->
                         </select>
@@ -140,21 +200,22 @@ import { ref, computed, onMounted, nextTick } from "vue";
 import moment from "moment";
 
 const searchQuery = ref("");
-
-const logDateFrom = ref(""); // Lọc từ ngày bắt đầu
-const logDateTo = ref(""); // Lọc đến ngày bắt đầu
+const logDateFrom = ref("");
+const logDateTo = ref("");
+const loggedDatetimeFrom = ref("");
+const loggedDatetimeTo = ref("");
 
 onMounted(() => {
     nextTick(() => {
         if (window.jQuery && $.fn.select2 && $.fn.datetimepicker) {
-            // Set default date range (last 30 days)
+            // Set default date range (last 7 days) for logged datetime only
             const today = moment();
-            const thirtyDaysAgo = moment().subtract(30, 'days');
+            const sevenDaysAgo = moment().subtract(7, 'days');
             
             const formattedToday = today.format('YYYY-MM-DD');
-            const formattedThirtyDaysAgo = thirtyDaysAgo.format('YYYY-MM-DD');
+            const formattedSevenDaysAgo = sevenDaysAgo.format('YYYY-MM-DD');
 
-            // Initialize date pickers
+            // Initialize date pickers for Logged Date (without default date)
             $("#logDatePickerFrom").datetimepicker({
                 format: "YYYY-MM-DD",
                 buttons: {
@@ -167,8 +228,7 @@ onMounted(() => {
                     clear: "fa fa-trash",
                     close: "fa fa-times",
                 },
-                useCurrent: false,
-                defaultDate: thirtyDaysAgo
+                useCurrent: false
             });
 
             $("#logDatePickerTo").datetimepicker({
@@ -183,25 +243,61 @@ onMounted(() => {
                     clear: "fa fa-trash",
                     close: "fa fa-times",
                 },
+                useCurrent: false
+            });
+
+            // Initialize datetime pickers for Logged Datetime
+            $("#loggedDatetimePickerFrom").datetimepicker({
+                format: "YYYY-MM-DD HH:mm:ss",
+                buttons: {
+                    showToday: true,
+                    showClear: true,
+                    showClose: true,
+                },
+                icons: {
+                    today: "fa fa-calendar-day",
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
+                useCurrent: false,
+                defaultDate: sevenDaysAgo
+            });
+
+            $("#loggedDatetimePickerTo").datetimepicker({
+                format: "YYYY-MM-DD HH:mm:ss",
+                buttons: {
+                    showToday: true,
+                    showClear: true,
+                    showClose: true,
+                },
+                icons: {
+                    today: "fa fa-calendar-day",
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
                 useCurrent: false,
                 defaultDate: today
             });
 
-            // Set input values
-            $("#logDateFrom").val(formattedThirtyDaysAgo);
-            $("#logDateTo").val(formattedToday);
+            // Set input values for Logged Datetime only
+            $("#loggedDatetimeFrom").val(sevenDaysAgo.format('YYYY-MM-DD HH:mm:ss'));
+            $("#loggedDatetimeTo").val(today.format('YYYY-MM-DD HH:mm:ss'));
 
-            // Set reactive variables
-            logDateFrom.value = formattedThirtyDaysAgo;
-            logDateTo.value = formattedToday;
+            // Set reactive variables for logged datetime only
+            loggedDatetimeFrom.value = sevenDaysAgo.format('YYYY-MM-DD HH:mm:ss');
+            loggedDatetimeTo.value = today.format('YYYY-MM-DD HH:mm:ss');
 
             // Apply initial filter with default dates
             filterWorklogs();
 
-            // Event handlers for date changes
+            // Event handlers for Logged Date changes
             $("#logDatePickerFrom").on("change.datetimepicker", function (e) {
                 let newDateFrom = e.date ? e.date.format("YYYY-MM-DD") : "";
                 if (newDateFrom) {
+                    if (logDateTo.value && newDateFrom > logDateTo.value) {
+                        toastr.warning('"From" date cannot be greater than "To" date');
+                        return;
+                    }
                     logDateFrom.value = newDateFrom;
                     filterWorklogs();
                 } else {
@@ -213,10 +309,45 @@ onMounted(() => {
             $("#logDatePickerTo").on("change.datetimepicker", function (e) {
                 let newDateTo = e.date ? e.date.format("YYYY-MM-DD") : "";
                 if (newDateTo) {
+                    if (logDateFrom.value && newDateTo < logDateFrom.value) {
+                        toastr.warning('"To" date cannot be less than "From" date');
+                        return;
+                    }
                     logDateTo.value = newDateTo;
                     filterWorklogs();
                 } else {
                     logDateTo.value = "";
+                    filterWorklogs();
+                }
+            });
+
+            // Event handlers for Logged Datetime changes
+            $("#loggedDatetimePickerFrom").on("change.datetimepicker", function (e) {
+                let newDatetimeFrom = e.date ? e.date.format("YYYY-MM-DD HH:mm:ss") : "";
+                if (newDatetimeFrom) {
+                    if (loggedDatetimeTo.value && newDatetimeFrom > loggedDatetimeTo.value) {
+                        toastr.warning('"From" datetime cannot be greater than "To" datetime');
+                        return;
+                    }
+                    loggedDatetimeFrom.value = newDatetimeFrom;
+                    filterWorklogs();
+                } else {
+                    loggedDatetimeFrom.value = "";
+                    filterWorklogs();
+                }
+            });
+
+            $("#loggedDatetimePickerTo").on("change.datetimepicker", function (e) {
+                let newDatetimeTo = e.date ? e.date.format("YYYY-MM-DD HH:mm:ss") : "";
+                if (newDatetimeTo) {
+                    if (loggedDatetimeFrom.value && newDatetimeTo < loggedDatetimeFrom.value) {
+                        toastr.warning('"To" datetime cannot be less than "From" datetime');
+                        return;
+                    }
+                    loggedDatetimeTo.value = newDatetimeTo;
+                    filterWorklogs();
+                } else {
+                    loggedDatetimeTo.value = "";
                     filterWorklogs();
                 }
             });
@@ -229,6 +360,7 @@ onMounted(() => {
                 "logged-user",
                 "logged-date",
                 "logged-time",
+                "created-at",
                 "description",
             ];
             $("#selectDisplayColumns").val(defaultColumns).trigger("change");
@@ -273,6 +405,7 @@ const filterWorklogs = () => {
         );
     }
 
+    // Filter by Logged Date
     if (logDateFrom.value) {
         filtered = filtered.filter(
             (worklog) => worklog.log_date >= logDateFrom.value
@@ -285,10 +418,25 @@ const filterWorklogs = () => {
         );
     }
 
+    // Filter by Logged Datetime
+    if (loggedDatetimeFrom.value) {
+        filtered = filtered.filter(
+            (worklog) => moment(worklog.created_at).format('YYYY-MM-DD HH:mm:ss') >= loggedDatetimeFrom.value
+        );
+    }
+
+    if (loggedDatetimeTo.value) {
+        filtered = filtered.filter(
+            (worklog) => moment(worklog.created_at).format('YYYY-MM-DD HH:mm:ss') <= loggedDatetimeTo.value
+        );
+    }
+
     if (
         searchQuery.value === "" &&
         logDateFrom.value === "" &&
-        logDateTo.value === ""
+        logDateTo.value === "" &&
+        loggedDatetimeFrom.value === "" &&
+        loggedDatetimeTo.value === ""
     ) {
         emit("blankQuery", true);
     } else {
