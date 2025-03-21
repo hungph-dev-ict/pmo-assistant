@@ -135,64 +135,86 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from "vue";
+import moment from "moment";
 
 const searchQuery = ref("");
 
-const planStartDateFrom = ref(""); // Lọc từ ngày bắt đầu
-const planStartDateTo = ref(""); // Lọc đến ngày bắt đầu
+const logDateFrom = ref(""); // Lọc từ ngày bắt đầu
+const logDateTo = ref(""); // Lọc đến ngày bắt đầu
 
 onMounted(() => {
     nextTick(() => {
         if (window.jQuery && $.fn.select2 && $.fn.datetimepicker) {
+            // Set default date range (last 30 days)
+            const today = moment();
+            const thirtyDaysAgo = moment().subtract(30, 'days');
+            
+            const formattedToday = today.format('YYYY-MM-DD');
+            const formattedThirtyDaysAgo = thirtyDaysAgo.format('YYYY-MM-DD');
+
+            // Initialize date pickers
             $("#logDatePickerFrom").datetimepicker({
                 format: "YYYY-MM-DD",
                 buttons: {
-                    showToday: true, // Hiển thị nút "Today"
-                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
-                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                    showToday: true,
+                    showClear: true,
+                    showClose: true,
                 },
                 icons: {
-                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    today: "fa fa-calendar-day",
                     clear: "fa fa-trash",
                     close: "fa fa-times",
                 },
+                useCurrent: false,
+                defaultDate: thirtyDaysAgo
             });
+
+            $("#logDatePickerTo").datetimepicker({
+                format: "YYYY-MM-DD",
+                buttons: {
+                    showToday: true,
+                    showClear: true,
+                    showClose: true,
+                },
+                icons: {
+                    today: "fa fa-calendar-day",
+                    clear: "fa fa-trash",
+                    close: "fa fa-times",
+                },
+                useCurrent: false,
+                defaultDate: today
+            });
+
+            // Set input values
+            $("#logDateFrom").val(formattedThirtyDaysAgo);
+            $("#logDateTo").val(formattedToday);
+
+            // Set reactive variables
+            logDateFrom.value = formattedThirtyDaysAgo;
+            logDateTo.value = formattedToday;
+
+            // Apply initial filter with default dates
+            filterWorklogs();
+
+            // Event handlers for date changes
             $("#logDatePickerFrom").on("change.datetimepicker", function (e) {
-                let newPlanStartDateFrom = e.date
-                    ? e.date.format("YYYY-MM-DD")
-                    : "";
-                if (newPlanStartDateFrom) {
-                    planStartDateFrom.value = newPlanStartDateFrom;
+                let newDateFrom = e.date ? e.date.format("YYYY-MM-DD") : "";
+                if (newDateFrom) {
+                    logDateFrom.value = newDateFrom;
                     filterWorklogs();
                 } else {
-                    planStartDateFrom.value = "";
+                    logDateFrom.value = "";
                     filterWorklogs();
                 }
             });
 
-            // Date picker for Plan Start Date (To)
-            $("#logDatePickerTo").datetimepicker({
-                format: "YYYY-MM-DD",
-                buttons: {
-                    showToday: true, // Hiển thị nút "Today"
-                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
-                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
-                },
-                icons: {
-                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
-                    clear: "fa fa-trash",
-                    close: "fa fa-times",
-                },
-            });
             $("#logDatePickerTo").on("change.datetimepicker", function (e) {
-                let newPlanStartDateTo = e.date
-                    ? e.date.format("YYYY-MM-DD")
-                    : "";
-                if (newPlanStartDateTo) {
-                    planStartDateTo.value = newPlanStartDateTo;
+                let newDateTo = e.date ? e.date.format("YYYY-MM-DD") : "";
+                if (newDateTo) {
+                    logDateTo.value = newDateTo;
                     filterWorklogs();
                 } else {
-                    planStartDateTo.value = "";
+                    logDateTo.value = "";
                     filterWorklogs();
                 }
             });

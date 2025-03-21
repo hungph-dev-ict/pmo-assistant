@@ -1,5 +1,5 @@
 <template>
-    <div class="card card-primary">
+    <div class="card card-primary collapsed-card">
         <div class="card-header">
             <h3 class="card-title">Search Box</h3>
             <div class="card-tools">
@@ -9,7 +9,7 @@
                     data-card-widget="collapse"
                     title="Collapse"
                 >
-                    <i class="fas fa-minus"></i>
+                    <i class="fas fa-plus"></i>
                 </button>
             </div>
         </div>
@@ -17,7 +17,6 @@
         <div
             class="card-body"
             :class="{ 'disabled-overlay': props.taskListEditing }"
-            style="max-height: 20vh; overflow-y: auto"
         >
             <div class="row">
                 <!-- Tìm kiếm chung -->

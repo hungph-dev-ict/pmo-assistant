@@ -581,14 +581,13 @@ const initPlugins = (editTask) => {
         $("#selectAssignee")
             .select2()
             .on("select2:open", () => {
-                setTimeout(() => {
-                    let searchField = $(
-                        ".select2-container--open .select2-search__field"
-                    );
-                    if (searchField.length > 0) {
-                        searchField[0].focus();
-                    }
-                }, 50);
+                setTimeout(
+                    () =>
+                        $(
+                            ".select2-container--open .select2-search__field"
+                        )[0]?.focus(),
+                    50
+                );
             })
             .on("change", function (e) {
                 editTask.assignee = $(this).val();
@@ -597,14 +596,13 @@ const initPlugins = (editTask) => {
         $("#selectPriority")
             .select2()
             .on("select2:open", () => {
-                setTimeout(() => {
-                    let searchField = $(
-                        ".select2-container--open .select2-search__field"
-                    );
-                    if (searchField.length > 0) {
-                        searchField[0].focus();
-                    }
-                }, 50);
+                setTimeout(
+                    () =>
+                        $(
+                            ".select2-container--open .select2-search__field"
+                        )[0]?.focus(),
+                    50
+                );
             })
             .on("change", function (e) {
                 editTask.priority = $(this).val();
@@ -613,14 +611,13 @@ const initPlugins = (editTask) => {
         $("#selectStatus")
             .select2()
             .on("select2:open", () => {
-                setTimeout(() => {
-                    let searchField = $(
-                        ".select2-container--open .select2-search__field"
-                    );
-                    if (searchField.length > 0) {
-                        searchField[0].focus();
-                    }
-                }, 50);
+                setTimeout(
+                    () =>
+                        $(
+                            ".select2-container--open .select2-search__field"
+                        )[0]?.focus(),
+                    50
+                );
             })
             .on("change", function (e) {
                 editTask.status = $(this).val();

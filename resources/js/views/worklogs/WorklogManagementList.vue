@@ -72,27 +72,29 @@
                     >
                         <tr class="bg-light">
                             <td v-if="isColumnVisible('project-name')">
-                                {{ worklog.task.project.name }}
+                                {{ worklog.task?.project?.name || 'N/A' }}
                             </td>
                             <td v-if="isColumnVisible('epic_task')">
                                 <a
+                                    v-if="worklog.task?.project?.id && worklog.task?.id"
                                     :href="`/${worklog.task.project.id}/task/${worklog.task.id}`"
                                     class="text-blue-500 hover:underline"
                                 >
-                                    {{ worklog.task.name }}
+                                    {{ worklog.task?.name || 'N/A' }}
                                 </a>
+                                <span v-else>{{ worklog.task?.name || 'N/A' }}</span>
                             </td>
                             <td v-if="isColumnVisible('assignee')">
-                                {{ worklog.task?.assignee_user?.account }}
+                                {{ worklog.task?.assignee_user?.account || 'N/A' }}
                             </td>
                             <td v-if="isColumnVisible('plan-effort')">
-                                {{ worklog.task.plan_effort }}
+                                {{ worklog.task?.plan_effort || 'N/A' }}
                             </td>
                             <td v-if="isColumnVisible('actual-effort')">
-                                {{ worklog.task.actual_effort }}
+                                {{ worklog.task?.actual_effort || 'N/A' }}
                             </td>
                             <td v-if="isColumnVisible('logged-user')">
-                                {{ worklog.user?.account }}
+                                {{ worklog.user?.account || 'N/A' }}
                             </td>
                             <td v-if="isColumnVisible('logged-date')">
                                 <span v-if="!worklog.isEditing">{{
@@ -258,12 +260,12 @@ const initPlugins = (worklog) => {
         $(".log-date-datepicker").datetimepicker({
             format: "YYYY-MM-DD",
             buttons: {
-                showToday: true, // Hiển thị nút "Today"
-                showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
-                showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                showToday: true,
+                showClear: true,
+                showClose: true,
             },
             icons: {
-                today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                today: "fa fa-calendar-day",
                 clear: "fa fa-trash",
                 close: "fa fa-times",
             },

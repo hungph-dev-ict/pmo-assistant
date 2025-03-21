@@ -66,25 +66,27 @@
                     >
                         <tr class="bg-light">
                             <td v-if="isColumnVisible('project-name')">
-                                {{ worklog.task.project.name }}
+                                {{ worklog.task?.project?.name || 'N/A' }}
                             </td>
                             <td v-if="isColumnVisible('epic_task')">
                                 <a
+                                    v-if="worklog.task?.project?.id && worklog.task?.id"
                                     :href="`/${worklog.task.project.id}/task/${worklog.task.id}`"
                                     class="text-blue-500 hover:underline"
                                 >
-                                    {{ worklog.task.name }}
+                                    {{ worklog.task?.name || 'N/A' }}
                                 </a>
+                                <span v-else>{{ worklog.task?.name || 'N/A' }}</span>
                             </td>
                             <td v-if="isColumnVisible('plan-effort')">
-                                {{ worklog.task.plan_effort }}
+                                {{ worklog.task?.plan_effort || 'N/A' }}
                             </td>
                             <td v-if="isColumnVisible('actual-effort')">
-                                {{ worklog.task.actual_effort }}
+                                {{ worklog.task?.actual_effort || 'N/A' }}
                             </td>
                             <td v-if="isColumnVisible('logged-date')">
                                 <span v-if="!worklog.isEditing">{{
-                                    worklog.log_date
+                                    worklog.log_date || 'N/A'
                                 }}</span>
                                 <div
                                     v-else
@@ -110,7 +112,7 @@
                             </td>
                             <td v-if="isColumnVisible('logged-time')">
                                 <span v-if="!worklog.isEditing">{{
-                                    worklog.log_time
+                                    worklog.log_time || 'N/A'
                                 }}</span>
                                 <input
                                     v-else
@@ -121,7 +123,7 @@
                             </td>
                             <td v-if="isColumnVisible('description')">
                                 <span v-if="!worklog.isEditing">{{
-                                    worklog.description
+                                    worklog.description || 'N/A'
                                 }}</span>
                                 <textarea
                                     v-else

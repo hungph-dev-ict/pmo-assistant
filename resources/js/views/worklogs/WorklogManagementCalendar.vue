@@ -185,6 +185,7 @@
 <script setup>
 import { computed, ref, onMounted, nextTick } from "vue";
 import Swal from "sweetalert2";
+import moment from "moment";
 
 const props = defineProps({
     worklogs: Array,
@@ -213,60 +214,77 @@ const filteredWorklogs = ref([]);
 onMounted(() => {
     nextTick(() => {
         if (window.jQuery && $.fn.select2 && $.fn.datetimepicker) {
+            // Set default date range (last 30 days)
+            const today = moment();
+            const thirtyDaysAgo = moment().subtract(30, 'days');
+            
+            const formattedToday = today.format('YYYY-MM-DD');
+            const formattedThirtyDaysAgo = thirtyDaysAgo.format('YYYY-MM-DD');
+
+            // Initialize date pickers
             $("#filterLogDatePickerFrom").datetimepicker({
                 format: "YYYY-MM-DD",
                 buttons: {
-                    showToday: true, // Hiển thị nút "Today"
-                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
-                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                    showToday: true,
+                    showClear: true,
+                    showClose: true,
                 },
                 icons: {
-                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    today: "fa fa-calendar-day",
                     clear: "fa fa-trash",
                     close: "fa fa-times",
                 },
+                useCurrent: false,
+                defaultDate: thirtyDaysAgo
             });
-            $("#filterLogDatePickerFrom").on(
-                "change.datetimepicker",
-                function (e) {
-                    let newPlanStartDateFrom = e.date
-                        ? e.date.format("YYYY-MM-DD")
-                        : "";
-                    if (newPlanStartDateFrom) {
-                        tempFromDate.value = newPlanStartDateFrom;
-                    } else {
-                        tempFromDate.value = "";
-                    }
-                }
-            );
 
-            // Date picker for Plan Start Date (To)
             $("#filterLogDatePickerTo").datetimepicker({
                 format: "YYYY-MM-DD",
                 buttons: {
-                    showToday: true, // Hiển thị nút "Today"
-                    showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
-                    showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                    showToday: true,
+                    showClear: true,
+                    showClose: true,
                 },
                 icons: {
-                    today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                    today: "fa fa-calendar-day",
                     clear: "fa fa-trash",
                     close: "fa fa-times",
                 },
+                useCurrent: false,
+                defaultDate: today
             });
-            $("#filterLogDatePickerTo").on(
-                "change.datetimepicker",
-                function (e) {
-                    let newPlanStartDateTo = e.date
-                        ? e.date.format("YYYY-MM-DD")
-                        : "";
-                    if (newPlanStartDateTo) {
-                        tempToDate.value = newPlanStartDateTo;
-                    } else {
-                        tempToDate.value = "";
-                    }
+
+            // Set input values
+            $("#filterLogDateFrom").val(formattedThirtyDaysAgo);
+            $("#filterLogDateTo").val(formattedToday);
+
+            // Set reactive variables
+            tempFromDate.value = formattedThirtyDaysAgo;
+            tempToDate.value = formattedToday;
+            fromDate.value = formattedThirtyDaysAgo;
+            toDate.value = formattedToday;
+
+            // Apply initial filter with default dates
+            applyFilter();
+
+            // Event handlers for date changes
+            $("#filterLogDatePickerFrom").on("change.datetimepicker", function (e) {
+                let newDateFrom = e.date ? e.date.format("YYYY-MM-DD") : "";
+                if (newDateFrom) {
+                    tempFromDate.value = newDateFrom;
+                } else {
+                    tempFromDate.value = "";
                 }
-            );
+            });
+
+            $("#filterLogDatePickerTo").on("change.datetimepicker", function (e) {
+                let newDateTo = e.date ? e.date.format("YYYY-MM-DD") : "";
+                if (newDateTo) {
+                    tempToDate.value = newDateTo;
+                } else {
+                    tempToDate.value = "";
+                }
+            });
         }
 
         // Cuộn xuống ngày cuối cùng sau khi render xong
@@ -364,9 +382,6 @@ const getUserAccount = (userId) => {
 const getDayOnly = (dateString) => {
     return new Date(dateString).getDate();
 };
-
-// Áp dụng bộ lọc ngay lần đầu tiên khi component mount
-applyFilter();
 
 const getCellClass = (value, date) => {
     const numValue = parseFloat(value);
