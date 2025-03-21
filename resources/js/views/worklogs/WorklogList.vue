@@ -16,7 +16,7 @@
                         </th>
                         <th
                             v-if="isColumnVisible('epic_task')"
-                            style="width: 37%"
+                            style="width: 27%"
                         >
                             Epic/Task
                         </th>
@@ -46,7 +46,7 @@
                         </th>
                         <th
                             v-if="isColumnVisible('description')"
-                            style="width: 13%"
+                            style="width: 23%"
                         >
                             Description
                         </th>
@@ -66,7 +66,14 @@
                     >
                         <tr class="bg-light">
                             <td v-if="isColumnVisible('project-name')">
-                                {{ worklog.task?.project?.name || 'N/A' }}
+                                <a
+                                    v-if="worklog.task?.project?.id"
+                                    :href="`/pm/${worklog.task.project.id}/task`"
+                                    class="text-blue-500 hover:underline"
+                                >
+                                    {{ worklog.task?.project?.name || 'N/A' }}
+                                </a>
+                                <span v-else>{{ worklog.task?.project?.name || 'N/A' }}</span>
                             </td>
                             <td v-if="isColumnVisible('epic_task')">
                                 <a
@@ -180,50 +187,24 @@
 </template>
 
 <script setup>
-import { computed, ref, nextTick, onMounted } from "vue";
+import { computed, ref, nextTick } from "vue";
 import Swal from "sweetalert2";
 
 const props = defineProps({
-    projectId: String,
     filteredWorklogs: Array,
     blankQuery: Boolean,
     visibleColumns: Array,
-    listAssignee: Array,
-    currentUserId: Number,
 });
 
-// Tạo danh sách task dưới dạng ref để có thể cập nhật giá trị
-const worklogs = ref([]);
-
-const selectedTask = ref(null);
 const globalIsEditting = ref(false);
-const logDate = ref("");
-const logTime = ref("");
-const logDescription = ref("");
-
-onMounted(() => {
-    worklogs.value = props.filteredWorklogs.map((worklog) => ({
-        ...worklog,
-        isEditing: false,
-        editedLogDate: worklog.log_date,
-        editedLogTime: worklog.log_time,
-        editedDescription: worklog.description,
-    }));
-    globalIsEditting.value = false;
-});
 
 const isBlankQuery = computed(() => props.blankQuery ?? true);
-const visibleWorklogs = computed(() => {
-    let worklogs = props.filteredWorklogs;
-    return worklogs;
-});
+const visibleWorklogs = computed(() => props.filteredWorklogs);
 
-// Kiểm tra xem cột có hiển thị không
 const isColumnVisible = (column) => {
     return props.visibleColumns.includes(column);
 };
 
-// Hàm bật chế độ edit
 const editWorklog = (worklog) => {
     if (globalIsEditting.value) {
         toastr.error(
@@ -240,98 +221,61 @@ const editWorklog = (worklog) => {
     nextTick(initPlugins(worklog));
 };
 
-// Hàm kích hoạt select2 và datetimepicker
 const initPlugins = (worklog) => {
     nextTick(() => {
-        // Khởi động lại datetimepicker cho tất cả các trường ngày tháng
         $(".log-date-datepicker").datetimepicker({
             format: "YYYY-MM-DD",
             buttons: {
-                showToday: true, // Hiển thị nút "Today"
-                showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
-                showClose: true, // (Tùy chọn) Hiển thị nút "Close"
+                showToday: true,
+                showClear: true,
+                showClose: true,
             },
             icons: {
-                today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
+                today: "fa fa-calendar-day",
                 clear: "fa fa-trash",
                 close: "fa fa-times",
             },
         });
 
         $(".log-date-datepicker").on("change.datetimepicker", function (e) {
-            let newPlanStartDate = e.date
-                ? e.date.format("YYYY-MM-DD")
-                : e.target.value
-                ? e.target.value
-                : "";
-            worklog.editedLogDate = newPlanStartDate;
+            let newDate = e.date ? e.date.format("YYYY-MM-DD") : e.target.value || "";
+            worklog.editedLogDate = newDate;
         });
     });
 };
 
-// Emit sự kiện update để thông báo lên component cha
 const emit = defineEmits(["update-worklog"]);
 
 const updateWorklog = async (worklog) => {
-    // Hủy Select2 trước khi cập nhật giao diện
-    destroySelect2();
-
-    // Tạo một object mới với dữ liệu đã chỉnh sửa
-    const updatedWorklog = {
-        ...worklog, // Giữ lại các thuộc tính cũ
-        log_date: worklog.editedLogDate,
-        log_time: worklog.editedLogTime,
-        description: worklog.editedDescription,
-        isEditing: false,
-    };
-
     try {
-        // Gọi API cập nhật dữ liệu
         const url = `/api/worklog/${worklog.id}/update`;
         await axios.put(url, {
-            log_date: updatedWorklog.log_date,
-            log_time: updatedWorklog.log_time,
-            description: updatedWorklog.description,
+            log_date: worklog.editedLogDate,
+            log_time: worklog.editedLogTime,
+            description: worklog.editedDescription,
         });
 
         toastr.success("Updated worklog successfully!");
+        worklog.isEditing = false;
+        globalIsEditting.value = false;
+        emit("update-worklog");
     } catch (error) {
-        // Lấy thông tin lỗi từ response
-        const errorMessage =
-            error.response?.data?.message || "Failed to create task!";
+        const errorMessage = error.response?.data?.message || "Failed to update worklog!";
         const errorDetail = error.response?.data?.error || "Unknown error";
-
-        // Hiển thị toastr lỗi với cả message và error detail
         toastr.error(`${errorMessage}: ${errorDetail}`);
     }
-    worklog.isEditing = false;
-    globalIsEditting.value = false;
-    // Emit để component cha xử lý
-    emit("update-worklog");
 };
 
 const cancelEdit = (worklog) => {
-    // Hủy Select2 trước khi cập nhật DOM
-    destroySelect2();
-
-    Object.assign(worklog, worklog.originalData); // Khôi phục dữ liệu gốc
+    Object.assign(worklog, worklog.originalData);
     worklog.isEditing = false;
     globalIsEditting.value = false;
 };
 
-const destroySelect2 = () => {
-    $(".assignee-select").select2("destroy");
-    $(".priority-select").select2("destroy");
-    $(".status-select").select2("destroy");
-};
-
 const confirmDelete = async (worklog) => {
-    let warningMessage = "Bạn có chắc chắn muốn xoá worklog này?";
-    let textMessage = "Thao tác này không thể hoàn tác.";
-
     const result = await Swal.fire({
-        title: warningMessage,
-        text: textMessage,
+        title: "Bạn có chắc chắn muốn xoá worklog này?",
+        text: "Thao tác này không thể hoàn tác.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -347,18 +291,13 @@ const confirmDelete = async (worklog) => {
 
 const softDelete = async (worklogId) => {
     try {
-        const url = `/api/worklog/${worklogId}/destroy`; // API xoá mềm
+        const url = `/api/worklog/${worklogId}/destroy`;
         await axios.delete(url);
         toastr.success("Worklog deleted successfully!");
-        // Emit để component cha xử lý
         emit("update-worklog");
     } catch (error) {
-        // Lấy thông tin lỗi từ response
-        const errorMessage =
-            error.response?.data?.message || "Failed to create worklog!";
+        const errorMessage = error.response?.data?.message || "Failed to delete worklog!";
         const errorDetail = error.response?.data?.error || "Unknown error";
-
-        // Hiển thị toastr lỗi với cả message và error detail
         toastr.error(`${errorMessage}: ${errorDetail}`);
     }
 };

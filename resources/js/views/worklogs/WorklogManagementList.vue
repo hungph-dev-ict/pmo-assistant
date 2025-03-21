@@ -26,7 +26,7 @@
                         </th>
                         <th
                             v-if="isColumnVisible('epic_task')"
-                            style="width: 32%"
+                            style="width: 22%"
                         >
                             Epic/Task
                         </th>
@@ -58,17 +58,23 @@
                             v-if="isColumnVisible('logged-date')"
                             style="width: 8%"
                         >
-                            Logged Date
+                            Worklog Date
                         </th>
                         <th
                             v-if="isColumnVisible('logged-time')"
                             style="width: 5%"
                         >
-                            Logged Time
+                            Worklog Time
+                        </th>
+                        <th
+                            v-if="isColumnVisible('created-at')"
+                            style="width: 15%"
+                        >
+                            Logged Datetime
                         </th>
                         <th
                             v-if="isColumnVisible('description')"
-                            style="width: 13%"
+                            style="width: 23%"
                         >
                             Description
                         </th>
@@ -81,7 +87,14 @@
                     >
                         <tr class="bg-light">
                             <td v-if="isColumnVisible('project-name')">
-                                {{ worklog.task?.project?.name || 'N/A' }}
+                                <a
+                                    v-if="worklog.task?.project?.id"
+                                    :href="`/pm/${worklog.task.project.id}/task`"
+                                    class="text-blue-500 hover:underline"
+                                >
+                                    {{ worklog.task?.project?.name || 'N/A' }}
+                                </a>
+                                <span v-else>{{ worklog.task?.project?.name || 'N/A' }}</span>
                             </td>
                             <td v-if="isColumnVisible('epic_task')">
                                 <a
@@ -141,6 +154,9 @@
                                     v-model="worklog.editedLogTime"
                                     class="form-control"
                                 />
+                            </td>
+                            <td v-if="isColumnVisible('created-at')">
+                                {{ worklog.created_at ? moment(worklog.created_at).format('YYYY-MM-DD HH:mm:ss') : 'N/A' }}
                             </td>
                             <td v-if="isColumnVisible('description')">
                                 <span v-if="!worklog.isEditing">{{
@@ -204,6 +220,7 @@
 import { computed, ref, nextTick, onMounted } from "vue";
 import Swal from "sweetalert2";
 import * as XLSX from 'xlsx';
+import moment from 'moment';
 
 const props = defineProps({
     projectId: String,
@@ -388,67 +405,96 @@ const softDelete = async (worklogId) => {
 
 // Function to export table to Excel
 const exportToExcel = () => {
-    // Create workbook
-    const wb = XLSX.utils.book_new();
-    
-    // Prepare data for export
-    const exportData = visibleWorklogs.value.map(worklog => {
-        const row = {};
-        
-        if (isColumnVisible('project-name')) {
-            row['Project'] = worklog.task?.project?.name || 'N/A';
+    try {
+        // Check if there's data to export
+        if (!props.filteredWorklogs || props.filteredWorklogs.length === 0) {
+            toastr.warning('No data available to export');
+            return;
         }
-        if (isColumnVisible('epic_task')) {
-            row['Epic/Task'] = worklog.task?.name || 'N/A';
-        }
-        if (isColumnVisible('assignee')) {
-            row['Assignee'] = worklog.task?.assignee_user?.account || 'N/A';
-        }
-        if (isColumnVisible('plan-effort')) {
-            row['Plan Effort'] = worklog.task?.plan_effort || 'N/A';
-        }
-        if (isColumnVisible('actual-effort')) {
-            row['Actual Effort'] = worklog.task?.actual_effort || 'N/A';
-        }
-        if (isColumnVisible('logged-user')) {
-            row['Logged User'] = worklog.user?.account || 'N/A';
-        }
-        if (isColumnVisible('logged-date')) {
-            row['Logged Date'] = worklog.log_date || 'N/A';
-        }
-        if (isColumnVisible('logged-time')) {
-            row['Logged Time'] = worklog.log_time || 'N/A';
-        }
-        if (isColumnVisible('description')) {
-            row['Description'] = worklog.description || 'N/A';
-        }
-        
-        return row;
-    });
 
-    // Create worksheet
-    const ws = XLSX.utils.json_to_sheet(exportData);
-    
-    // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(wb, ws, "Worklogs");
-    
-    // Generate Excel file
-    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    
-    // Create download link
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `worklogs_${new Date().toISOString().split('T')[0]}.xlsx`);
-    
-    // Trigger download
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-    
-    // Show success message
-    toastr.success('Worklogs exported successfully!');
+        // Create workbook
+        const wb = XLSX.utils.book_new();
+        
+        // Prepare data for export
+        const exportData = props.filteredWorklogs.map(worklog => {
+            const row = {};
+            
+            if (isColumnVisible('project-name')) {
+                row['Project'] = worklog.task?.project?.name || 'N/A';
+            }
+            if (isColumnVisible('epic_task')) {
+                row['Epic/Task'] = worklog.task?.name || 'N/A';
+            }
+            if (isColumnVisible('assignee')) {
+                row['Assignee'] = worklog.task?.assignee_user?.account || 'N/A';
+            }
+            if (isColumnVisible('plan-effort')) {
+                row['Plan Effort'] = worklog.task?.plan_effort || 'N/A';
+            }
+            if (isColumnVisible('actual-effort')) {
+                row['Actual Effort'] = worklog.task?.actual_effort || 'N/A';
+            }
+            if (isColumnVisible('logged-user')) {
+                row['Logged User'] = worklog.user?.account || 'N/A';
+            }
+            if (isColumnVisible('logged-date')) {
+                row['Logged Date'] = worklog.log_date || 'N/A';
+            }
+            if (isColumnVisible('logged-time')) {
+                row['Logged Time'] = worklog.log_time || 'N/A';
+            }
+            if (isColumnVisible('created-at')) {
+                row['Logged Datetime'] = worklog.created_at ? moment(worklog.created_at).format('YYYY-MM-DD HH:mm:ss') : 'N/A';
+            }
+            if (isColumnVisible('description')) {
+                row['Description'] = worklog.description || 'N/A';
+            }
+            
+            return row;
+        });
+
+        // Create worksheet
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        
+        // Set column widths
+        const colWidths = [
+            { wch: 20 }, // Project
+            { wch: 40 }, // Epic/Task
+            { wch: 15 }, // Assignee
+            { wch: 10 }, // Plan Effort
+            { wch: 10 }, // Actual Effort
+            { wch: 15 }, // Logged User
+            { wch: 12 }, // Logged Date
+            { wch: 10 }, // Logged Time
+            { wch: 15 }, // Logged Datetime
+            { wch: 50 }, // Description
+        ];
+        ws['!cols'] = colWidths;
+        
+        // Add worksheet to workbook
+        XLSX.utils.book_append_sheet(wb, ws, "Worklogs");
+        
+        // Generate Excel file
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `worklogs_${new Date().toISOString().split('T')[0]}.xlsx`);
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        // Show success message
+        toastr.success('Worklogs exported successfully!');
+    } catch (error) {
+        console.error('Error exporting to Excel:', error);
+        toastr.error('Failed to export worklogs. Please try again.');
+    }
 };
 </script>
