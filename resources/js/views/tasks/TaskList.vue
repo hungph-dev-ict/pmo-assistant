@@ -37,10 +37,7 @@
                     </ul>
                 </div>
 
-                <div
-                    class="card-body"
-                    style="max-height: 80vh; overflow-y: auto"
-                >
+                <div class="card-body">
                     <div class="tab-content">
                         <div class="tab-pane" id="history">
                             <div v-if="projectWorklogIsLoading" class="overlay">
@@ -257,26 +254,7 @@
                                         </td>
                                         <td v-if="isColumnVisible('epic_task')">
                                             <!-- Nút toggle cho Epic -->
-                                            <span
-                                                v-if="
-                                                    task.type ===
-                                                    TASK_TYPES.EPIC
-                                                "
-                                                @click="toggleTask(task.id)"
-                                                class="cursor-pointer mr-2"
-                                            >
-                                                <span
-                                                    v-if="!isExpanded(task.id)"
-                                                    class="triangle-right"
-                                                ></span>
-                                                <span
-                                                    v-else
-                                                    class="triangle-down"
-                                                ></span>
-                                            </span>
-
-                                            <!-- Hiển thị tên task -->
-                                            <a
+                                            <template
                                                 v-if="
                                                     !task.isEditing ||
                                                     (task.isEditing &&
@@ -284,10 +262,34 @@
                                                         !hasPermissionPm &&
                                                         hasPermissionStaff)
                                                 "
-                                                :href="`/${props.projectId}/task/${task.id}`"
                                             >
-                                                {{ task.name }}
-                                            </a>
+                                                <span
+                                                    v-if="
+                                                        task.type ===
+                                                        TASK_TYPES.EPIC
+                                                    "
+                                                    @click="toggleTask(task.id)"
+                                                    class="cursor-pointer mr-2"
+                                                >
+                                                    <span
+                                                        v-if="
+                                                            !isExpanded(task.id)
+                                                        "
+                                                        class="triangle-right"
+                                                    ></span>
+                                                    <span
+                                                        v-else
+                                                        class="triangle-down"
+                                                    ></span>
+                                                </span>
+
+                                                <!-- Hiển thị tên task -->
+                                                <a
+                                                    :href="`/${props.projectId}/task/${task.id}`"
+                                                >
+                                                    {{ task.name }}
+                                                </a>
+                                            </template>
 
                                             <input
                                                 v-else
@@ -738,7 +740,7 @@
                                             <template v-else>
                                                 <a
                                                     href="#"
-                                                    class="btn btn-success btn-sm mr-2"
+                                                    class="btn btn-success btn-sm ml-3 mr-2"
                                                     @click.prevent="
                                                         updateTask(task)
                                                     "
@@ -1167,11 +1169,13 @@ const initSelect2 = (selector, updateTaskField) => {
             updateTaskField($(this).val());
         })
         .on("select2:open", () => {
-            setTimeout(() => {
-                $(".select2-container--open .select2-search__field")
-                    .first()
-                    .focus();
-            }, 50);
+            setTimeout(
+                () =>
+                    $(
+                        ".select2-container--open .select2-search__field"
+                    )[0]?.focus(),
+                50
+            );
         });
 };
 
