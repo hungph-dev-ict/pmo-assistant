@@ -3,6 +3,15 @@
         <div class="card-header">
             <h3 class="card-title" v-if="isTenantRoute">List Tenant Worklog</h3>
             <h3 class="card-title" v-if="isPMRoute">List Project Worklog</h3>
+            <div class="card-tools">
+                <button
+                    type="button"
+                    class="btn btn-success btn-sm"
+                    @click="exportToExcel"
+                >
+                    <i class="fas fa-file-excel"></i> Export to Excel
+                </button>
+            </div>
         </div>
 
         <div class="card-body">
@@ -194,6 +203,7 @@
 <script setup>
 import { computed, ref, nextTick, onMounted } from "vue";
 import Swal from "sweetalert2";
+import * as XLSX from 'xlsx';
 
 const props = defineProps({
     projectId: String,
@@ -260,12 +270,12 @@ const initPlugins = (worklog) => {
         $(".log-date-datepicker").datetimepicker({
             format: "YYYY-MM-DD",
             buttons: {
-                showToday: true,
-                showClear: true,
-                showClose: true,
+                showToday: true, // Hiển thị nút "Today"
+                showClear: true, // (Tùy chọn) Hiển thị nút "Clear"
+                showClose: true, // (Tùy chọn) Hiển thị nút "Close"
             },
             icons: {
-                today: "fa fa-calendar-day",
+                today: "fa fa-calendar-day", // Sử dụng FontAwesome icon
                 clear: "fa fa-trash",
                 close: "fa fa-times",
             },
@@ -374,5 +384,71 @@ const softDelete = async (worklogId) => {
         // Hiển thị toastr lỗi với cả message và error detail
         toastr.error(`${errorMessage}: ${errorDetail}`);
     }
+};
+
+// Function to export table to Excel
+const exportToExcel = () => {
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    
+    // Prepare data for export
+    const exportData = visibleWorklogs.value.map(worklog => {
+        const row = {};
+        
+        if (isColumnVisible('project-name')) {
+            row['Project'] = worklog.task?.project?.name || 'N/A';
+        }
+        if (isColumnVisible('epic_task')) {
+            row['Epic/Task'] = worklog.task?.name || 'N/A';
+        }
+        if (isColumnVisible('assignee')) {
+            row['Assignee'] = worklog.task?.assignee_user?.account || 'N/A';
+        }
+        if (isColumnVisible('plan-effort')) {
+            row['Plan Effort'] = worklog.task?.plan_effort || 'N/A';
+        }
+        if (isColumnVisible('actual-effort')) {
+            row['Actual Effort'] = worklog.task?.actual_effort || 'N/A';
+        }
+        if (isColumnVisible('logged-user')) {
+            row['Logged User'] = worklog.user?.account || 'N/A';
+        }
+        if (isColumnVisible('logged-date')) {
+            row['Logged Date'] = worklog.log_date || 'N/A';
+        }
+        if (isColumnVisible('logged-time')) {
+            row['Logged Time'] = worklog.log_time || 'N/A';
+        }
+        if (isColumnVisible('description')) {
+            row['Description'] = worklog.description || 'N/A';
+        }
+        
+        return row;
+    });
+
+    // Create worksheet
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Worklogs");
+    
+    // Generate Excel file
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    
+    // Create download link
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `worklogs_${new Date().toISOString().split('T')[0]}.xlsx`);
+    
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    
+    // Show success message
+    toastr.success('Worklogs exported successfully!');
 };
 </script>
