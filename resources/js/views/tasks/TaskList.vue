@@ -1036,14 +1036,14 @@
                                         </table>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="col-md-6">
-                                    <!-- LINE CHART -->
+                            <!-- Line Chart -->
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="card card-info">
                                         <div class="card-header">
-                                            <h3 class="card-title">
-                                                Line Chart
-                                            </h3>
+                                            <h3 class="card-title">Performance Metrics Chart</h3>
 
                                             <div class="card-tools">
                                                 <button
@@ -1075,9 +1075,31 @@
                                                 ></canvas>
                                             </div>
                                         </div>
-                                        <!-- /.card-body -->
                                     </div>
-                                    <!-- /.card -->
+                                </div>
+                            </div>
+
+                            <!-- Burndown Chart -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Burndown Chart</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chart">
+                                                <canvas
+                                                    id="burndownChart"
+                                                    style="
+                                                        min-height: 250px;
+                                                        height: 250px;
+                                                        max-height: 250px;
+                                                        max-width: 100%;
+                                                    "
+                                                ></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1524,6 +1546,140 @@ function renderChart() {
         options: chartOptions,
     });
 }
+
+// Add burndown chart data and initialization
+const burndownChart = ref(null);
+
+const calculateBurndownData = () => {
+    if (!props.taskListData?.tasks) return null;
+
+    const tasks = props.taskListData.tasks;
+    const totalEffort = tasks.reduce((sum, task) => sum + (Number(task.plan_effort) || 0), 0);
+    
+    // Calculate ideal burndown line
+    const startDate = new Date(Math.min(...tasks.map(task => new Date(task.plan_start_date))));
+    const endDate = new Date(Math.max(...tasks.map(task => new Date(task.plan_end_date))));
+    const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+
+    const idealBurndown = [];
+    const actualBurndown = [];
+    const labels = [];
+
+    for (let i = 0; i < days; i++) {
+        const currentDate = new Date(startDate);
+        currentDate.setDate(startDate.getDate() + i);
+        labels.push(currentDate.toLocaleDateString());
+
+        // Ideal burndown
+        const idealRemaining = totalEffort * (1 - i / days);
+        idealBurndown.push(idealRemaining);
+
+        // Actual burndown
+        const actualRemaining = tasks.reduce((sum, task) => {
+            const taskDate = new Date(task.plan_start_date);
+            if (taskDate <= currentDate) {
+                if (task.status === TASK_STATUS.DONE) {
+                    return sum;
+                }
+                return sum + (Number(task.plan_effort) || 0);
+            }
+            return sum;
+        }, totalEffort);
+        actualBurndown.push(actualRemaining);
+    }
+
+    return {
+        labels,
+        idealBurndown,
+        actualBurndown,
+        totalEffort
+    };
+};
+
+const initBurndownChart = () => {
+    const ctx = document.getElementById('burndownChart');
+    if (!ctx) return;
+
+    const data = calculateBurndownData();
+    if (!data) return;
+
+    if (burndownChart.value) {
+        burndownChart.value.destroy();
+    }
+
+    burndownChart.value = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: [
+                {
+                    label: 'Ideal Burndown',
+                    data: data.idealBurndown,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                    tension: 0.1,
+                    fill: true
+                },
+                {
+                    label: 'Actual Burndown',
+                    data: data.actualBurndown,
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    tension: 0.1,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Remaining Effort (hours)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Project Burndown Chart'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} hours`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+};
+
+// Watch for changes in taskListData to update the burndown chart
+watch(() => props.taskListData, () => {
+    nextTick(() => {
+        initBurndownChart();
+    });
+}, { deep: true });
+
+// Initialize burndown chart when component is mounted
+onMounted(() => {
+    nextTick(() => {
+        initBurndownChart();
+    });
+});
 </script>
 
 <style>
