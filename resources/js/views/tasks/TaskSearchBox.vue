@@ -157,7 +157,7 @@
 
                 <!-- Tìm kiếm theo Plan Start Date -->
                 <div class="col-3">
-                    <div class="form-group" style="display: none">
+                    <div class="form-group">
                         <label>Filter Plan Start Date:</label>
                         <div class="d-flex align-items-center">
                             <!-- Plan Start Date (From) -->
@@ -172,6 +172,7 @@
                                     class="form-control datetimepicker-input"
                                     data-target="#planStartDatePickerFrom"
                                     placeholder="From"
+                                    v-model="filtersQuery.plan_start_date_from"
                                 />
                                 <div
                                     class="input-group-append"
@@ -199,6 +200,7 @@
                                     class="form-control datetimepicker-input"
                                     data-target="#planStartDatePickerTo"
                                     placeholder="To"
+                                    v-model="filtersQuery.plan_start_date_to"
                                 />
                                 <div
                                     class="input-group-append"
@@ -216,7 +218,7 @@
 
                 <!-- Tìm kiếm theo Plan End Date -->
                 <div class="col-3">
-                    <div class="form-group" style="display: none">
+                    <div class="form-group">
                         <label>Filter Plan End Date:</label>
                         <div class="d-flex align-items-center">
                             <!-- Plan End Date (From) -->
@@ -231,6 +233,7 @@
                                     class="form-control datetimepicker-input"
                                     data-target="#planEndDatePickerFrom"
                                     placeholder="From"
+                                    v-model="filtersQuery.plan_end_date_from"
                                 />
                                 <div
                                     class="input-group-append"
@@ -258,6 +261,7 @@
                                     class="form-control datetimepicker-input"
                                     data-target="#planEndDatePickerTo"
                                     placeholder="To"
+                                    v-model="filtersQuery.plan_end_date_to"
                                 />
                                 <div
                                     class="input-group-append"
@@ -275,7 +279,7 @@
 
                 <!-- Tìm kiếm theo Actual Start Date -->
                 <div class="col-3">
-                    <div class="form-group" style="display: none">
+                    <div class="form-group">
                         <label>Filter Actual Start Date:</label>
                         <div class="d-flex align-items-center">
                             <!-- Actual Start Date (From) -->
@@ -290,6 +294,7 @@
                                     class="form-control datetimepicker-input"
                                     data-target="#actualStartDatePickerFrom"
                                     placeholder="From"
+                                    v-model="filtersQuery.actual_start_date_from"
                                 />
                                 <div
                                     class="input-group-append"
@@ -317,6 +322,7 @@
                                     class="form-control datetimepicker-input"
                                     data-target="#actualStartDatePickerTo"
                                     placeholder="To"
+                                    v-model="filtersQuery.actual_start_date_to"
                                 />
                                 <div
                                     class="input-group-append"
@@ -334,7 +340,7 @@
 
                 <!-- Tìm kiếm theo Actual End Date -->
                 <div class="col-3">
-                    <div class="form-group" style="display: none">
+                    <div class="form-group">
                         <label>Filter Actual End Date:</label>
                         <div class="d-flex align-items-center">
                             <!-- Actual End Date (From) -->
@@ -349,6 +355,7 @@
                                     class="form-control datetimepicker-input"
                                     data-target="#actualEndDatePickerFrom"
                                     placeholder="From"
+                                    v-model="filtersQuery.actual_end_date_from"
                                 />
                                 <div
                                     class="input-group-append"
@@ -376,6 +383,7 @@
                                     class="form-control datetimepicker-input"
                                     data-target="#actualEndDatePickerTo"
                                     placeholder="To"
+                                    v-model="filtersQuery.actual_end_date_to"
                                 />
                                 <div
                                     class="input-group-append"
@@ -444,6 +452,14 @@ const filtersQuery = ref({
     priority: [],
     assignee: "",
     status: [],
+    plan_start_date_from: "",
+    plan_start_date_to: "",
+    plan_end_date_from: "",
+    plan_end_date_to: "",
+    actual_start_date_from: "",
+    actual_start_date_to: "",
+    actual_end_date_from: "",
+    actual_end_date_to: ""
 });
 
 // 1️⃣ Đồng bộ filters từ cha xuống con (chỉ cập nhật khi khác)
@@ -457,6 +473,14 @@ watch(
                 : [],
             assignee: newFilters.assignee || "",
             status: Array.isArray(newFilters.status) ? newFilters.status : [],
+            plan_start_date_from: newFilters.plan_start_date_from || "",
+            plan_start_date_to: newFilters.plan_start_date_to || "",
+            plan_end_date_from: newFilters.plan_end_date_from || "",
+            plan_end_date_to: newFilters.plan_end_date_to || "",
+            actual_start_date_from: newFilters.actual_start_date_from || "",
+            actual_start_date_to: newFilters.actual_start_date_to || "",
+            actual_end_date_from: newFilters.actual_end_date_from || "",
+            actual_end_date_to: newFilters.actual_end_date_to || ""
         };
     },
     { deep: true }
@@ -471,6 +495,42 @@ watch(
         }
     },
     { deep: true }
+);
+
+// Watch for changes in date filters
+watch(
+    [
+        planStartDateFrom,
+        planStartDateTo,
+        planEndDateFrom,
+        planEndDateTo,
+        actualStartDateFrom,
+        actualStartDateTo,
+        actualEndDateFrom,
+        actualEndDateTo
+    ],
+    ([
+        newPlanStartFrom,
+        newPlanStartTo,
+        newPlanEndFrom,
+        newPlanEndTo,
+        newActualStartFrom,
+        newActualStartTo,
+        newActualEndFrom,
+        newActualEndTo
+    ]) => {
+        filtersQuery.value = {
+            ...filtersQuery.value,
+            plan_start_date_from: newPlanStartFrom,
+            plan_start_date_to: newPlanStartTo,
+            plan_end_date_from: newPlanEndFrom,
+            plan_end_date_to: newPlanEndTo,
+            actual_start_date_from: newActualStartFrom,
+            actual_start_date_to: newActualStartTo,
+            actual_end_date_from: newActualEndFrom,
+            actual_end_date_to: newActualEndTo
+        };
+    }
 );
 
 const updateSearch = () => {
@@ -587,6 +647,15 @@ const emit = defineEmits([
 const resetSearchTitle = () => {
     searchText.value = "";
     filtersQuery.value.text = "";
+    // Reset all date filters
+    planStartDateFrom.value = "";
+    planStartDateTo.value = "";
+    planEndDateFrom.value = "";
+    planEndDateTo.value = "";
+    actualStartDateFrom.value = "";
+    actualStartDateTo.value = "";
+    actualEndDateFrom.value = "";
+    actualEndDateTo.value = "";
 };
 
 // Khi nhấn vào icon, gán assignee thành currentUserAccount

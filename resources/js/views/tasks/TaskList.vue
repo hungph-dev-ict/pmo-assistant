@@ -119,6 +119,17 @@
                             </div>
                         </div>
                         <div class="tab-pane active" id="list">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div class="card-tools">
+                                    <button
+                                        type="button"
+                                        class="btn btn-success btn-sm"
+                                        @click="exportToExcel"
+                                    >
+                                        <i class="fas fa-file-excel"></i> Export to Excel
+                                    </button>
+                                </div>
+                            </div>
                             <table
                                 class="table table-sm fixed-header-table table-bordered"
                                 style="margin-right: 20px"
@@ -1118,7 +1129,7 @@
 </template>
 
 <script setup>
-import { computed, ref, nextTick, onMounted, watch, reactive } from "vue";
+import { computed, ref, nextTick, onMounted, watch } from "vue";
 import Swal from "sweetalert2";
 import LogWorkModal from "../../components/LogWorkModal.vue";
 import {
@@ -1127,6 +1138,7 @@ import {
     TASK_TYPES,
     statusClass,
 } from "../../constants/taskConstants";
+import * as XLSX from 'xlsx';
 
 const props = defineProps({
     projectId: String,
@@ -1382,16 +1394,6 @@ const handleTaskUpdate = () => {
     emit("update-data");
 };
 
-// const filters = reactive({
-//     status: "0",
-//     priority: "3",
-// });
-
-// const exportTasks = () => {
-//     const params = new URLSearchParams(filters).toString();
-//     window.location.href = `/export-tasks?${params}`;
-// };
-
 import tippy from "tippy.js";
 // Directive tùy chỉnh để dùng Tippy.js
 const vTooltip = {
@@ -1557,8 +1559,12 @@ const calculateBurndownData = () => {
     const totalEffort = tasks.reduce((sum, task) => sum + (Number(task.plan_effort) || 0), 0);
     
     // Calculate ideal burndown line
-    const startDate = new Date(Math.min(...tasks.map(task => new Date(task.plan_start_date))));
-    const endDate = new Date(Math.max(...tasks.map(task => new Date(task.plan_end_date))));
+    const startDate = new Date(Math.min(...tasks
+        .filter(task => task.plan_start_date)
+        .map(task => new Date(task.plan_start_date))));
+    const endDate = new Date(Math.max(...tasks
+        .filter(task => task.plan_end_date)
+        .map(task => new Date(task.plan_end_date))));
     const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
     const idealBurndown = [];
@@ -1680,6 +1686,93 @@ onMounted(() => {
         initBurndownChart();
     });
 });
+
+// Function to export table to Excel
+const exportToExcel = () => {
+    try {
+        // Check if there's data to export
+        if (!props.taskListData?.tasks || props.taskListData.tasks.length === 0) {
+            toastr.warning('No data available to export');
+            return;
+        }
+
+        // Create workbook
+        const wb = XLSX.utils.book_new();
+        
+        // Prepare data for export
+        const exportData = props.taskListData.tasks.map(task => {
+            const row = {};
+            
+            if (isColumnVisible('epic_task')) {
+                row['Epic/Task'] = task.name || 'N/A';
+            }
+            if (isColumnVisible('priority')) {
+                row['Priority'] = task.taskPriority?.value1 || 'N/A';
+            }
+            if (isColumnVisible('assignee')) {
+                row['Assignee'] = task.assigneeUser?.account || 'N/A';
+            }
+            if (isColumnVisible('plan_start_date')) {
+                row['Plan Start Date'] = task.plan_start_date || 'N/A';
+            }
+            if (isColumnVisible('plan_end_date')) {
+                row['Plan End Date'] = task.plan_end_date || 'N/A';
+            }
+            if (isColumnVisible('plan-effort')) {
+                row['Plan Effort'] = task.plan_effort || 'N/A';
+            }
+            if (isColumnVisible('actual-effort')) {
+                row['Actual Effort'] = task.actual_effort || 'N/A';
+            }
+            if (isColumnVisible('status')) {
+                row['Status'] = task.taskStatus?.value1 || 'N/A';
+            }
+            
+            return row;
+        });
+
+        // Create worksheet
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        
+        // Set column widths
+        const colWidths = [
+            { wch: 40 }, // Epic/Task
+            { wch: 10 }, // Priority
+            { wch: 15 }, // Assignee
+            { wch: 12 }, // Plan Start Date
+            { wch: 12 }, // Plan End Date
+            { wch: 10 }, // Plan Effort
+            { wch: 10 }, // Actual Effort
+            { wch: 15 }, // Status
+        ];
+        ws['!cols'] = colWidths;
+        
+        // Add worksheet to workbook
+        XLSX.utils.book_append_sheet(wb, ws, "Tasks");
+        
+        // Generate Excel file
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `tasks_${new Date().toISOString().split('T')[0]}.xlsx`);
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        // Show success message
+        toastr.success('Tasks exported successfully!');
+    } catch (error) {
+        console.error('Error exporting to Excel:', error);
+        toastr.error('Failed to export tasks. Please try again.');
+    }
+};
 </script>
 
 <style>

@@ -61,7 +61,7 @@ class TaskService
             // Truy vấn bảng constants để lấy các status tương ứng trong tasks
             $statusMapped = Constant::where('group', 'task_status')
                 ->whereIn('value1', $f_statusArray)
-                ->pluck('key') // hoặc 'id' tùy vào cách ánh xạ của bạn
+                ->pluck('key')
                 ->toArray();
 
             // Nếu tìm thấy status hợp lệ, áp dụng vào query
@@ -69,8 +69,32 @@ class TaskService
                 $query->whereIn('status', $statusMapped);
             }
         }
-        // Log::debug("Generated SQL: " . $query->toSql());
-        // Log::debug("Bindings: ", $query->getBindings());
+
+        // Handle date filters
+        if ($request->filled('plan_start_date_from')) {
+            $query->where('plan_start_date', '>=', $request->plan_start_date_from);
+        }
+        if ($request->filled('plan_start_date_to')) {
+            $query->where('plan_start_date', '<=', $request->plan_start_date_to);
+        }
+        if ($request->filled('plan_end_date_from')) {
+            $query->where('plan_end_date', '>=', $request->plan_end_date_from);
+        }
+        if ($request->filled('plan_end_date_to')) {
+            $query->where('plan_end_date', '<=', $request->plan_end_date_to);
+        }
+        if ($request->filled('actual_start_date_from')) {
+            $query->where('actual_start_date', '>=', $request->actual_start_date_from);
+        }
+        if ($request->filled('actual_start_date_to')) {
+            $query->where('actual_start_date', '<=', $request->actual_start_date_to);
+        }
+        if ($request->filled('actual_end_date_from')) {
+            $query->where('actual_end_date', '>=', $request->actual_end_date_from);
+        }
+        if ($request->filled('actual_end_date_to')) {
+            $query->where('actual_end_date', '<=', $request->actual_end_date_to);
+        }
 
         $task_list = $query->get()->map(function ($task) {
             $task->overdue = !is_null($task->plan_end_date) && $task->plan_end_date < now() && !in_array($task->status, [4, 7]);
