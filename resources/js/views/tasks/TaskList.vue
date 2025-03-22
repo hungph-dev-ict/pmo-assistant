@@ -1570,33 +1570,28 @@ const calculateBurndownData = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    // Use the earlier of endDate or today for actual burndown
-    const actualEndDate = endDate > today ? today : endDate;
-    const days = Math.ceil((actualEndDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+    // Calculate days for ideal burndown (start to end)
+    const idealDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+    
+    // Calculate days for actual burndown (start to now)
+    const actualDays = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
     const idealBurndown = [];
     const actualBurndown = [];
     const labels = [];
 
-    // Calculate completed effort for each task
-    const completedEffort = tasks.reduce((sum, task) => {
-        if (task.status === TASK_STATUS.DONE) {
-            return sum + (Number(task.plan_effort) || 0);
-        }
-        return sum;
-    }, 0);
-
-    for (let i = 0; i < days; i++) {
+    // Calculate ideal burndown for full project duration
+    for (let i = 0; i < idealDays; i++) {
         const currentDate = new Date(startDate);
         currentDate.setDate(startDate.getDate() + i);
         labels.push(currentDate.toLocaleDateString());
 
-        // Ideal burndown (linear decrease)
-        const idealRemaining = totalEffort * (1 - i / days);
+        // Ideal burndown (linear decrease from start to end)
+        const idealRemaining = totalEffort * (1 - i / idealDays);
         idealBurndown.push(idealRemaining);
 
-        // Actual burndown (only decreases when tasks are completed)
-        if (currentDate <= today) {
+        // Actual burndown (only for dates up to today)
+        if (i < actualDays) {
             // Calculate completed effort up to current date
             const completedEffortUpToDate = tasks.reduce((sum, task) => {
                 if (task.status === TASK_STATUS.DONE && new Date(task.actual_end_date) <= currentDate) {
