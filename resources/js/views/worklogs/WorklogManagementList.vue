@@ -252,7 +252,6 @@ onMounted(() => {
     globalIsEditting.value = false;
 });
 
-const isBlankQuery = computed(() => props.blankQuery ?? true);
 const visibleWorklogs = computed(() => {
     let worklogs = props.filteredWorklogs;
     return worklogs;
