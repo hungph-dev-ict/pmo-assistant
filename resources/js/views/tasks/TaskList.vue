@@ -1565,33 +1565,53 @@ const calculateBurndownData = () => {
     const endDate = new Date(Math.max(...tasks
         .filter(task => task.plan_end_date)
         .map(task => new Date(task.plan_end_date))));
-    const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+    
+    // Get today's date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Use the earlier of endDate or today for actual burndown
+    const actualEndDate = endDate > today ? today : endDate;
+    const days = Math.ceil((actualEndDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
     const idealBurndown = [];
     const actualBurndown = [];
     const labels = [];
+
+    // Calculate completed effort for each task
+    const completedEffort = tasks.reduce((sum, task) => {
+        if (task.status === TASK_STATUS.DONE) {
+            return sum + (Number(task.plan_effort) || 0);
+        }
+        return sum;
+    }, 0);
 
     for (let i = 0; i < days; i++) {
         const currentDate = new Date(startDate);
         currentDate.setDate(startDate.getDate() + i);
         labels.push(currentDate.toLocaleDateString());
 
-        // Ideal burndown
+        // Ideal burndown (linear decrease)
         const idealRemaining = totalEffort * (1 - i / days);
         idealBurndown.push(idealRemaining);
 
-        // Actual burndown
-        const actualRemaining = tasks.reduce((sum, task) => {
-            const taskDate = new Date(task.plan_start_date);
-            if (taskDate <= currentDate) {
-                if (task.status === TASK_STATUS.DONE) {
-                    return sum;
+        // Actual burndown (only decreases when tasks are completed)
+        if (currentDate <= today) {
+            // Calculate completed effort up to current date
+            const completedEffortUpToDate = tasks.reduce((sum, task) => {
+                if (task.status === TASK_STATUS.DONE && new Date(task.actual_end_date) <= currentDate) {
+                    return sum + (Number(task.plan_effort) || 0);
                 }
-                return sum + (Number(task.plan_effort) || 0);
-            }
-            return sum;
-        }, totalEffort);
-        actualBurndown.push(actualRemaining);
+                return sum;
+            }, 0);
+
+            // Actual remaining effort is total effort minus completed effort
+            const actualRemaining = totalEffort - completedEffortUpToDate;
+            actualBurndown.push(actualRemaining);
+        } else {
+            // For future dates, don't show actual burndown
+            actualBurndown.push(null);
+        }
     }
 
     return {
