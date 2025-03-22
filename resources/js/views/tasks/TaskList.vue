@@ -1382,16 +1382,6 @@ const handleTaskUpdate = () => {
     emit("update-data");
 };
 
-// const filters = reactive({
-//     status: "0",
-//     priority: "3",
-// });
-
-// const exportTasks = () => {
-//     const params = new URLSearchParams(filters).toString();
-//     window.location.href = `/export-tasks?${params}`;
-// };
-
 import tippy from "tippy.js";
 // Directive tùy chỉnh để dùng Tippy.js
 const vTooltip = {
@@ -1557,8 +1547,12 @@ const calculateBurndownData = () => {
     const totalEffort = tasks.reduce((sum, task) => sum + (Number(task.plan_effort) || 0), 0);
     
     // Calculate ideal burndown line
-    const startDate = new Date(Math.min(...tasks.map(task => new Date(task.plan_start_date))));
-    const endDate = new Date(Math.max(...tasks.map(task => new Date(task.plan_end_date))));
+    const startDate = new Date(Math.min(...tasks
+        .filter(task => task.plan_start_date)
+        .map(task => new Date(task.plan_start_date))));
+    const endDate = new Date(Math.max(...tasks
+        .filter(task => task.plan_end_date)
+        .map(task => new Date(task.plan_end_date))));
     const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
     const idealBurndown = [];
