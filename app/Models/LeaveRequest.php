@@ -16,11 +16,17 @@ class LeaveRequest extends Model {
         'leave_start_time',
         'leave_end_time',
         'leave_reason',
-        'leave_status'
+        'leave_status',
+        'leave_approver',
+        'approved_at'
     ];
 
     public function user() {
         return $this->belongsTo(User::class, 'leave_user');
+    }
+
+    public function approver() {
+        return $this->belongsTo(User::class, 'leave_approver');
     }
 
     public function approvers() {

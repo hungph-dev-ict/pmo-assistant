@@ -69,7 +69,7 @@
                         </th>
                         <th
                             v-if="isColumnVisible('leave-status') && !globalIsEditting"
-                            style="width: 9%"
+                            style="width: 12%"
                         >
                             Leave Status
                         </th>
@@ -83,175 +83,191 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <template
-                        v-for="leaveRequest in visibleLeaveRequests"
-                        :key="leaveRequest.id"
-                    >
-                        <tr class="bg-light">
-                            <td v-if="isClientOrPm">
-                                <input type="checkbox" v-model="selectedLeaveRequests" :value="leaveRequest.id" :disabled="leaveRequest.leave_status != 0"/>
-                            </td>
-                            <td v-if="isColumnVisible('leave-user') && isClientOrPm"
-                            :style="leaveRequest.user.id == props.currentUserId ? 'font-weight: bold;' : ''">
-                                {{ leaveRequest.user.name }}
-                            </td>
-                            <td v-if="isColumnVisible('leave-type')">                                
-                                <span v-if="!leaveRequest.isEditing">
-                                    {{ leaveRequest.leave_request_type.value1 }}
-                                </span>
-                                <select v-else v-model="leaveRequest.editedLeaveType" class="form-control custom-select">
-                                    <option v-for="type in leaveTypes" :key="type.id" :value="type.key">
-                                    {{ type.value1 }}
-                                    </option>
-                                </select>
-                            </td>
-                            <td v-if="isColumnVisible('leave-date')">
-                                <span v-if="!leaveRequest.isEditing">{{
-                                    leaveRequest.leave_date
-                                }}</span>
-                                <div
-                                    v-else
-                                    class="input-group date leave-date-datepicker"
-                                    data-target-input="nearest"
-                                >
-                                    <input
-                                        type="text"
-                                        class="form-control datetimepicker-input"
-                                        v-model="leaveRequest.editedLeaveDate"
-                                        data-target=".leave-date-datepicker"
-                                    />
+                    <template v-if="visibleLeaveRequests.length > 0">
+                        <template
+                            v-for="leaveRequest in visibleLeaveRequests"
+                            :key="leaveRequest.id"
+                        >
+                            <tr class="bg-light">
+                                <td v-if="isClientOrPm">
+                                    <input type="checkbox" v-model="selectedLeaveRequests" :value="leaveRequest.id" :disabled="leaveRequest.leave_status != 0"/>
+                                </td>
+                                <td v-if="isColumnVisible('leave-user') && isClientOrPm"
+                                :style="leaveRequest.user.id == props.currentUserId ? 'font-weight: bold;' : ''">
+                                    {{ leaveRequest.user.name }}
+                                </td>
+                                <td v-if="isColumnVisible('leave-type')">                                
+                                    <span v-if="!leaveRequest.isEditing">
+                                        {{ leaveRequest.leave_request_type.value1 }}
+                                    </span>
+                                    <select v-else v-model="leaveRequest.editedLeaveType" class="form-control custom-select">
+                                        <option v-for="type in leaveTypes" :key="type.id" :value="type.key">
+                                        {{ type.value1 }}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td v-if="isColumnVisible('leave-date')">
+                                    <span v-if="!leaveRequest.isEditing">{{
+                                        leaveRequest.leave_date
+                                    }}</span>
                                     <div
-                                        class="input-group-append"
-                                        data-target=".leave-date-datepicker"
-                                        data-toggle="datetimepicker"
+                                        v-else
+                                        class="input-group date leave-date-datepicker"
+                                        data-target-input="nearest"
                                     >
-                                        <div class="input-group-text">
-                                            <i class="fa fa-calendar"></i>
+                                        <input
+                                            type="text"
+                                            class="form-control datetimepicker-input"
+                                            v-model="leaveRequest.editedLeaveDate"
+                                            data-target=".leave-date-datepicker"
+                                        />
+                                        <div
+                                            class="input-group-append"
+                                            data-target=".leave-date-datepicker"
+                                            data-toggle="datetimepicker"
+                                        >
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                            
-                            <td v-if="isColumnVisible('leave-time')">
-                                <!-- Hiển thị thời gian khi không chỉnh sửa -->
-                                <span v-if="!leaveRequest.isEditing">
-                                    {{ leaveRequest.leave_start_time }} - {{ leaveRequest.leave_end_time }}
-                                </span>
-
-                                <div v-else class="d-flex">
-                                    <span v-if="leaveRequest.editedLeaveType!=2">
-                                        -
+                                </td>
+                                
+                                <td v-if="isColumnVisible('leave-time')">
+                                    <!-- Hiển thị thời gian khi không chỉnh sửa -->
+                                    <span v-if="!leaveRequest.isEditing">
+                                        {{ leaveRequest.leave_start_time }} - {{ leaveRequest.leave_end_time }}
                                     </span>
 
-                                    <!-- Hiển thị input chỉnh sửa khi đang ở chế độ chỉnh sửa -->
-                                    <div :style="{ visibility: leaveRequest.editedLeaveType==2 ? 'visible' : 'hidden' }"  class="d-flex">
-                                        <!-- Thời gian bắt đầu -->
-                                        <div class="input-group date leave-start-datepicker" data-target-input="nearest">
-                                            <input 
-                                                type="text" 
-                                                class="form-control datetimepicker-input" 
-                                                v-model="leaveRequest.editedLeaveStartTime" 
-                                                data-target=".leave-start-datepicker" 
-                                            />
-                                            <div class="input-group-append" data-target=".leave-start-datepicker" data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                                    <div v-else class="d-flex">
+                                        <span v-if="leaveRequest.editedLeaveType!=2">
+                                            -
+                                        </span>
+
+                                        <!-- Hiển thị input chỉnh sửa khi đang ở chế độ chỉnh sửa -->
+                                        <div :style="{ visibility: leaveRequest.editedLeaveType==2 ? 'visible' : 'hidden' }"  class="d-flex">
+                                            <!-- Thời gian bắt đầu -->
+                                            <div class="input-group date leave-start-datepicker" data-target-input="nearest">
+                                                <input 
+                                                    type="text" 
+                                                    class="form-control datetimepicker-input" 
+                                                    v-model="leaveRequest.editedLeaveStartTime" 
+                                                    data-target=".leave-start-datepicker" 
+                                                />
+                                                <div class="input-group-append" data-target=".leave-start-datepicker" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <span class="mx-1"></span>
+                                            <span class="mx-1"></span>
 
-                                        <!-- Thời gian kết thúc -->
-                                        <div class="input-group date leave-end-datepicker" data-target-input="nearest">
-                                            <input 
-                                                type="text" 
-                                                class="form-control datetimepicker-input" 
-                                                v-model="leaveRequest.editedLeaveEndTime" 
-                                                data-target=".leave-end-datepicker" 
-                                            />
-                                            <div class="input-group-append" data-target=".leave-end-datepicker" data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                                            <!-- Thời gian kết thúc -->
+                                            <div class="input-group date leave-end-datepicker" data-target-input="nearest">
+                                                <input 
+                                                    type="text" 
+                                                    class="form-control datetimepicker-input" 
+                                                    v-model="leaveRequest.editedLeaveEndTime" 
+                                                    data-target=".leave-end-datepicker" 
+                                                />
+                                                <div class="input-group-append" data-target=".leave-end-datepicker" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
 
-                            </td>
-                            <td v-if="isColumnVisible('leave-reason')">
-                                <span v-if="!leaveRequest.isEditing">{{
-                                    leaveRequest.leave_reason
-                                }}</span>
-                                <textarea
-                                    v-else
-                                    type="text"
-                                    v-model="leaveRequest.editedLeaveReason"
-                                    class="form-control form-control"
-                                    rows="3"
-                                ></textarea>
-                            </td>                            
-                            <td v-if="isColumnVisible('leave-approver') && !isClientOrPm">
-                                <li v-if="!leaveRequest.isEditing" v-for="approver in leaveRequest.approvers" :key="approver.id">
-                                    {{ approver.name }}
-                                </li>
-                                <div v-else class="form-group">
-                                    <div class="select2-purple">
-                                        <select v-model="leaveRequest.selectedLeaveApprovers" class="select2" multiple="multiple" data-placeholder="" data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                            <option v-for="approver in leaveApprovers" :key="approver.id" :value="approver.id">
-                                                {{ approver.name }}
-                                            </option>
-                                        </select>
+                                </td>
+                                <td v-if="isColumnVisible('leave-reason')">
+                                    <span v-if="!leaveRequest.isEditing">{{
+                                        leaveRequest.leave_reason
+                                    }}</span>
+                                    <textarea
+                                        v-else
+                                        type="text"
+                                        v-model="leaveRequest.editedLeaveReason"
+                                        class="form-control form-control"
+                                        rows="3"
+                                    ></textarea>
+                                </td>                            
+                                <td v-if="isColumnVisible('leave-approver') && !isClientOrPm">
+                                    <li v-if="!leaveRequest.isEditing" v-for="approver in leaveRequest.approvers" :key="approver.id">
+                                        {{ approver.name }}
+                                    </li>
+                                    <div v-else class="form-group">
+                                        <div class="select2-purple">
+                                            <select v-model="leaveRequest.selectedLeaveApprovers" class="select2" multiple="multiple" data-placeholder="" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                                <option v-for="approver in leaveApprovers" :key="approver.id" :value="approver.id">
+                                                    {{ approver.name }}
+                                                </option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td v-if="isColumnVisible('leave-status') && !globalIsEditting"
-                            :style="{ 
-                                color: leaveRequest.leave_status === 0 ? '#FFD700' :
-                                    leaveRequest.leave_status === 1 ? '#198754' :
-                                    leaveRequest.leave_status === 2 ? '#dc3545' : 'inherit',
-                                fontWeight: 'bold'
-                            }">
-                                {{ leaveRequest.leave_request_status.value1 }}
-                            </td>
-                            <td
-                                v-if="isColumnVisible('action')"
-                                class="text-center"
-                            >
-                                <template v-if="!leaveRequest.isEditing">
-                                    <a
-                                        class="btn btn-info btn-sm mr-2"
-                                        @click.prevent="editLeaveRequest(leaveRequest)" v-tooltip="'Edit'"
-                                        :style="leaveRequest.leave_status != 0 ? 'pointer-events: none; opacity: 0.5; cursor: not-allowed;' : ''"
-                                    >
-                                        <i class="fas fa-pencil-alt"></i> 
-                                    </a>
-                                    <a
-                                        class="btn btn-danger btn-sm mr-2"
-                                        @click="confirmDelete(leaveRequest)" v-tooltip="'Delete'"
-                                        :style="leaveRequest.leave_status != 0 ? 'pointer-events: none; opacity: 0.5; cursor: not-allowed;' : ''"
-                                    >
-                                        <i class="fas fa-trash"></i> 
-                                    </a>
-                                </template>
+                                </td>
+                                <td v-if="isColumnVisible('leave-status') && !globalIsEditting"
+                                :style="{ 
+                                    color: leaveRequest.leave_status === 0 ? '#FFD700' :
+                                        leaveRequest.leave_status === 1 ? '#198754' :
+                                        leaveRequest.leave_status === 2 ? '#dc3545' : 'inherit',
+                                    fontWeight: 'bold'
+                                }">
+                                    {{ leaveRequest.leave_request_status.value1 }}
+                                    <span v-if="leaveRequest.leave_approver" style="display: block; font-size: 12px;">
+                                        <span style="font-weight: normal; font-size: 12px;">By</span> {{ leaveRequest.approver.name }}
+                                        
+                                    </span>                                
+                                    <span v-if="leaveRequest.approved_at" style="display: block; font-weight: normal; font-size: 12px;">
+                                        At {{ convertToVNTime(leaveRequest.approved_at) }}
+                                    </span>
+                                </td>
+                                <td
+                                    v-if="isColumnVisible('action')"
+                                    class="text-center"
+                                >
+                                    <template v-if="!leaveRequest.isEditing">
+                                        <a
+                                            class="btn btn-info btn-sm mr-2"
+                                            @click.prevent="editLeaveRequest(leaveRequest)" v-tooltip="'Edit'"
+                                            :style="leaveRequest.leave_status != 0 ? 'pointer-events: none; opacity: 0.5; cursor: not-allowed;' : ''"
+                                        >
+                                            <i class="fas fa-pencil-alt"></i> 
+                                        </a>
+                                        <a
+                                            class="btn btn-danger btn-sm mr-2"
+                                            @click="confirmDelete(leaveRequest)" v-tooltip="'Delete'"
+                                            :style="leaveRequest.leave_status != 0 ? 'pointer-events: none; opacity: 0.5; cursor: not-allowed;' : ''"
+                                        >
+                                            <i class="fas fa-trash"></i> 
+                                        </a>
+                                    </template>
 
-                                <template v-else>
-                                    <a
-                                        class="btn btn-success btn-sm mr-2"
-                                        href="#"
-                                        @click.prevent="updateLeaveRequest(leaveRequest)"  v-tooltip="'Update'"
-                                    >
-                                        <i class="fas fa-save"></i> 
-                                    </a>
-                                    <a
-                                        class="btn btn-secondary btn-sm"
-                                        href="#"
-                                        @click.prevent="cancelEdit(leaveRequest)"  v-tooltip="'Cancel'"
-                                    >
-                                        <i class="fas fa-times"></i> 
-                                    </a>
-                                </template>
-                            </td>
-                        </tr>
+                                    <template v-else>
+                                        <a
+                                            class="btn btn-success btn-sm mr-2"
+                                            href="#"
+                                            @click.prevent="updateLeaveRequest(leaveRequest)"  v-tooltip="'Update'"
+                                        >
+                                            <i class="fas fa-save"></i> 
+                                        </a>
+                                        <a
+                                            class="btn btn-secondary btn-sm"
+                                            href="#"
+                                            @click.prevent="cancelEdit(leaveRequest)"  v-tooltip="'Cancel'"
+                                        >
+                                            <i class="fas fa-times"></i> 
+                                        </a>
+                                    </template>
+                                </td>
+                            </tr>
+                        </template>
                     </template>
+                    <tr v-else>
+                        <td :colspan="getTotalColumns" class="text-center text-success" style="width: 100%;">
+                            <div class="card-body text-center text-success py-2">
+                                <p class="mb-0">🎉 Congratulations! It looks like you've completed all your tasks.</p>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -621,5 +637,15 @@ const emitLeaveRequestModal = () => {
     
     emit("update-leave-request");
     console.log("Emit")
+};
+
+const convertToVNTime = (datetime) => {
+    if (!datetime) return '';
+    
+    // Chuyển đổi về đối tượng Date
+    let date = new Date(datetime + 'Z'); // Thêm 'Z' để đảm bảo là UTC
+
+    // Chuyển về múi giờ Việt Nam (GMT+7)
+    return date.toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
 };
 </script>
