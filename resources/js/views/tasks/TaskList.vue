@@ -696,56 +696,64 @@
                                             class="text-left"
                                         >
                                             <template v-if="!task.isEditing">
-                                                <a
-                                                    href="#"
-                                                    class="btn btn-info btn-sm ml-3 mr-2"
-                                                    @click.prevent="
-                                                        editTask(task)
+                                                <div
+                                                    style="
+                                                        display: grid;
+                                                        grid-template-columns: repeat(4, max-content);
+                                                        justify-content: center;
                                                     "
-                                                    v-tooltip="'Edit'"
                                                 >
-                                                    <i
-                                                        class="fas fa-pencil-alt"
-                                                    ></i>
-                                                </a>
-                                                <a
-                                                    v-if="
-                                                        hasPermissionClient ||
-                                                        hasPermissionPm
-                                                    "
-                                                    href="#"
-                                                    class="btn btn-danger btn-sm mr-2"
-                                                    @click="confirmDelete(task)"
-                                                    v-tooltip="'Delete'"
-                                                >
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
-                                                <button
-                                                    class="btn btn-secondary btn-sm mr-2"
-                                                    @click="copyTaskLink(task)"
-                                                    v-tooltip="'Share'"
-                                                >
-                                                    <i class="fas fa-link"></i>
-                                                </button>
-                                                <a
-                                                    href="#"
-                                                    class="btn btn-primary btn-sm"
-                                                    v-if="
-                                                        ![
-                                                            TASK_STATUS.OPEN,
-                                                            TASK_STATUS.DONE,
-                                                            TASK_STATUS.REOPEN,
-                                                            TASK_STATUS.PENDING,
-                                                            TASK_STATUS.CANCELED,
-                                                        ].includes(task.status)
-                                                    "
-                                                    @click.prevent="
-                                                        openLogWorkModal(task)
-                                                    "
-                                                    v-tooltip="'Log Work'"
-                                                >
-                                                    <i class="fas fa-clock"></i>
-                                                </a>
+                                                    <a
+                                                        href="#"
+                                                        class="btn btn-info btn-sm ml-1 mr-1"
+                                                        @click.prevent="
+                                                            editTask(task)
+                                                        "
+                                                        v-tooltip="'Edit'"
+                                                    >
+                                                        <i
+                                                            class="fas fa-pencil-alt"
+                                                        ></i>
+                                                    </a>
+                                                    <a
+                                                        v-if="
+                                                            hasPermissionClient ||
+                                                            hasPermissionPm
+                                                        "
+                                                        href="#"
+                                                        class="btn btn-danger btn-sm mr-1"
+                                                        @click="confirmDelete(task)"
+                                                        v-tooltip="'Delete'"
+                                                    >
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                    <button
+                                                        class="btn btn-secondary btn-sm mr-1"
+                                                        @click="copyTaskLink(task)"
+                                                        v-tooltip="'Share'"
+                                                    >
+                                                        <i class="fas fa-link"></i>
+                                                    </button>
+                                                    <a
+                                                        href="#"
+                                                        class="btn btn-primary btn-sm mr-1"
+                                                        v-if="
+                                                            ![
+                                                                TASK_STATUS.OPEN,
+                                                                TASK_STATUS.DONE,
+                                                                TASK_STATUS.REOPEN,
+                                                                TASK_STATUS.PENDING,
+                                                                TASK_STATUS.CANCELED,
+                                                            ].includes(task.status)
+                                                        "
+                                                        @click.prevent="
+                                                            openLogWorkModal(task)
+                                                        "
+                                                        v-tooltip="'Log Work'"
+                                                    >
+                                                        <i class="fas fa-clock"></i>
+                                                    </a>                                                    
+                                                </div>
                                             </template>
 
                                             <template v-else>
