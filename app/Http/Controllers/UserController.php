@@ -163,14 +163,13 @@ class UserController extends Controller
      */
     public function destroy($tenant_id, $user_id)
     {
-        // Xóa Project bằng ProjectService
-        $result = $this->userService->deleteUserById($user_id);
-
-        if ($result) {
-            return redirect()->route('client.users.list', $tenant_id)->with('success', 'User deleted successfully.');
+        try {
+            $user = User::findOrFail($user_id);
+            $user->delete();
+            return redirect()->route('client.users.index', ['tenant_id' => $tenant_id])->with('success', 'User deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete user');
         }
-
-        return redirect()->route('client.users.list', $tenant_id)->with('error', 'Failed to delete user.');
     }
 
     /**
