@@ -69,7 +69,7 @@
                         </th>
                         <th
                             v-if="isColumnVisible('leave-status') && !globalIsEditting"
-                            style="width: 9%"
+                            style="width: 12%"
                         >
                             Leave Status
                         </th>
@@ -211,6 +211,13 @@
                                 fontWeight: 'bold'
                             }">
                                 {{ leaveRequest.leave_request_status.value1 }}
+                                <span v-if="leaveRequest.leave_approver" style="display: block; font-size: 12px;">
+                                    <span style="font-weight: normal; font-size: 12px;">By</span> {{ leaveRequest.approver.name }}
+                                    
+                                </span>                                
+                                <span v-if="leaveRequest.approved_at" style="display: block; font-weight: normal; font-size: 12px;">
+                                    At {{ convertToVNTime(leaveRequest.approved_at) }}
+                                </span>
                             </td>
                             <td
                                 v-if="isColumnVisible('action')"
@@ -621,5 +628,15 @@ const emitLeaveRequestModal = () => {
     
     emit("update-leave-request");
     console.log("Emit")
+};
+
+const convertToVNTime = (datetime) => {
+    if (!datetime) return '';
+    
+    // Chuyển đổi về đối tượng Date
+    let date = new Date(datetime + 'Z'); // Thêm 'Z' để đảm bảo là UTC
+
+    // Chuyển về múi giờ Việt Nam (GMT+7)
+    return date.toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
 };
 </script>

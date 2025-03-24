@@ -111,7 +111,11 @@ class LeaveRequestController extends Controller
 
             foreach ($leaveRequests as $leaveRequest) {
                 // Cập nhật trạng thái đơn nghỉ
-                $leaveRequest->update(['leave_status' => $validatedData['leave_status']]);
+                $leaveRequest->update([
+                    'leave_status' => $validatedData['leave_status'],
+                    'leave_approver' => auth()->id(), // ID của người đang đăng nhập
+                    'approved_at' => now() // Thời gian hiện tại
+                ]);
             }
 
             return response()->json([

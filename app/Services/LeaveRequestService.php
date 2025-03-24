@@ -26,7 +26,7 @@ class LeaveRequestService
         $leaveRequests = LeaveRequest::whereHas('approvers', function ($query) use ($user) {
             $query->where('leave_approver', $user->id); // Kiểm tra nếu user là Approver
         })
-        ->with(['user', 'leaveRequestType', 'leaveRequestStatus', 'approvers']) 
+        ->with(['user', 'leaveRequestType', 'leaveRequestStatus', 'approvers', 'approver']) 
         ->orderBy('leave_status')
         ->orderBy('created_at', 'desc') // Sắp xếp theo thời gian tạo đơn nghỉ
         ->get();
@@ -47,7 +47,7 @@ class LeaveRequestService
 
         // Lọc các LeaveRequest theo user_id và sắp xếp theo thời gian tạo
         $leaveRequests = LeaveRequest::where('leave_user', $user->id)
-            ->with(['user', 'leaveRequestType', 'leaveRequestStatus', 'approvers']) 
+            ->with(['user', 'leaveRequestType', 'leaveRequestStatus', 'approvers', 'approver']) 
             ->orderBy('created_at', 'desc') // Sắp xếp theo thời gian tạo đơn nghỉ
             ->get();
 
