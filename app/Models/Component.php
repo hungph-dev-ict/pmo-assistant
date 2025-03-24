@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Component extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
-    protected $fillable = ['project_id', 'name', 'description'];
+    protected $fillable = ['project_id', 'name', 'memo'];
+    protected $dates = ['deleted_at'];
 
     public function project()
     {

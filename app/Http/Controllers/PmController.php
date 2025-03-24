@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Task;
 use App\Models\Project;
+use App\Models\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\TaskService;
@@ -205,6 +206,44 @@ class PmController extends Controller
         $maxDate = $tasks->whereNotNull('plan_end_date')->max('plan_end_date');
 
         return view('pm.chart', compact('taskTree', 'minDate', 'maxDate', 'project'));
+    }
+
+    public function viewComponents($project_id)
+    {
+        $project = Project::find($project_id);
+        $components = Component::withTrashed()->where('project_id', $project_id)->get();
+        return view('pm.components', compact('components', 'project_id'));
+    }
+
+    public function createComponents(Request $request, $project_id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'memo' => 'nullable|string',
+        ]);
+
+        Component::create([
+            'project_id' => $project_id,
+            'name' => $request->name,
+            'memo' => $request->memo,
+        ]);
+        return redirect()->route('pm.components', ['project_id' => $project_id]);
+    }
+
+    public function destroy(Request $request, $project_id, $id)
+    {
+
+        $component = Component::findOrFail($id);
+        $component->delete();
+        return redirect()->route('pm.components', ['project_id' => $project_id]);
+    }
+
+    public function restore(Request $request, $project_id, $id)
+    {
+        $component = Component::withTrashed()->findOrFail($id);
+        $component->restore();
+
+        return redirect()->route('pm.components', ['project_id' => $project_id]);
     }
 
     public function softDeleteTask($project_id, $task_id)
