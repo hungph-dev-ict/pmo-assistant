@@ -79,7 +79,14 @@ class WorklogService
 
         // Lấy worklogs có task_id nằm trong danh sách taskIds
         $worklogs = Worklog::whereIn('task_id', $taskIds)
-            ->with('user:id,account,name', 'task.project:id,name')
+            ->with([
+                'user' => function ($query) {
+                    $query->select('id', 'account', 'name')->withTrashed();
+                },
+                'task' => function ($query) {
+                    $query->withTrashed()->with(['project:id,name']);
+                }
+            ])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -153,7 +160,22 @@ class WorklogService
 
         $tenant_user_ids = User::where('tenant_id', $user->tenant_id)->pluck('id')->all();
 
-        $worklogs = Worklog::whereIn('log_user', $tenant_user_ids)->with('user', 'task.project', 'task.assigneeUser')->orderBy('log_date', 'desc')->get();
+        $worklogs = Worklog::whereIn('log_user', $tenant_user_ids)
+            ->with([
+                'user' => function ($query) {
+                    $query->select('id', 'name', 'account')->withTrashed();
+                },
+                'task' => function ($query) {
+                    $query->withTrashed()->with([
+                        'project:id,name',
+                        'assigneeUser' => function ($query) {
+                            $query->select('id', 'name', 'account')->withTrashed();
+                        }
+                    ]);
+                }
+            ])
+            ->orderBy('log_date', 'desc')
+            ->get();
 
         return response()->json([
             'success' => true,
