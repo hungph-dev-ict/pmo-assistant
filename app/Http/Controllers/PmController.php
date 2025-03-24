@@ -45,15 +45,10 @@ class PmController extends Controller
 
     public function listTasksByFilter(Request $request, $project_id)
     {
-        $project = Project::findOrFail($project_id);
-        if ($request->ajax()) {
-            $data = $this->taskService->getTasksByFilter($project_id, $request);
+        Log::info('vao day roi');
+        $data = $this->taskService->getTasksByFilter($project_id, $request);
 
-            return response()->json($data);
-        }
-        $listAssignee = Project::with('users')->find($project_id)->users;
-
-        return view('pm.task', compact('project_id', 'listAssignee', 'project'));
+        return response()->json($data);
     }
 
     public function storeTask(StoreTaskRequest $request, $project_id)

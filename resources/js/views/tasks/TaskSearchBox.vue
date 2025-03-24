@@ -407,6 +407,34 @@
                         🙋‍♂️ Assign to Me
                     </button>
                 </div>
+                <div class="col-1">
+                    <div class="form-group clearfix">
+                        <div class="icheck-danger d-inline">
+                            <input
+                                type="checkbox"
+                                id="checkDelayed"
+                                v-model="filtersQuery.checkDelayed"
+                            />
+                            <label for="checkDelayed">Delayed</label>
+                        </div>
+                        <div class="icheck-danger d-inline">
+                            <input
+                                type="checkbox"
+                                id="checkOverDue"
+                                v-model="filtersQuery.checkOverDue"
+                            />
+                            <label for="checkOverDue">Overdue</label>
+                        </div>
+                        <div class="icheck-danger d-inline">
+                            <input
+                                type="checkbox"
+                                id="checkOverCost"
+                                v-model="filtersQuery.checkOverCost"
+                            />
+                            <label for="checkOverCost">Overcost</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -445,20 +473,36 @@ const filtersQuery = ref({
     priority: [],
     assignee: "",
     status: [],
+    checkDelayed: false,
+    checkOverDue: false,
+    checkOverCost: false,
 });
+
+// 🏷 Biến đánh dấu lần đầu load
+let isFirstLoad = true;
+
+// 🔄 Hàm đồng bộ filters từ cha xuống con
+const syncFilters = (newFilters) => {
+    filtersQuery.value = {
+        text: newFilters.text || "",
+        priority: Array.isArray(newFilters.priority) ? newFilters.priority : [],
+        assignee: newFilters.assignee || "",
+        status: Array.isArray(newFilters.status) ? newFilters.status : [],
+        checkDelayed: newFilters.checkDelayed ?? false,
+        checkOverDue: newFilters.checkOverDue ?? false,
+        checkOverCost: newFilters.checkOverCost ?? false,
+    };
+};
 
 // 1️⃣ Đồng bộ filters từ cha xuống con (chỉ cập nhật khi khác)
 watch(
     () => props.filters,
     (newFilters) => {
-        filtersQuery.value = {
-            text: newFilters.text || "",
-            priority: Array.isArray(newFilters.priority)
-                ? newFilters.priority
-                : [],
-            assignee: newFilters.assignee || "",
-            status: Array.isArray(newFilters.status) ? newFilters.status : [],
-        };
+        if (isFirstLoad) {
+            isFirstLoad = false; // Bỏ qua lần đầu
+            return;
+        }
+        syncFilters(newFilters);
     },
     { deep: true }
 );
@@ -481,6 +525,9 @@ const updateSearch = () => {
 };
 
 onMounted(() => {
+    if (Object.keys(props.filters).length) {
+        syncFilters(props.filters);
+    }
     nextTick(() => {
         if (window.jQuery && $.fn.select2 && $.fn.datetimepicker) {
             // Hàm khởi tạo Select2
@@ -575,15 +622,7 @@ onMounted(() => {
 //     filtersQuery.value = { ...newFilters }; // Gán lại toàn bộ object
 // }, { deep: true });
 
-const emit = defineEmits([
-    "updateSelectedAssignee",
-    "updateFilteredTasks",
-    "blankQuery",
-    "updateVisibleColumns",
-    "updateSearchQuery",
-    "updateSelectedStatuses",
-    "filter-changed",
-]);
+const emit = defineEmits(["updateVisibleColumns", "filter-changed"]);
 
 const resetSearchTitle = () => {
     searchText.value = "";

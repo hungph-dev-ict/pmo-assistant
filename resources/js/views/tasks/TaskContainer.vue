@@ -26,7 +26,6 @@
             :currentUserId="numberCurrentUserId"
             :currentUserAccount="currentUserAccount"
             @updateFilteredTasks="filteredTasks = $event"
-            @blankQuery="handleBlankQuery"
             @updateVisibleColumns="updateVisibleColumns"
             :taskListEditing="taskListEditing"
         >
@@ -105,6 +104,9 @@ const filters = ref({
     priority: [],
     assignee: "",
     status: [],
+    checkDelayed: false,
+    checkOverDue: false,
+    checkOverCost: false,
 });
 
 const listAssigneeByProject = ref({});
@@ -147,8 +149,65 @@ const blankQuery = ref(true); // Mặc định là false
 const queryParams = ref("");
 
 const taskListIsLoading = ref(false); // Biến kiểm soát trạng thái loading
+let firstLoad = true; // 🆕 Biến để kiểm soát lần đầu
+
+onMounted(async () => {
+    console.log(3);
+    fetchTasksByQuery();
+    const urlParams = new URLSearchParams(window.location.search);
+
+    let hasParams = false; // Kiểm tra xem có tham số không
+    const urlFilters = {}; // Dùng object tạm để tránh lỗi reactivity khi thay đổi ref trực tiếp
+
+    for (const [key, value] of urlParams.entries()) {
+        hasParams = true;
+
+        // Nếu có dấu ",", chuyển thành mảng (tự động chuyển số nếu có)
+        if (value.includes(",")) {
+            urlFilters[key] = value
+                .split(",")
+                .map((val) => (isNaN(val) ? val : Number(val)));
+        } else {
+            // Nếu là số, chuyển thành Number, nếu không giữ nguyên
+            urlFilters[key] = isNaN(value) ? value : Number(value);
+        }
+    }
+    updateURL();
+
+
+     // ✅ Nếu có filters từ URL thì mới fetch dữ liệu
+     if (Object.keys(urlFilters).length > 0) {
+        console.log(555);
+        filters.value = urlFilters;
+        fetchTasksByQuery(urlFilters); // ⚡ Gọi fetch ngay nếu có filter từ URL
+    }
+
+    try {
+        const response = await axios.get(
+            `/api/${props.projectId}/getAllMembers`
+        );
+        listAssigneeByProject.value = response.data.members;
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+    }
+
+    try {
+        const response = await axios.get(`/api/getAllStatuses`);
+        listTaskStatuses.value = response.data.statuses;
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+    }
+
+    try {
+        const response = await axios.get(`/api/getAllPriorities`);
+        listTaskPriorities.value = response.data.priorities;
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+    }
+});
 
 const fetchTasksByQuery = async (p_filters) => {
+    console.log(1);
     taskListIsLoading.value = true; // Bắt đầu loading
 
     let apiUrl = computed(() => {
@@ -169,6 +228,7 @@ const fetchTasksByQuery = async (p_filters) => {
 
     try {
         const { data } = await axios.get(fullApiUrl);
+        console.log("📥 Dữ liệu API trả về:", data);
         taskListData.value = {
             ...taskListData.value,
             tasks: [...data.tasks], // Gán lại mảng mới
@@ -185,12 +245,32 @@ const fetchTasksByQuery = async (p_filters) => {
     }
 };
 
-// Khi blankQuery = true, reset danh sách task
-const handleBlankQuery = (value) => {
-    blankQuery.value = value;
-    if (value) {
-        filteredTasks.value = tasks.value;
-    }
+// 🏷 Watch filters để cập nhật URL nhưng bỏ qua lần đầu
+watch(
+    filters,
+    (newFilters, oldFilters) => {
+        if (firstLoad) {
+            firstLoad = false; // 🔥 Bỏ qua lần đầu tiên
+            return;
+        }
+
+        console.log("🧐 Filters Thay Đổi!");
+        console.log("🔹 Trước:", JSON.stringify(oldFilters, null, 2));
+        console.log("🔸 Sau:", JSON.stringify(newFilters, null, 2));
+
+        updateURL();
+        console.log(4);
+        fetchTasksByQuery(newFilters);
+    },
+    { deep: true }
+);
+
+// Nhận filters từ TaskSearch
+const updatefilters = async (filtersFromSearch) => {
+    filters.value = { ...filtersFromSearch };
+    updateURL();
+    console.log(4);
+    fetchTasksByQuery(filters.value);
 };
 
 const visibleColumns = ref([
@@ -230,6 +310,7 @@ const handleTaskUpdate = (loadNew = false) => {
     }
     // Gán lại vào filters để Vue phản ứng
     filters.value = urlFilters;
+    console.log(2);
 
     // Gọi API lấy danh sách tasks
     fetchTasksByQuery(hasParams ? filters.value : null);
@@ -270,68 +351,6 @@ const updateURL = () => {
         : window.location.pathname;
 
     window.history.pushState({}, "", newURL);
-};
-
-// Khi filters thay đổi, cập nhật URL
-watch(
-    filters,
-    () => {
-        updateURL();
-    },
-    { deep: true }
-);
-
-onMounted(async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-
-    let hasParams = false; // Kiểm tra xem có tham số không
-    const urlFilters = {}; // Dùng object tạm để tránh lỗi reactivity khi thay đổi ref trực tiếp
-
-    for (const [key, value] of urlParams.entries()) {
-        hasParams = true;
-
-        // Nếu có dấu ",", chuyển thành mảng (tự động chuyển số nếu có)
-        if (value.includes(",")) {
-            urlFilters[key] = value
-                .split(",")
-                .map((val) => (isNaN(val) ? val : Number(val)));
-        } else {
-            // Nếu là số, chuyển thành Number, nếu không giữ nguyên
-            urlFilters[key] = isNaN(value) ? value : Number(value);
-        }
-    }
-    // Gán lại vào filters để Vue phản ứng
-    filters.value = urlFilters;
-
-    try {
-        const response = await axios.get(
-            `/api/${props.projectId}/getAllMembers`
-        );
-        listAssigneeByProject.value = response.data.members;
-    } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu:", error);
-    }
-
-    try {
-        const response = await axios.get(`/api/getAllStatuses`);
-        listTaskStatuses.value = response.data.statuses;
-    } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu:", error);
-    }
-
-    try {
-        const response = await axios.get(`/api/getAllPriorities`);
-        listTaskPriorities.value = response.data.priorities;
-    } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu:", error);
-    }
-});
-
-// Nhận filters từ TaskSearch
-const updatefilters = async (filtersFromSearch) => {
-    filters.value = { ...filtersFromSearch };
-    updateURL();
-    fetchTasksByQuery(filters.value);
 };
 </script>
 

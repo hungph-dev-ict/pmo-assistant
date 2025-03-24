@@ -76,17 +76,31 @@ class TaskService
             $task->overdue = !is_null($task->plan_end_date) && $task->plan_end_date < now() && !in_array($task->status, [4, 7]);
             $task->delayed = !is_null($task->plan_start_date) && $task->plan_start_date < now()->subDays(1) && $task->status == 0;
             $task->overcost = floatval($task->actual_effort) > floatval($task->plan_effort);
-        
+
             return $task;
         });
 
         // Lấy danh sách assignee duy nhất từ danh sách task
         $assignees = $task_list->pluck('assignee:id,account')->filter()->unique('id')->values();
 
+        // Áp dụng lọc dựa trên các biến truyền vào
+        if ($request->boolean('checkDelayed')) {
+            $task_list = $task_list->where('delayed', true);
+        }
+
+        if ($request->boolean('checkOverDue')) {
+            $task_list = $task_list->where('overdue', true);
+        }
+
+        if ($request->boolean('checkOverCost')) {
+            $task_list = $task_list->where('overcost', true);
+        }
+
         $priorities = Constant::getPriorityList();
+        Log::info($task_list);
 
         return [
-            'tasks' => $task_list,
+            'tasks' => $task_list->values()->toArray(),
             'assignees' => $assignees,
             'priorities' => $priorities,
         ];
