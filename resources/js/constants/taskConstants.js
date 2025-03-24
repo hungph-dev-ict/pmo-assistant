@@ -20,13 +20,13 @@ export const TASK_STATUS = {
 };
 
 export const STATUS_CLASSES = {
-    [TASK_STATUS.OPEN]: "badge badge-secondary", // Màu xám
-    [TASK_STATUS.IN_PROGRESS]: "badge badge-primary", // Màu xanh dương
+    [TASK_STATUS.OPEN]: "badge badge-info", // Màu xanh dương nhạt
+    [TASK_STATUS.IN_PROGRESS]: "badge badge-primary", // Màu xanh dương đậm
     [TASK_STATUS.RESOLVED]: "badge badge-success", // Màu xanh lá
     [TASK_STATUS.FEEDBACK]: "badge badge-warning", // Màu vàng
-    [TASK_STATUS.DONE]: "badge badge-dark", // Màu đen hoặc tím đậm
+    [TASK_STATUS.DONE]: "badge badge-dark", // Màu đen
     [TASK_STATUS.REOPEN]: "badge badge-danger", // Màu đỏ
-    [TASK_STATUS.PENDING]: "badge badge-warning", // Màu cam
+    [TASK_STATUS.PENDING]: "badge badge-orange", // Màu cam
     [TASK_STATUS.CANCELED]: "badge badge-secondary", // Màu xám
 };
 
