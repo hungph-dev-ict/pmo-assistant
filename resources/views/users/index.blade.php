@@ -30,7 +30,12 @@
             </div>
         </div>
         <div class="card-body p-0">
-            <table class="table table-striped projects">
+            <style>
+                tr[data-deleted="true"] {
+                    background-color:rgb(130, 130, 131);
+                }
+            </style>
+            <table class="table table-bordered projects">
                 <thead>
                     <tr>
                         <th style="width: 2%">
@@ -66,7 +71,7 @@
                 </thead>
                 <tbody>
                     @foreach ($users as $user)
-                        <tr>
+                        <tr @if($user->deleted_at) data-deleted="true" @endif>
                             <td>
                                 {{ $user->id }}
                             </td>
@@ -119,15 +124,12 @@
                                 </small>
                             </td>
                             <td class="project-state">
-                                @if ($user->status == 0)
-                                    <span class="badge badge-secondary">{{ $user->userStatus->value1 ?? '-' }}</span>
-                                    <!-- Màu xám khi status là 0 -->
+                                @if ($user->deleted_at)
+                                    <span class="badge badge-secondary">Inactive</span>
                                 @elseif ($user->status == 1)
                                     <span class="badge badge-success">{{ $user->userStatus->value1 ?? '-' }}</span>
-                                    <!-- Màu xanh khi status là 1 -->
                                 @else
                                     <span class="badge badge-warning">{{ $user->userStatus->value1 ?? '-' }}</span>
-                                    <!-- Màu vàng khi - -->
                                 @endif
                             </td>
                             <td>
@@ -199,6 +201,7 @@
                         action="{{ route('client.users.destroy', ['tenant_id' => $tenant_id, 'user_id' => $user->id]) }}">
                         @csrf
                         @method('DELETE')
+                        <input type="hidden" name="page" value="{{ request()->get('page', 1) }}">
                         <button type="submit" class="btn btn-outline-light">Delete</button>
                     </form>
                 </div>
@@ -222,7 +225,7 @@
 
             var modal = $(this);
             modal.find('#userName').text(userName); // Hiển thị tên user
-            var deleteUrl = '/tenant/' + tenantId + '/users/' + userId;
+            var deleteUrl = '/tenant/' + tenantId + '/users/' + userId + '?page=' + new URLSearchParams(window.location.search).get('page');
             modal.find('#deleteUserForm').attr('action', deleteUrl); // Cập nhật URL trong action
         });
         @if (session('success'))

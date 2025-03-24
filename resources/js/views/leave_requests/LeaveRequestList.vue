@@ -264,7 +264,7 @@
                     <tr v-else>
                         <td :colspan="getTotalColumns" class="text-center text-success" style="width: 100%;">
                             <div class="card-body text-center text-success py-2">
-                                <p class="mb-0">🎉 Congratulations! It looks like you've completed all your tasks.</p>
+                                <p class="mb-0">🎉 {{ isClientOrPm ? 'No leave requests need to be managed at the moment.' : 'You haven\'t submitted any leave requests yet.' }}</p>
                             </div>
                         </td>
                     </tr>
