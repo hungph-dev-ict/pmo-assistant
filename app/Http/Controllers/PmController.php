@@ -234,7 +234,7 @@ class PmController extends Controller
     {
 
         $component = Component::findOrFail($id);
-        $component->delete(); 
+        $component->delete();
         return redirect()->route('pm.components', ['project_id' => $project_id]);
     }
 
@@ -244,18 +244,6 @@ class PmController extends Controller
         $component->restore();
 
         return redirect()->route('pm.components', ['project_id' => $project_id]);
-    }
-
-    public function store(Request $request, $project_id)
-    {
-        // dd($request->all());
-        $newTaskInfo = $request->all();
-        $createNewTask = $this->taskService->createTask($newTaskInfo);
-        // if ($createNewTask) {
-        //     return redirect()->route('pm.tasks.store')
-        //         ->with('success', 'Task created successfully.');
-        // }
-        // return 500;
     }
 
     public function softDeleteTask($project_id, $task_id)
