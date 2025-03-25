@@ -177,11 +177,11 @@ const fetchTasksByQuery = async (p_filters) => {
         console.error("Lỗi khi lấy dữ liệu:", error);
     } finally {
         taskListIsLoading.value = false; // Kết thúc loading
-        nextTick(() => {
-            if (taskListContainer.value) {
-                taskListContainer.value.scrollIntoView({ behavior: "smooth" });
-            }
-        });
+        // nextTick(() => {
+        //     if (taskListContainer.value) {
+        //         taskListContainer.value.scrollIntoView({ behavior: "smooth" });
+        //     }
+        // });
     }
 };
 
