@@ -1273,6 +1273,22 @@ const initPlugins = (task) => {
 };
 
 const updateTask = async (task) => {
+    // Kiểm tra khi chuyển từ OPEN sang trạng thái khác
+    if (task.status === TASK_STATUS.OPEN && task.editedStatus !== TASK_STATUS.OPEN) {
+        if (!task.editedActualStartDate) {
+            toastr.error("Please enter Actual Start Date before changing status from Open");
+            return;
+        }
+    }
+
+    // Kiểm tra khi chuyển sang trạng thái DONE
+    if (Number(task.editedStatus) === Number(TASK_STATUS.DONE)) {
+        if (!task.editedActualEndDate) {
+            toastr.error("Please enter Actual End Date before marking task as Done");
+            return;
+        }
+    }
+
     // Hủy Select2 trước khi cập nhật giao diện
     destroySelect2();
 
@@ -1347,9 +1363,14 @@ const copyTaskLink = (task) => {
 };
 
 const destroySelect2 = () => {
-    $(".assignee-select").select2("destroy");
-    $(".priority-select").select2("destroy");
-    $(".status-select").select2("destroy");
+    // Kiểm tra và destroy từng select2 một cách an toàn
+    const selectors = [".assignee-select", ".priority-select", ".status-select"];
+    selectors.forEach(selector => {
+        const $element = $(selector);
+        if ($element.length && $element.data('select2')) {
+            $element.select2('destroy');
+        }
+    });
 };
 
 const confirmDelete = async (task) => {
@@ -1498,7 +1519,17 @@ const groupedUsers = computed(() => {
 });
 
 function renderChart() {
-    const ctx = document.getElementById("performanceChart").getContext("2d");
+    const canvas = document.getElementById("performanceChart");
+    if (!canvas) {
+        console.warn('Canvas element "performanceChart" not found');
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+        console.warn('Could not get 2d context for performanceChart');
+        return;
+    }
 
     if (chartInstance) {
         chartInstance.destroy(); // Xóa chart cũ nếu có
@@ -1550,11 +1581,15 @@ function renderChart() {
         },
     };
 
-    chartInstance = new Chart(ctx, {
-        type: "line",
-        data: chartData,
-        options: chartOptions,
-    });
+    try {
+        chartInstance = new Chart(ctx, {
+            type: "line",
+            data: chartData,
+            options: chartOptions,
+        });
+    } catch (error) {
+        console.error('Error creating performance chart:', error);
+    }
 }
 
 // Add burndown chart data and initialization
@@ -1626,74 +1661,90 @@ const calculateBurndownData = () => {
 };
 
 const initBurndownChart = () => {
-    const ctx = document.getElementById('burndownChart');
-    if (!ctx) return;
+    const canvas = document.getElementById('burndownChart');
+    if (!canvas) {
+        console.warn('Canvas element "burndownChart" not found');
+        return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+        console.warn('Could not get 2d context for burndownChart');
+        return;
+    }
 
     const data = calculateBurndownData();
-    if (!data) return;
+    if (!data) {
+        console.warn('No data available for burndown chart');
+        return;
+    }
 
     if (burndownChart.value) {
         burndownChart.value.destroy();
     }
 
-    burndownChart.value = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: data.labels,
-            datasets: [
-                {
-                    label: 'Ideal Burndown',
-                    data: data.idealBurndown,
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                    tension: 0.1,
-                    fill: true
-                },
-                {
-                    label: 'Actual Burndown',
-                    data: data.actualBurndown,
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
-                    tension: 0.1,
-                    fill: true
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Remaining Effort (hours)'
+    try {
+        burndownChart.value = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: 'Ideal Burndown',
+                        data: data.idealBurndown,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                        tension: 0.1,
+                        fill: true
+                    },
+                    {
+                        label: 'Actual Burndown',
+                        data: data.actualBurndown,
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                        tension: 0.1,
+                        fill: true
                     }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Date'
-                    }
-                }
+                ]
             },
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Project Burndown Chart'
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Remaining Effort (hours)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    }
                 },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                    callbacks: {
-                        label: function(context) {
-                            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} hours`;
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Project Burndown Chart'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} hours`;
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
+    } catch (error) {
+        console.error('Error creating burndown chart:', error);
+    }
 };
 
 // Watch for changes in taskListData to update the burndown chart
