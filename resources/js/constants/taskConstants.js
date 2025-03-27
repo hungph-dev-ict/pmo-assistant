@@ -26,8 +26,8 @@ export const STATUS_CLASSES = {
     [TASK_STATUS.FEEDBACK]: "badge badge-warning", // Màu vàng
     [TASK_STATUS.DONE]: "badge badge-dark", // Màu đen
     [TASK_STATUS.REOPEN]: "badge badge-danger", // Màu đỏ
-    [TASK_STATUS.PENDING]: "badge badge-light", // Màu trắng
-    [TASK_STATUS.CANCELED]: "badge badge-secondary", // Màu xám
+    [TASK_STATUS.PENDING]: "badge badge-secondary", // Màu xám
+    [TASK_STATUS.CANCELED]: "badge badge-purple", // Màu tím
 };
 
 export const statusClass = (status) => STATUS_CLASSES[status] || STATUS_CLASSES.default;
