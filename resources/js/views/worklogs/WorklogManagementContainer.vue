@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="calendar-container" v-if="worklogs.length > 0">
-            <worklog-management-calendar :worklogs="worklogs"></worklog-management-calendar>
+            <worklog-management-calendar :key="leaveRequests.length"  :worklogs="worklogs" :leaveRequests="leaveRequests"></worklog-management-calendar>
         </div>
 
         <worklog-search-box :worklogs="worklogs" @updateFilteredWorklogs="filteredWorklogs = $event"
@@ -28,6 +28,7 @@ const props = defineProps({});
 
 const worklogs = ref([]); // Danh sách task gốc
 const filteredWorklogs = ref([]); // Danh sách task đã lọc
+const leaveRequests = ref([]); // Danh sách leaveRequests gốc
 const blankQuery = ref(true); // Mặc định là false
 const worklogListIsLoading = ref(false); // Biến kiểm soát trạng thái loading
 
@@ -38,6 +39,7 @@ const isTenantRoute = computed(() => currentPath.value.includes("tenant/"));
 // Add onMounted hook to fetch initial data
 onMounted(async () => {
     await fetchWorklogs();
+    await fetchLeaveRequests();
 });
 
 const fetchWorklogs = async () => {
@@ -69,6 +71,27 @@ const fetchWorklogs = async () => {
     }
 };
 
+const fetchLeaveRequests = async () => {
+    worklogListIsLoading.value = true; // Bắt đầu loading
+    try {
+        let data;
+        const response = await axios.get("/api/tenant-leave-request");
+        data = response.data;
+
+        if (data?.original?.success) {
+            leaveRequests.value = [...data.original.data];
+        } else {
+            console.error("API trả về lỗi:", data);
+            toastr.error("Failed to fetch leave requests");
+        }
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu leave requests:", error);
+        toastr.error("Failed to fetch leave requests");
+    } finally {
+        worklogListIsLoading.value = false; // Kết thúc loading
+    }
+};
+
 // Khi blankQuery = true, reset danh sách task
 const handleBlankQuery = (value) => {
     blankQuery.value = value;
@@ -94,6 +117,7 @@ const updateVisibleColumns = (columns) => {
 
 const handleWorklogUpdate = async () => {
     await fetchWorklogs();
+    await fetchLeaveRequests();
 };
 </script>
 

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\Task;
 use App\Models\Worklog;
+use App\Models\LeaveRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -180,6 +181,24 @@ class WorklogService
         return response()->json([
             'success' => true,
             'data' => $worklogs
+        ]);
+    }
+
+    public function getTenantLeaveRequests()
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->hasRole('client')) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        $leaveRequests = LeaveRequest::whereHas('user', function ($query) use ($user) {
+            $query->where('tenant_id', $user->tenant_id);
+        })
+        ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $leaveRequests
         ]);
     }
 

@@ -71,6 +71,13 @@ class WorklogController extends Controller
         return response()->json($tenantWorklogs, 201);
     }
 
+    public function getTenantLeaveRequests()
+    {
+        $tenantLeaveRequests = $this->worklogService->getTenantLeaveRequests();
+
+        return response()->json($tenantLeaveRequests, 201);
+    }
+
     public function viewProjectWorklogs($project_id)
     {
         $project = Project::findOrFail($project_id);
