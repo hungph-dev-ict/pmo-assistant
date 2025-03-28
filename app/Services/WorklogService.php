@@ -73,6 +73,22 @@ class WorklogService
         ]);
     }
 
+    public function getMyLeaveRequests()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $leaveRequests = LeaveRequest::where('leave_user', $user->id)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $leaveRequests
+        ]);
+    }
+
     public function getProjectWorklogs($project_id)
     {
         // Lấy danh sách task_id thuộc về các project trong projectIds
@@ -96,6 +112,25 @@ class WorklogService
             'data' => $worklogs
         ]);
     }
+
+    public function getProjectLeaveRequests($project_id)
+    {
+        // Lấy danh sách task_id thuộc về các project trong projectIds
+        $taskIds = Task::where('project_id', $project_id)->pluck('id');
+
+        // Lấy worklogs có task_id nằm trong danh sách taskIds
+        // Lấy danh sách userId từ worklogs của project
+        $userIds = Worklog::whereIn('task_id', $taskIds)->pluck('log_user')->unique();
+
+        // Truy vấn đơn nghỉ của những user trong danh sách
+        $leaveRequests = LeaveRequest::whereIn('leave_user', $userIds)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $leaveRequests
+        ]);
+    }
+
 
     public function getUsersWithoutWorklogs($project_id)
     {

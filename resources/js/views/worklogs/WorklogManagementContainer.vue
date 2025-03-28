@@ -75,8 +75,15 @@ const fetchLeaveRequests = async () => {
     worklogListIsLoading.value = true; // Bắt đầu loading
     try {
         let data;
-        const response = await axios.get("/api/tenant-leave-request");
-        data = response.data;
+        if (isTenantRoute.value) {
+            const response = await axios.get("/api/tenant-leave-request");
+            data = response.data;
+        } else if (isPMRoute.value) {
+            const pathSegments = window.location.pathname.split("/");
+            const projectId = pathSegments[2];
+            const response = await axios.get(`/api/project/${projectId}/leave-request`);
+            data = response.data;
+        }
 
         if (data?.original?.success) {
             leaveRequests.value = [...data.original.data];

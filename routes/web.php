@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/my-worklog', [WorklogController::class, 'viewMyWorklog'])->name('my-worklog');
     Route::get('/api/my-worklog', [WorklogController::class, 'getMyWorklogs']);
+    Route::get('/api/my-leave-request', [WorklogController::class, 'getMyLeaveRequests']);
     Route::put('/api/worklog/{worklog_id}/update', [WorklogController::class, 'updateWorklog']);
     Route::delete('/api/worklog/{worklog_id}/destroy', [WorklogController::class, 'softDeleteWorklog']);
     Route::get('/api/{project_id}/task/{task_id}/worklog', [WorklogController::class, 'get']);
@@ -81,7 +82,8 @@ Route::group(['middleware' => ['auth', 'role:admin|client|pm']], function () {
     Route::delete('/api/pm/{project_id}/tasks/{task_id}/destroy', [PmController::class, 'softDeleteTask']);
     Route::get('/api/tenant-worklog', [WorklogController::class, 'getTenantWorklogs']);
     Route::get('/api/tenant-leave-request', [WorklogController::class, 'getTenantLeaveRequests']);
-    Route::get('/api/project/{project_id}/worklog', [WorklogController::class, 'getProjectWorklogs']);    
+    Route::get('/api/project/{project_id}/worklog', [WorklogController::class, 'getProjectWorklogs']);  
+    Route::get('/api/project/{project_id}/leave-request', [WorklogController::class, 'getProjectLeaveRequests']);    
     Route::get('/api/leave-request-management', [LeaveRequestController::class, 'getLeaveRequestsManagement']);
 
     Route::prefix('pm/{project_id}')->group(function () {
