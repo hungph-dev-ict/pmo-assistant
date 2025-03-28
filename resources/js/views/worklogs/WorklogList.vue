@@ -145,13 +145,13 @@
                                 class="text-center"
                             >
                                 <template v-if="!worklog.isEditing">
-                                    <a
+                                   <!--  <a
                                         class="btn btn-info btn-sm mr-2"
                                         href="#"
                                         @click.prevent="editWorklog(worklog)"
                                     >
                                         <i class="fas fa-pencil-alt"></i> Edit
-                                    </a>
+                                    </a> -->
                                     <a
                                         class="btn btn-danger btn-sm mr-2"
                                         href="#"
