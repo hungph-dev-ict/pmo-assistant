@@ -1,3 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'admin-lte/dist/css/adminlte.min.css';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+@import 'icheck-bootstrap/icheck-bootstrap.min.css';
+
+/* Thêm namespace cho các lớp Tailwind */
+.tw- {
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+}

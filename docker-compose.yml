@@ -2,20 +2,26 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     image: hungph1996/pmo-assistant
     container_name: web-app
-    ports:
-      - 8000:8000
     volumes:
       - .:/var/www
+      - ./storage:/var/www/storage
+      - ./bootstrap/cache:/var/www/bootstrap/cache
     environment:
-      - APP_ENV=local
-      - APP_DEBUG=true
-      - APP_KEY=
+      APP_ENV: local
+      APP_DEBUG: true
+      APP_KEY: # key sẽ được tự động tạo
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: pmo_assistant
+      DB_USERNAME: admin
+      DB_PASSWORD: pmo123456
     depends_on:
       - db
-    command: php artisan serve --host=0.0.0.0 --port=8000
+    networks:
+      - app-network
 
   db:
     image: mysql:8.0
@@ -29,6 +35,25 @@ services:
       MYSQL_PASSWORD: pmo123456
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-server
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/var/www
+      - ./nginx.conf.local:/etc/nginx/nginx.conf
+    depends_on:
+      - app
+    networks:
+      - app-network
 
 volumes:
   db_data:
+
+networks:
+  app-network:
+    driver: bridge
