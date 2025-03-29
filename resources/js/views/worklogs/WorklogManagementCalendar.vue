@@ -110,20 +110,9 @@
                             <td
                                 v-for="date in loggedDates"
                                 :key="date"
-                                :class="
-                                    getCellClass(
-                                        worklogs[date]
-                                            ? worklogs[date].toFixed(2)
-                                            : '0.00',
-                                        date
-                                    )
-                                "
+                                :class="getCellClass(getWorklogValue(worklogs[date], userId, date), date)"
                             >
-                                {{
-                                    worklogs[date]
-                                        ? worklogs[date].toFixed(2)
-                                        : "0.00"
-                                }}
+                                {{ getWorklogDisplay(worklogs[date], userId, date) }}
                             </td>
                         </tr>
                     </tbody>
@@ -189,6 +178,7 @@ import moment from "moment";
 
 const props = defineProps({
     worklogs: Array,
+    leaveRequests: Array
 });
 
 const currentPath = computed(() => window.location.pathname);
@@ -210,7 +200,7 @@ const tempToDate = ref(toDate.value);
 
 // Dữ liệu worklogs đã lọc (chỉ cập nhật khi bấm "Search")
 const filteredWorklogs = ref([]);
-
+const filteredLeaveRequests = ref([]);
 onMounted(() => {
     nextTick(() => {
         if (window.jQuery && $.fn.select2 && $.fn.datetimepicker) {
@@ -323,6 +313,13 @@ const applyFilter = () => {
             worklog.log_date >= fromDate.value &&
             worklog.log_date <= toDate.value
     );
+    
+
+    filteredLeaveRequests.value = props.leaveRequests.filter(
+        (leaveRequest) =>
+            leaveRequest.leave_date >= fromDate.value &&
+            leaveRequest.leave_date <= toDate.value
+    );
 
     nextTick(() => {
         scrollToLastDate(); // Cuộn xuống ngày cuối cùng
@@ -396,5 +393,60 @@ const getCellClass = (value, date) => {
     if (numValue > 8) return "bg-warning";
 
     return "";
+};
+
+const getWorklogValue = (worklogTime, userId, date) => {
+    let time = parseFloat(worklogTime) || 0;
+
+    // Tìm đơn nghỉ phép của user tại ngày đó
+    const leave = filteredLeaveRequests.value.find(
+        (l) => l.leave_user == userId && l.leave_date == date && l.leave_status == 1
+    );
+
+    if (!leave) return time.toFixed(2); // Không có đơn nghỉ, giữ nguyên số giờ
+
+    switch (leave.leave_type) {
+        case 0: // Working from home
+            return time.toFixed(2); // Giữ nguyên số giờ
+
+        case 1: // All-day leave
+            return "8.00"; // Mặc định đủ 8 tiếng
+
+        case 2: { // Partial leave
+            // Chuyển TIME (HH:MM:SS) thành số giờ
+            const [startHour, startMinute] = leave.leave_start_time.split(":").map(Number);
+            const [endHour, endMinute] = leave.leave_end_time.split(":").map(Number);
+
+            const leaveDuration = (endHour + endMinute / 60) - (startHour + startMinute / 60); // Số giờ nghỉ
+
+            return (time + leaveDuration).toFixed(2); // Cộng số giờ nghỉ vào số giờ làm và chuẩn hóa
+        }
+    }
+};
+
+const getWorklogDisplay = (worklogTime, userId, date) => {
+    const time = worklogTime ? worklogTime.toFixed(2) : "0.00";
+
+    // Tìm đơn nghỉ phép của user tại ngày đó
+    const leave = filteredLeaveRequests.value.find(
+        (l) => l.leave_user == userId && l.leave_date == date && l.leave_status == 1
+    );
+    
+
+
+    if (!leave) return time; // Không có đơn nghỉ, giữ nguyên số giờ
+
+    switch (leave.leave_type) {
+        case 0: // Working from home
+            return `(R) ${time}`;
+
+        case 1: // All-day leave
+            return "(L)"; // Mặc định đủ 8 tiếng
+
+        case 2: { // Partial leave
+            
+            return `(L) ${time}`;
+        }
+    }
 };
 </script>

@@ -50,11 +50,25 @@ class WorklogController extends Controller
         return response()->json($myWorklogs, 201);
     }
 
+    public function getMyLeaveRequests()
+    {
+        $myLeaveRequests = $this->worklogService->getMyLeaveRequests();
+
+        return response()->json($myLeaveRequests, 201);
+    }
+
     public function getProjectWorklogs($project_id)
     {
         $projectWorklogs = $this->worklogService->getProjectWorklogs($project_id);
 
         return response()->json($projectWorklogs, 201);
+    }
+
+    public function getProjectLeaveRequests($project_id)
+    {
+        $projectLeaveRequests = $this->worklogService->getProjectLeaveRequests($project_id);
+
+        return response()->json($projectLeaveRequests, 201);
     }
 
     public function getWorlogAuditInWeek($project_id)
@@ -69,6 +83,13 @@ class WorklogController extends Controller
         $tenantWorklogs = $this->worklogService->getTenantWorklogs();
 
         return response()->json($tenantWorklogs, 201);
+    }
+
+    public function getTenantLeaveRequests()
+    {
+        $tenantLeaveRequests = $this->worklogService->getTenantLeaveRequests();
+
+        return response()->json($tenantLeaveRequests, 201);
     }
 
     public function viewProjectWorklogs($project_id)
