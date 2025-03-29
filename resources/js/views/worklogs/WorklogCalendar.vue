@@ -98,14 +98,9 @@
                             <td
                                 v-for="date in loggedDates"
                                 :key="date"
-                                :class="
-                                    getCellClass(
-                                        formattedTotalWorklog[date],
-                                        date
-                                    )
-                                "
+                                :class="getCellClass(getWorklogValue(formattedTotalWorklog[date], date), date)"
                             >
-                                {{ formattedTotalWorklog[date] }}
+                                {{ getWorklogDisplay(formattedTotalWorklog[date], date) }}
                             </td>
                         </tr>
                     </tbody>
@@ -172,6 +167,7 @@ import moment from "moment";
 
 const props = defineProps({
     worklogs: Array,
+    leaveRequests: Array
 });
 
 // Ngày mặc định là 30 ngày trước
@@ -188,6 +184,7 @@ const tempToDate = ref(toDate.value);
 
 // Dữ liệu worklogs đã lọc (chỉ cập nhật khi bấm "Search")
 const filteredWorklogs = ref([]);
+const filteredLeaveRequests = ref([]);
 
 watch(
     () => props.worklogs,
@@ -196,6 +193,11 @@ watch(
             (worklog) =>
                 worklog.log_date >= fromDate.value &&
                 worklog.log_date <= toDate.value
+        );
+        filteredLeaveRequests.value = props.leaveRequests.filter(
+        (leaveRequest) =>
+            leaveRequest.leave_date >= fromDate.value &&
+            leaveRequest.leave_date <= toDate.value
         );
     },
     { deep: true, immediate: true }
@@ -367,8 +369,8 @@ const formattedTotalWorklog = computed(() => {
     // Đảm bảo tất cả ngày trong loggedDates có giá trị mặc định là "0.00"
     loggedDates.value.forEach((date) => {
         result[date] = totalWorklogByDate.value[date]
-            ? totalWorklogByDate.value[date].toFixed(2)
-            : "0.00";
+            ? totalWorklogByDate.value[date]
+            : 0;
     });
 
     return result;
@@ -392,5 +394,60 @@ const getCellClass = (value, date) => {
     if (numValue > 8) return "bg-warning";
 
     return "";
+};
+
+const getWorklogValue = (worklogTime, date) => {
+    let time = parseFloat(worklogTime) || 0;
+
+    // Tìm đơn nghỉ phép của user tại ngày đó
+    const leave = filteredLeaveRequests.value.find(
+        (l) => l.leave_date == date && l.leave_status == 1
+    );
+
+    if (!leave) return time.toFixed(2); // Không có đơn nghỉ, giữ nguyên số giờ
+
+    switch (leave.leave_type) {
+        case 0: // Working from home
+            return time.toFixed(2); // Giữ nguyên số giờ
+
+        case 1: // All-day leave
+            return "8.00"; // Mặc định đủ 8 tiếng
+
+        case 2: { // Partial leave
+            // Chuyển TIME (HH:MM:SS) thành số giờ
+            const [startHour, startMinute] = leave.leave_start_time.split(":").map(Number);
+            const [endHour, endMinute] = leave.leave_end_time.split(":").map(Number);
+
+            const leaveDuration = (endHour + endMinute / 60) - (startHour + startMinute / 60); // Số giờ nghỉ
+
+            return (time + leaveDuration).toFixed(2); // Cộng số giờ nghỉ vào số giờ làm và chuẩn hóa
+        }
+    }
+};
+
+const getWorklogDisplay = (worklogTime, date) => {
+    const time = worklogTime ? worklogTime.toFixed(2) : "0.00";
+
+    // Tìm đơn nghỉ phép của user tại ngày đó
+    const leave = filteredLeaveRequests.value.find(
+        (l) => l.leave_date == date && l.leave_status == 1
+    );
+    
+
+
+    if (!leave) return time; // Không có đơn nghỉ, giữ nguyên số giờ
+
+    switch (leave.leave_type) {
+        case 0: // Working from home
+            return `(R) ${time}`;
+
+        case 1: // All-day leave
+            return "(L)"; // Mặc định đủ 8 tiếng
+
+        case 2: { // Partial leave
+            
+            return `(L) ${time}`;
+        }
+    }
 };
 </script>

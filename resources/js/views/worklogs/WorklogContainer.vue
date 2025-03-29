@@ -1,8 +1,8 @@
 <template>
     <div>
         <worklog-calendar
-            v-if="worklogs.length > 0"
-            :worklogs="worklogs"
+            v-if="worklogs.length > 0" :key="leaveRequests.length"
+            :worklogs="worklogs" :leaveRequests="leaveRequests"
         ></worklog-calendar>
 
         <worklog-search-box
@@ -36,7 +36,7 @@ import WorklogCalendar from "./WorklogCalendar.vue";
 const props = defineProps({});
 
 const worklogs = ref([]); // Danh sách task gốc
-
+const leaveRequests = ref([]); // Danh sách leaveRequests gốc
 const filteredWorklogs = ref([]); // Danh sách task đã lọc
 const blankQuery = ref(true); // Mặc định là false
 
@@ -73,6 +73,27 @@ const fetchWorklogs = async () => {
     }
 };
 
+const fetchLeaveRequests = async () => {
+    worklogListIsLoading.value = true; // Bắt đầu loading
+    try {
+        let data;
+        const response = await axios.get("/api/my-leave-request");
+            data = response.data;
+
+        if (data?.original?.success) {
+            leaveRequests.value = [...data.original.data];
+        } else {
+            console.error("API trả về lỗi:", data);
+            toastr.error("Failed to fetch leave requests");
+        }
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu leave requests:", error);
+        toastr.error("Failed to fetch leave requests");
+    } finally {
+        worklogListIsLoading.value = false; // Kết thúc loading
+    }
+};
+
 // Khi blankQuery = true, reset danh sách task
 const handleBlankQuery = (value) => {
     blankQuery.value = value;
@@ -97,9 +118,13 @@ const updateVisibleColumns = (columns) => {
 // Khi task được cập nhật, fetch lại danh sách task
 const handleWorklogUpdate = async () => {
     await fetchWorklogs();
+    await fetchLeaveRequests();
 };
 
-onMounted(fetchWorklogs);
+onMounted(async () => {
+    await fetchWorklogs();
+    await fetchLeaveRequests();
+});
 </script>
 
 <style scoped>
